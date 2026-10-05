@@ -3,38 +3,50 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>About | Your Name</title>
-  <meta name="description" content="Artist portfolio of Your Name.">
+  <title>About Me | Your Name</title>
+  <meta name="description" content="Artist, designer, and illustrator Your Name.">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- HEADER + MENU: copy this block unchanged onto every page.
+  <!-- MENU: copy this block unchanged onto every page.
        Only move aria-current="page" to the link for the page you're on. -->
   <header>
-    <p class="site-name">Your Name</p>
     <nav aria-label="Main">
       <ul>
-        <li><a href="index.html" aria-current="page">About</a></li>
+        <li><a href="index.html" aria-current="page">About Me</a></li>
         <li><a href="portfolio.html">Portfolio</a></li>
-        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="gallery.html">Art Gallery</a></li>
         <li><a href="store.html">Store</a></li>
-        <li><a href="commissions.html">Commissions</a></li>
+        <li><a href="commissions.html">Commission Inquiry</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
     </nav>
   </header>
 
-  <main>
-    <h1>About me</h1>
+  <main class="about">
+    <h1>Artist, Designer, Illustrator.</h1>
 
-    <!-- Replace with a photo of you or your art, e.g. <img src="images/about.jpg" alt="..."> -->
-    <div class="about-photo" role="img" aria-label="Photo placeholder"></div>
+    <div class="about-text">
+      <p>Hello! My name is BLANK.</p>
+      <p>Write your introduction here: who you are, what you make, and where to go next. Try the
+         <a href="gallery.html">art gallery</a> or <a href="commissions.html">commission inquiry</a>.</p>
+    </div>
 
-    <p>Hi, I'm Your Name. Write a short introduction here: who you are and what kind of art you make.</p>
-    <p>Add a second paragraph about your style, your influences, or how you got started.</p>
-    <p>Finish with where to go next: browse the <a href="gallery.html">gallery</a> or
-       <a href="commissions.html">request a commission</a>.</p>
+    <div class="about-side">
+      <p class="pill">YOUR NAME</p>
+      <div class="frame">
+        <!-- To use a real photo, replace the <svg>...</svg> with:
+             <img src="images/about.jpg" alt="Describe the photo"> -->
+        <div class="frame-inner">
+          <svg viewBox="0 0 200 260" role="img" aria-label="Portrait placeholder">
+            <rect width="200" height="260" fill="#fff"/>
+            <circle cx="100" cy="95" r="52" fill="#2c2c2c"/>
+            <path d="M82 135 L40 215 Q34 232 52 232 H148 Q166 232 160 215 L118 135 Z" fill="#2c2c2c"/>
+          </svg>
+        </div>
+      </div>
+    </div>
   </main>
 
   <footer>
