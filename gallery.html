@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gallery | Your Name</title>
+  <meta name="description" content="Digital and traditional artwork by Your Name.">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Gallery styles. Colors come from the variables in style.css. */
+    .controls { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; align-items: center; margin: 1rem 0; }
+    .controls button, #more, #clearTag, dialog button {
+      font: inherit; padding: 0.35rem 0.8rem; border: 1px solid var(--text);
+      background: var(--bg); color: var(--text); cursor: pointer;
+    }
+    .controls button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
+    .controls input { font: inherit; padding: 0.35rem; border: 1px solid var(--text); }
+    #status { color: var(--muted); }
+    .grid { list-style: none; margin: 1rem 0; padding: 0; display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.75rem; }
+    .thumb { display: block; width: 100%; padding: 0; border: 0; background: var(--line); cursor: pointer; }
+    .thumb img, .thumb .ph { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
+    .thumb .ph { background: var(--line); }
+    #more { display: block; margin: 1.5rem auto; }
+    dialog { max-width: 900px; width: 92%; border: 1px solid var(--text); background: var(--bg); color: var(--text); padding: 1rem; }
+    dialog::backdrop { background: rgba(0, 0, 0, 0.7); }
+    dialog img { max-height: 70vh; margin: 0 auto; display: block; }
+    dialog .ph { width: 100%; aspect-ratio: 4 / 3; background: var(--line); }
+    #lbTags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.5rem 0; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <p class="site-name">Your Name</p>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="index.html">About</a></li>
+        <li><a href="portfolio.html">Portfolio</a></li>
+        <li><a href="gallery.html" aria-current="page">Gallery</a></li>
+        <li><a href="store.html">Store</a></li>
+        <li><a href="commissions.html">Commissions</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Gallery</h1>
+    <p>A random mix of my work, different every visit. Pick a medium, search, or click a tag to find related pieces.</p>
+
+    <div class="controls">
+      <div role="group" aria-label="Medium">
+        <button type="button" data-medium="all" aria-pressed="true">All</button>
+        <button type="button" data-medium="digital" aria-pressed="false">Digital</button>
+        <button type="button" data-medium="traditional" aria-pressed="false">Traditional</button>
+      </div>
+      <label>Search <input type="search" id="q" placeholder="title or tag"></label>
+      <button type="button" id="shuffle">Shuffle</button>
+    </div>
+
+    <p id="activeTag" hidden>Tag: <strong id="tagName"></strong> <button type="button" id="clearTag">Clear tag</button></p>
+    <p id="status" aria-live="polite"></p>
+
+    <ul id="grid" class="grid"></ul>
+    <button type="button" id="more" hidden>Load more</button>
+
+    <dialog id="lightbox" aria-labelledby="lbTitle">
+      <div id="lbImg"></div>
+      <h2 id="lbTitle"></h2>
+      <p id="lbMeta"></p>
+      <div id="lbTags"></div>
+      <button type="button" id="lbClose">Close</button>
+    </dialog>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Your Name. All artwork is copyrighted and may not be used without permission.</p>
+  </footer>
+
+  <script src="artworks.js"></script>
+  <script>
+    const PAGE = 48;                       // how many pieces to show at a time
+    let medium = "all", tag = "", query = "", order = [], current = [], shown = 0;
+
+    const $ = id => document.getElementById(id);
+    const grid = $("grid"), lb = $("lightbox");
+
+    function shuffle(arr) {
+      arr = arr.slice();
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function matches(a) {
+      if (medium !== "all" && a.medium !== medium) return false;
+      if (tag && !a.tags.includes(tag)) return false;
+      if (query) {
+        const text = (a.title + " " + a.tags.join(" ")).toLowerCase();
+        if (!text.includes(query)) return false;
+      }
+      return true;
+    }
+
+    function makeImage(src, alt, cls) {
+      if (!src) { const d = document.createElement("div"); d.className = "ph"; return d; }
+      const img = document.createElement("img");
+      img.src = src; img.alt = alt; img.loading = "lazy";
+      return img;
+    }
+
+    function refresh(reshuffle) {
+      if (reshuffle || !order.length) order = shuffle(ARTWORKS.map((_, i) => i));
+      current = order.filter(i => matches(ARTWORKS[i]));
+      grid.innerHTML = ""; shown = 0;
+      $("status").textContent = current.length + (current.length === 1 ? " piece" : " pieces");
+      $("activeTag").hidden = !tag; $("tagName").textContent = tag;
+      showMore();
+    }
+
+    function showMore() {
+      current.slice(shown, shown + PAGE).forEach(i => {
+        const a = ARTWORKS[i], li = document.createElement("li"), b = document.createElement("button");
+        b.type = "button"; b.className = "thumb"; b.setAttribute("aria-label", "View " + a.title);
+        b.appendChild(makeImage(a.thumb, a.title));
+        b.addEventListener("click", () => openLightbox(a));
+        li.appendChild(b); grid.appendChild(li);
+      });
+      shown = Math.min(shown + PAGE, current.length);
+      $("more").hidden = shown >= current.length;
+    }
+
+    function openLightbox(a) {
+      $("lbImg").replaceChildren(makeImage(a.full || a.thumb, a.title));
+      $("lbTitle").textContent = a.title;
+      $("lbMeta").textContent = a.medium.charAt(0).toUpperCase() + a.medium.slice(1);
+      $("lbTags").replaceChildren(...a.tags.map(t => {
+        const b = document.createElement("button");
+        b.type = "button"; b.textContent = t;
+        b.addEventListener("click", () => { tag = t; lb.close(); refresh(false); window.scrollTo(0, 0); });
+        return b;
+      }));
+      lb.showModal();
+    }
+
+    document.querySelectorAll("[data-medium]").forEach(b => b.addEventListener("click", () => {
+      medium = b.dataset.medium;
+      document.querySelectorAll("[data-medium]").forEach(x => x.setAttribute("aria-pressed", x === b));
+      refresh(false);
+    }));
+    $("q").addEventListener("input", e => { query = e.target.value.trim().toLowerCase(); refresh(false); });
+    $("shuffle").addEventListener("click", () => refresh(true));
+    $("clearTag").addEventListener("click", () => { tag = ""; refresh(false); });
+    $("more").addEventListener("click", showMore);
+    $("lbClose").addEventListener("click", () => lb.close());
+    lb.addEventListener("click", e => { if (e.target === lb) lb.close(); });   // click outside to close
+
+    refresh(true);
+  </script>
+
+</body>
+</html>
