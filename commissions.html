@@ -7,7 +7,24 @@
   <meta name="description" content="Commission information and inquiry form for Your Name.">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Form styles. Move into style.css later. */
+    /* Page styles. Move into style.css later. */
+
+    /* Examples grid */
+    .examples { list-style: none; margin: 1rem 0; padding: 0; display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.25rem; }
+    .examples figure { margin: 0; }
+    .examples .ph { background: var(--line); aspect-ratio: 1 / 1; border-radius: 0.75rem; }
+    .examples img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 0.75rem; }
+    .examples figcaption { margin-top: 0.5rem; }
+    .examples figcaption span { display: block; color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
+
+    /* Price table */
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    table { border-collapse: collapse; width: 100%; min-width: 440px; }
+    th, td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--line); }
+    th { color: var(--accent); font-weight: 700; }
+
+    /* Form styles */
     form label { display: block; margin-top: 1rem; }
     form input, form select, form textarea {
       display: block; width: 100%; margin-top: 0.25rem; padding: 0.5rem;
@@ -42,15 +59,63 @@
 
     <h2>What I draw</h2>
     <p>Character illustrations, original character designs, stylized portraits, expression sheets.</p>
+    <p>Each can be done <strong>digital</strong> or <strong>traditional</strong>, as either a <strong>sketch</strong> or a <strong>complete illustration</strong>.</p>
+
+    <h2>Examples</h2>
+    <!-- To add a real example, replace the <div class="ph"></div> line in a block with:
+         <img src="images/commissions/your-file.jpg" alt="Describe the artwork">
+         To add another example, copy a whole <li>...</li> block. -->
+    <ul class="examples">
+      <li>
+        <figure>
+          <div class="ph" role="img" aria-label="Example placeholder"></div>
+          <figcaption>Character illustration<span>Short note about this example.</span></figcaption>
+        </figure>
+      </li>
+      <li>
+        <figure>
+          <div class="ph" role="img" aria-label="Example placeholder"></div>
+          <figcaption>Original character design<span>Short note about this example.</span></figcaption>
+        </figure>
+      </li>
+      <li>
+        <figure>
+          <div class="ph" role="img" aria-label="Example placeholder"></div>
+          <figcaption>Stylized portrait<span>Short note about this example.</span></figcaption>
+        </figure>
+      </li>
+      <li>
+        <figure>
+          <div class="ph" role="img" aria-label="Example placeholder"></div>
+          <figcaption>Expression sheet<span>Short note about this example.</span></figcaption>
+        </figure>
+      </li>
+    </ul>
 
     <h2>Prices</h2>
-    <p>TBH</p>
+    <p>Prices are per character: each additional character adds to the total.</p>
+    <!-- Replace each TBD with your price (for example $25). If digital and traditional
+         will cost differently, copy this table and label one of each. -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Type</th><th>Sketch</th><th>Complete Illustration</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Character illustration</td><td>TBD</td><td>TBD</td></tr>
+          <tr><td>Original character design</td><td>TBD</td><td>TBD</td></tr>
+          <tr><td>Stylized portrait</td><td>TBD</td><td>TBD</td></tr>
+          <tr><td>Expression sheet</td><td>TBD</td><td>TBD</td></tr>
+          <tr><td>Each additional character</td><td>+ TBD</td><td>+ TBD</td></tr>
+        </tbody>
+      </table>
+    </div>
 
     <h2>Process</h2>
     <p>You send an inquiry, I reply with a quote, payment is made via PayPal or CashApp, I send a sketch for approval, once the sketch is to your liking I will move onto finalizing the drawing.</p>
 
     <h2>Terms</h2>
-    <p>TBH</p>
+    <p>TBD</p>
 
     <h2>Request a commission</h2>
     <!-- The action below is a placeholder. Create a free form at formspree.io and
@@ -62,15 +127,36 @@
       <label>Email
         <input type="email" name="email" required>
       </label>
-      <label>Type of commission
-        <select name="type" required>
+
+      <label>Medium
+        <select name="medium" required>
           <option value="">Choose one</option>
-          <option>Sketch</option>
           <option>Digital</option>
           <option>Traditional</option>
-          <option>Other</option>
         </select>
       </label>
+      <label>Finish
+        <select name="finish" required>
+          <option value="">Choose one</option>
+          <option>Sketch</option>
+          <option>Complete Illustration</option>
+        </select>
+      </label>
+      <label>Type of piece
+        <select name="type" required>
+          <option value="">Choose one</option>
+          <option>Character illustration</option>
+          <option>Original character design</option>
+          <option>Stylized portrait</option>
+          <option>Expression sheet</option>
+          <option>Other (explain below)</option>
+        </select>
+      </label>
+      <label>Number of characters
+        <input type="number" name="characters" min="1" value="1" required>
+        <span class="hint">Price increases for each additional character.</span>
+      </label>
+
       <label>Describe what you'd like
         <textarea name="description" required></textarea>
         <span class="hint">Include characters, pose, mood, and any reference links.</span>
@@ -90,7 +176,7 @@
   </main>
 
   <footer>
-    <p>&copy; 2026 Jaleesa Zachery. All artwork is copyrighted and may not be used without permission.</p>
+    <p>&copy; 2026 Your Name. All artwork is copyrighted and may not be used without permission.</p>
   </footer>
 
 </body>
