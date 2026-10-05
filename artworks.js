@@ -11,7 +11,7 @@
    Keep a comma after every line except (optionally) the last. */
 
 const ARTWORKS = [
-  { title: "Sample sketch 1",   medium: "traditional", tags: ["sketch", "animal"],      thumb: "", full: "" },
+  { title: "Pokémon illustration",   medium: "digital", tags: ["pokemon", "fanart", "charizard", "squirtle", "bulbasaur"],      thumb: "https://64.media.tumblr.com/649024ba0b0de5839a92def682a01d8b/33e2938a3f419fbf-78/s1280x1920/7637e9354c61236591b64aaa36be417dfac814bc.png", full: "https://64.media.tumblr.com/649024ba0b0de5839a92def682a01d8b/33e2938a3f419fbf-78/s1280x1920/7637e9354c61236591b64aaa36be417dfac814bc.png" },
   { title: "Sample sketch 2",   medium: "digital",     tags: ["sketch", "character"],   thumb: "", full: "" },
   { title: "Sample fanart",     medium: "digital",     tags: ["fanart", "character"],   thumb: "", full: "" },
   { title: "Sample unfinished", medium: "traditional", tags: ["unfinished", "animal"],  thumb: "", full: "" },
