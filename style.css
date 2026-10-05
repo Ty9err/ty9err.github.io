@@ -12,10 +12,13 @@
   --accent: #ffc310;   /* links and highlights on dark */
   --bg:     #2c2c2c;   /* used by form fields and gallery widgets */
   --line:   #4a4a4a;   /* dividers and image placeholders */
+  --footer-h: 3.5rem;   /* height of the fixed bottom bar */
   --font:   "Orbitron", "Segoe UI", Arial, sans-serif;
 }
 
 * { box-sizing: border-box; }
+
+html, body { overscroll-behavior-y: none; }
 
 body {
   margin: 0;
@@ -28,6 +31,7 @@ body {
   flex-direction: column;
   min-height: 100vh;
   min-height: 100dvh;
+  padding-bottom: var(--footer-h);   /* room for the fixed footer */
 }
 
 /* ----- Header and menu ----- */
@@ -59,7 +63,8 @@ main { width: 100%; flex: 1 0 auto; max-width: 1100px; margin: 2rem auto; paddin
 main.card {
   background: var(--dark); color: var(--text);
   border-radius: 1.5rem; padding: 2rem;
-  max-width: 1000px; box-shadow: 1.25rem 1.25rem 0 var(--shade);
+  width: calc(100% - 3rem); max-width: 1000px; margin: 2rem auto 3rem;
+  box-shadow: 1.25rem 1.25rem 0 var(--shade);
 }
 main.card h1, main.card h2 { color: var(--accent); }
 main.card h1 { margin-top: 0; }
@@ -88,10 +93,12 @@ img { max-width: 100%; height: auto; }
 footer {
   background: var(--bar); color: var(--muted);
   border-radius: clamp(1.5rem, 5vw, 4rem) clamp(1.5rem, 5vw, 4rem) 0 0;
-  position: sticky;         /* stays at the bottom while scrolling */
-  bottom: 0;
+  position: fixed;          /* pinned to the bottom of the screen */
+  left: 0; right: 0; bottom: 0;
   z-index: 10;
-  padding: 0.9rem 1.5rem; text-align: center; font-size: 0.8rem; line-height: 1.5;
+  height: var(--footer-h); overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 1.5rem; text-align: center; font-size: 0.8rem; line-height: 1.5;
 }
 footer p { margin: 0; }
 
@@ -103,7 +110,15 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
   .about { grid-template-columns: 1fr; }
   .about-side { grid-column: 1; grid-row: auto; padding-right: 1rem; margin-top: 2rem; }
   .pill, .frame, main.card { box-shadow: 0.6rem 0.6rem 0 var(--shade); }
-  main.card { padding: 1.25rem; }
+  main.card { padding: 1rem; width: calc(100% - 2rem); }
+  body { font-size: 0.85rem; }
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.1rem; }
+  .pill { font-size: 1rem; }
+  .about-text { padding: 1.1rem; }
+  :root { --footer-h: 4rem; }
+  footer { font-size: 0.75rem; }
+  .about-side { margin-bottom: 1rem; }
   nav li + li::before { display: none; }
   nav a { font-size: 0.9rem; }
   nav ul { gap: 0.1rem 1rem; }
