@@ -24,6 +24,10 @@ body {
   font-family: var(--font);
   font-size: 0.95rem;
   line-height: 1.8;
+  display: flex;            /* lets the footer sit at the bottom on short pages */
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* ----- Header and menu ----- */
@@ -31,6 +35,9 @@ header {
   background: var(--bar);
   border-radius: 0 0 clamp(1.5rem, 5vw, 4rem) clamp(1.5rem, 5vw, 4rem);
   padding: 1.1rem 1.5rem 1.4rem;
+  position: sticky;         /* stays at the top while scrolling */
+  top: 0;
+  z-index: 10;
 }
 nav ul {
   list-style: none; margin: 0; padding: 0;
@@ -46,7 +53,7 @@ nav a:hover { color: var(--accent); }
 nav a[aria-current="page"] { color: var(--accent); }
 
 /* ----- Page content ----- */
-main { max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem; }
+main { width: 100%; flex: 1 0 auto; max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem; }
 
 /* Pages with a single dark card (Portfolio, Gallery, Store, Commissions, Contact) */
 main.card {
@@ -81,7 +88,10 @@ img { max-width: 100%; height: auto; }
 footer {
   background: var(--bar); color: var(--muted);
   border-radius: clamp(1.5rem, 5vw, 4rem) clamp(1.5rem, 5vw, 4rem) 0 0;
-  margin-top: 3rem; padding: 1.5rem; text-align: center; font-size: 0.8rem;
+  position: sticky;         /* stays at the bottom while scrolling */
+  bottom: 0;
+  z-index: 10;
+  padding: 0.9rem 1.5rem; text-align: center; font-size: 0.8rem; line-height: 1.5;
 }
 footer p { margin: 0; }
 
@@ -95,4 +105,7 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
   .pill, .frame, main.card { box-shadow: 0.6rem 0.6rem 0 var(--shade); }
   main.card { padding: 1.25rem; }
   nav li + li::before { display: none; }
+  nav a { font-size: 0.9rem; }
+  nav ul { gap: 0.1rem 1rem; }
+  header { padding: 0.7rem 1rem 1rem; }
 }
