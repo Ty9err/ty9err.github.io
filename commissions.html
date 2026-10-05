@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Commissions | Your Name</title>
+  <meta name="description" content="Commission information and inquiry form for Your Name.">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Form styles. Move into style.css later. */
+    form label { display: block; margin-top: 1rem; }
+    form input, form select, form textarea {
+      display: block; width: 100%; margin-top: 0.25rem; padding: 0.5rem;
+      font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--text);
+    }
+    form textarea { min-height: 8rem; }
+    form button {
+      margin-top: 1.25rem; padding: 0.5rem 1.25rem; font: inherit; cursor: pointer;
+      color: var(--bg); background: var(--blue); border: 0;
+    }
+    .hint { color: var(--muted); font-size: 0.95rem; margin: 0.25rem 0 0; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <p class="site-name">Your Name</p>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="index.html">About</a></li>
+        <li><a href="portfolio.html">Portfolio</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="store.html">Store</a></li>
+        <li><a href="commissions.html" aria-current="page">Commissions</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Commissions</h1>
+    <p><strong>Status:</strong> Open / Closed (edit this line as your availability changes)</p>
+
+    <h2>What I draw</h2>
+    <p>List the types of commissions you offer, such as character sketches, full-color digital pieces, or traditional pieces. Say what you don't draw.</p>
+
+    <h2>Prices</h2>
+    <p>Add your prices or starting prices here, for example: sketch from $__, flat color from $__, full render from $__.</p>
+
+    <h2>Process</h2>
+    <p>Explain the steps: you send an inquiry, I reply with a quote, payment is made, I send a sketch for approval, then the final piece.</p>
+
+    <h2>Terms</h2>
+    <p>Add your rules here: payment methods, turnaround time, revisions, refunds, and how the finished art may be used.</p>
+
+    <h2>Request a commission</h2>
+    <!-- The action below is a placeholder. Create a free form at formspree.io and
+         replace YOUR_FORM_ID with the ID it gives you. -->
+    <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <label>Your name
+        <input type="text" name="name" required>
+      </label>
+      <label>Email
+        <input type="email" name="email" required>
+      </label>
+      <label>Type of commission
+        <select name="type" required>
+          <option value="">Choose one</option>
+          <option>Sketch</option>
+          <option>Digital</option>
+          <option>Traditional</option>
+          <option>Other</option>
+        </select>
+      </label>
+      <label>Describe what you'd like
+        <textarea name="description" required></textarea>
+        <span class="hint">Include characters, pose, mood, and any reference links.</span>
+      </label>
+      <label>Budget
+        <input type="text" name="budget">
+      </label>
+      <label>Deadline, if any
+        <input type="text" name="deadline">
+      </label>
+      <label>
+        <input type="checkbox" name="agreed" required style="display:inline; width:auto; margin-right:0.5rem;">
+        I have read the terms above.
+      </label>
+      <button type="submit">Send inquiry</button>
+    </form>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Your Name. All artwork is copyrighted and may not be used without permission.</p>
+  </footer>
+
+</body>
+</html>
