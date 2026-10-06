@@ -248,5 +248,13 @@ const ARTWORKS = [
   {"title": "tumblr_pbwjwq0rXr1to0pkyo1_1280", "medium": "traditional", "tags": [], "thumb": "images/thumbs/tumblr-pbwjwq0rxr1to0pkyo1-1280-3ced1d.webp", "full": "images/full/tumblr-pbwjwq0rxr1to0pkyo1-1280-3ced1d.webp"},
   {"title": "tumblr_pgu8ddjQ6h1s4fze5_1280", "medium": "traditional", "tags": [], "thumb": "images/thumbs/tumblr-pgu8ddjq6h1s4fze5-1280-e0b05c.webp", "full": "images/full/tumblr-pgu8ddjq6h1s4fze5-1280-e0b05c.webp"},
   {"title": "tumblr_pkukas1ZgF1s4fze5_500", "medium": "traditional", "tags": [], "thumb": "images/thumbs/tumblr-pkukas1zgf1s4fze5-500-98a8a9.webp", "full": "images/full/tumblr-pkukas1zgf1s4fze5-500-98a8a9.webp"},
-  {"title": "tumblr_pp6iz2D9Ac1s4fze5_1280", "medium": "traditional", "tags": [], "thumb": "images/thumbs/tumblr-pp6iz2d9ac1s4fze5-1280-2e6e77.webp", "full": "images/full/tumblr-pp6iz2d9ac1s4fze5-1280-2e6e77.webp"}
+  {"title": "tumblr_pp6iz2D9Ac1s4fze5_1280", "medium": "traditional", "tags": [], "thumb": "images/thumbs/tumblr-pp6iz2d9ac1s4fze5-1280-2e6e77.webp", "full": "images/full/tumblr-pp6iz2d9ac1s4fze5-1280-2e6e77.webp"},
+  {"title": "tumblr_pib0yns6iz1to0pkyo1_1280", "medium": "mixed media", "tags": [], "thumb": "images/thumbs/tumblr-pib0yns6iz1to0pkyo1-1280-d0dec8.webp", "full": "images/full/tumblr-pib0yns6iz1to0pkyo1-1280-d0dec8.webp"},
+  {"title": "tumblr_pifuslJILp1s4fze5_1280", "medium": "mixed media", "tags": [], "thumb": "images/thumbs/tumblr-pifusljilp1s4fze5-1280-6f411f.webp", "full": "images/full/tumblr-pifusljilp1s4fze5-1280-6f411f.webp"},
+  {"title": "tumblr_piuaqopuGX1to0pkyo1_1280", "medium": "mixed media", "tags": [], "thumb": "images/thumbs/tumblr-piuaqopugx1to0pkyo1-1280-8b8b74.webp", "full": "images/full/tumblr-piuaqopugx1to0pkyo1-1280-8b8b74.webp"},
+  {"title": "tumblr_pjllaktc2U1to0pkyo1_1280", "medium": "mixed media", "tags": [], "thumb": "images/thumbs/tumblr-pjllaktc2u1to0pkyo1-1280-aee42c.webp", "full": "images/full/tumblr-pjllaktc2u1to0pkyo1-1280-aee42c.webp"},
+  {"title": "tumblr_plak8hiOn11to0pkyo1_1280", "medium": "mixed media", "tags": [], "thumb": "images/thumbs/tumblr-plak8hion11to0pkyo1-1280-df9490.webp", "full": "images/full/tumblr-plak8hion11to0pkyo1-1280-df9490.webp"},
+  {"title": "tumblr_plgjpd1RlU1to0pkyo1_1280", "medium": "mixed media", "tags": [], "thumb": "images/thumbs/tumblr-plgjpd1rlu1to0pkyo1-1280-d348e4.webp", "full": "images/full/tumblr-plgjpd1rlu1to0pkyo1-1280-d348e4.webp"},
+  {"title": "tumblr_po030bsdlH1s4fze5_1280", "medium": "mixed media", "tags": [], "thumb": "images/thumbs/tumblr-po030bsdlh1s4fze5-1280-e44fad.webp", "full": "images/full/tumblr-po030bsdlh1s4fze5-1280-e44fad.webp"},
+  {"title": "tumblr_po4p34Xtre1to0pkyo1_1280", "medium": "mixed media", "tags": [], "thumb": "images/thumbs/tumblr-po4p34xtre1to0pkyo1-1280-7340e7.webp", "full": "images/full/tumblr-po4p34xtre1to0pkyo1-1280-7340e7.webp"}
 ];
