@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thanks! | TYGERR</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="/images/favicon.ico" sizes="any">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <style>
+    /* A simple centered page on the site's yellow background. */
+    .thanks {
+      min-height: 100vh; box-sizing: border-box; padding: 2rem 1rem;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 1.5rem; text-align: center;
+    }
+    /* Your illustration. Change 420px to make it bigger or smaller. */
+    .thanks img { width: 100%; max-width: 420px; height: auto; }
+    /* Hidden on screen, but read aloud by screen readers. */
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .back {
+      display: inline-block; padding: 0.75rem 1.5rem; border-radius: 0.75rem;
+      background: #2c2c2c; color: #ffc310; text-decoration: none; font-weight: 700;
+    }
+    .back:hover, .back:focus { background: #000; }
+  </style>
+</head>
+<body>
+  <main class="thanks">
+    <h1 class="sr-only">Thanks! Your message was sent.</h1>
+    <!-- Put your drawing in the images folder named thanks.png
+         (or change the filename here to match yours). -->
+    <img src="images/thanks.png" alt="My character waving and saying Thanks!">
+    <a class="back" href="index.html">Return to website</a>
+  </main>
+</body>
+</html>

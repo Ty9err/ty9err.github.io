@@ -41,9 +41,10 @@
     .stepper { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem; }
     .stepper button { width: 2.75rem; height: 2.75rem; margin: 0; padding: 0; font-size: 1.25rem; }
     .stepper input { width: 4rem; text-align: center; margin: 0; }
-       .stepper input { -moz-appearance: textfield; appearance: textfield; }
-   .stepper input::-webkit-inner-spin-button,
-   .stepper input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    /* Hide the browser's built-in up/down arrows so only the yellow buttons are used */
+    .stepper input { -moz-appearance: textfield; appearance: textfield; }
+    .stepper input::-webkit-inner-spin-button,
+    .stepper input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     .price-note { color: var(--accent); font-weight: bold; }
   </style>
 <link rel="icon" href="/images/favicon.ico" sizes="any">
@@ -131,8 +132,9 @@
     <p>TBD</p>
 
     <h2>Request a commission</h2>
-   
-    <form action="https://formspree.io/f/xoejnbzn" method="POST">
+    <form id="inquiry" action="https://formspree.io/f/xoejnbzn" method="POST">
+      <!-- Tells you in your Formspree inbox which page the message came from. -->
+      <input type="hidden" name="form" value="Commission inquiry">
       <label>Your name
         <input type="text" name="name" required>
       </label>
@@ -177,7 +179,7 @@
         <label for="characters">Number of characters</label>
         <div class="stepper">
           <button type="button" id="minus" aria-label="One fewer character">&minus;</button>
-          <input type="number" name="characters" id="characters" min="1" max="10" value="1" required>
+          <input type="number" name="characters" id="characters" min="1" max="10" value="1" readonly>
           <button type="button" id="plus" aria-label="One more character">+</button>
         </div>
         <span class="hint">Price increases for each additional character.</span>
@@ -197,7 +199,8 @@
         <input type="checkbox" name="agreed" required style="display:inline; width:auto; margin-right:0.5rem;">
         I have read the terms above.
       </label>
-      <button type="submit">Send inquiry</button>
+      <button type="submit" id="send">Send inquiry</button>
+      <p class="hint" id="form-error" role="alert" hidden>Sorry, something went wrong. Please try again, or email me directly.</p>
     </form>
   </main>
 
@@ -244,6 +247,31 @@
     document.getElementById("minus").addEventListener("click", () => step(-1));
     document.getElementById("plus").addEventListener("click", () => step(1));
     update();
+
+    /* Sends the form in the background, then opens your own thanks page.
+       (Formspree's built-in redirect is a paid feature, this way is free.) */
+    const form = document.getElementById("inquiry");
+    const send = document.getElementById("send");
+    const error = document.getElementById("form-error");
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      send.disabled = true;
+      send.textContent = "Sending...";
+      error.hidden = true;
+      try {
+        const response = await fetch(form.action, {
+          method: "POST",
+          body: new FormData(form),
+          headers: { Accept: "application/json" }
+        });
+        if (!response.ok) throw new Error();
+        window.location.href = "thanks.html";
+      } catch {
+        error.hidden = false;
+        send.disabled = false;
+        send.textContent = "Send inquiry";
+      }
+    });
   </script>
 
 </body>
