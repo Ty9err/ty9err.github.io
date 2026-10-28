@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Commissions | TYGERR</title>
-  <meta name="description" content="Commission information and inquiry form for Your Name.">
+  <meta name="description" content="Commission information and inquiry form for Jaleesa Zachery.">
   <link rel="stylesheet" href="style.css">
   <style>
     /* Page styles. Move into style.css later. */
@@ -36,6 +36,12 @@
       color: var(--bg); background: var(--accent); border: 0;
     }
     .hint { color: var(--muted); font-size: 0.95rem; margin: 0.25rem 0 0; }
+
+    /* Number of characters stepper */
+    .stepper { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem; }
+    .stepper button { width: 2.75rem; height: 2.75rem; margin: 0; padding: 0; font-size: 1.25rem; }
+    .stepper input { width: 4rem; text-align: center; margin: 0; }
+    .price-note { color: var(--accent); font-weight: bold; }
   </style>
 <link rel="icon" href="/images/favicon.ico" sizes="any">
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
@@ -58,11 +64,12 @@
 
   <main class="card">
     <h1>Commissions</h1>
-    <p><strong>Status:</strong> Open / **CLOSED**</p>
+    <p><strong>Status:</strong> Closed</p>
 
     <h2>What I draw</h2>
     <p>Character illustrations, original character designs, stylized portraits, expression sheets.</p>
-    <p>Each can be done <strong>digital</strong> or <strong>traditional</strong>, as either a <strong>sketch</strong> or a <strong>complete illustration</strong>.</p>
+    <p>Each can be done <strong>digital</strong> or <strong>traditional</strong>, as either a <strong>sketch</strong> or a <strong>complete illustration</strong>. Traditional pieces can also be done as an <strong>ink</strong> finish.</p>
+    <p>I also design <strong>logos</strong> and <strong>posters</strong> (digital only).</p>
 
     <h2>Examples</h2>
     <!-- To add a real example, replace the <div class="ph"></div> line in a block with:
@@ -131,34 +138,48 @@
         <input type="email" name="email" required>
       </label>
 
-      <label>Medium
-        <select name="medium" required>
-          <option value="">Choose one</option>
-          <option>Digital</option>
-          <option>Traditional</option>
-        </select>
-      </label>
-      <label>Finish
-        <select name="finish" required>
-          <option value="">Choose one</option>
-          <option>Sketch</option>
-          <option>Complete Illustration</option>
-        </select>
-      </label>
       <label>Type of piece
-        <select name="type" required>
+        <select name="type" id="type" required>
           <option value="">Choose one</option>
           <option>Character illustration</option>
           <option>Original character design</option>
           <option>Stylized portrait</option>
           <option>Expression sheet</option>
+          <option>Logo</option>
+          <option>Poster</option>
           <option>Other (explain below)</option>
         </select>
       </label>
-      <label>Number of characters
-        <input type="number" name="characters" min="1" value="1" required>
+
+      <div id="art-options">
+        <label>Medium
+          <select name="medium" id="medium" required>
+            <option value="">Choose one</option>
+            <option>Digital</option>
+            <option>Traditional</option>
+          </select>
+        </label>
+        <label>Finish
+          <select name="finish" id="finish" required>
+            <option value="">Choose one</option>
+            <option>Sketch</option>
+            <option id="ink-option" hidden disabled>Ink</option>
+            <option>Complete illustration</option>
+          </select>
+          <span class="hint price-note" id="double-note" hidden>Traditional complete illustrations cost double.</span>
+        </label>
+      </div>
+      <p class="hint" id="digital-note" hidden>Logos and posters are made digitally.</p>
+
+      <div id="character-count">
+        <label for="characters">Number of characters</label>
+        <div class="stepper">
+          <button type="button" id="minus" aria-label="One fewer character">&minus;</button>
+          <input type="number" name="characters" id="characters" min="1" max="10" value="1" required>
+          <button type="button" id="plus" aria-label="One more character">+</button>
+        </div>
         <span class="hint">Price increases for each additional character.</span>
-      </label>
+      </div>
 
       <label>Describe what you'd like
         <textarea name="description" required></textarea>
@@ -181,6 +202,47 @@
   <footer>
     <p>&copy; 2026 Jaleesa Zachery. All artwork is copyrighted and may not be used without permission.</p>
   </footer>
+
+  <script>
+    /* Shows and hides form questions based on the type of piece and medium. */
+    const type = document.getElementById("type");
+    const medium = document.getElementById("medium");
+    const finish = document.getElementById("finish");
+    const ink = document.getElementById("ink-option");
+    const count = document.getElementById("characters");
+
+    // Hide a section and turn off its questions, so they aren't required or sent.
+    function toggle(id, show) {
+      const box = document.getElementById(id);
+      box.hidden = !show;
+      box.querySelectorAll("select, input, button").forEach(el => el.disabled = !show);
+    }
+
+    function update() {
+      const design = type.value === "Logo" || type.value === "Poster";
+      toggle("art-options", !design);
+      document.getElementById("digital-note").hidden = !design;
+      toggle("character-count", type.value !== "Logo");
+
+      const traditional = medium.value === "Traditional";
+      ink.hidden = ink.disabled = !traditional;
+      if (!traditional && finish.value === "Ink") finish.value = "";
+      document.getElementById("double-note").hidden =
+        !(traditional && finish.value === "Complete illustration");
+    }
+
+    function step(by) {
+      const n = (parseInt(count.value, 10) || 1) + by;
+      count.value = Math.min(10, Math.max(1, n));
+    }
+
+    type.addEventListener("change", update);
+    medium.addEventListener("change", update);
+    finish.addEventListener("change", update);
+    document.getElementById("minus").addEventListener("click", () => step(-1));
+    document.getElementById("plus").addEventListener("click", () => step(1));
+    update();
+  </script>
 
 </body>
 </html>
