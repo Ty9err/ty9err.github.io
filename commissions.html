@@ -29,8 +29,9 @@
     form input, form select, form textarea {
       display: block; width: 100%; margin-top: 0.25rem; padding: 0.5rem;
       font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--text);
+      box-sizing: border-box;   /* keeps every box exactly as wide as the form */
     }
-    form textarea { min-height: 8rem; }
+    form textarea { min-height: 8rem; resize: vertical; }   /* can be dragged taller, never wider */
     form button {
       margin-top: 1.25rem; padding: 0.5rem 1.25rem; font: inherit; cursor: pointer;
       color: var(--bg); background: var(--accent); border: 0;
@@ -71,9 +72,9 @@
     <p><strong>Status:</strong> Closed</p>
 
     <h2>What I draw</h2>
-    <p>Character illustrations, original character designs, stylized portraits, expression sheets.</p>
+    <p>Character illustrations, original character designs, stylized portraits, expression sheets, and storyboards.</p>
     <p>Each can be done <strong>digital</strong> or <strong>traditional</strong>, as either a <strong>sketch</strong> or a <strong>complete illustration</strong>. Traditional pieces can also be done as an <strong>ink</strong> finish.</p>
-    <p>I also design <strong>logos</strong> and <strong>posters</strong> (digital only).</p>
+    <p>I also design <strong>logos</strong> and <strong>posters</strong>.</p>
 
     <h2>Examples</h2>
     <!-- To add a real example, replace the <div class="ph"></div> line in a block with:
@@ -184,7 +185,7 @@
 
       <label>Describe what you'd like
         <textarea name="description" required></textarea>
-        <span class="hint">Include characters, pose, mood, and any reference links.</span>
+        <span class="hint">Include images of characters, poses, mood, and reference links if you've got any that will help describe your commission.</span>
       </label>
       <label>Budget
         <input type="text" name="budget">
