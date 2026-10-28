@@ -41,6 +41,9 @@
     .stepper { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem; }
     .stepper button { width: 2.75rem; height: 2.75rem; margin: 0; padding: 0; font-size: 1.25rem; }
     .stepper input { width: 4rem; text-align: center; margin: 0; }
+       .stepper input { -moz-appearance: textfield; appearance: textfield; }
+   .stepper input::-webkit-inner-spin-button,
+   .stepper input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     .price-note { color: var(--accent); font-weight: bold; }
   </style>
 <link rel="icon" href="/images/favicon.ico" sizes="any">
