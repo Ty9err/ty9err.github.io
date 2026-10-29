@@ -39,6 +39,27 @@
     }
     .hint { color: var(--muted); font-size: 0.95rem; margin: 0.25rem 0 0; }
 
+    /* Dropdowns: our own arrow, moved in from the right edge.
+       Change "right 0.9rem" to move it further left or right. */
+    form select {
+      appearance: none; -webkit-appearance: none; cursor: pointer;
+      padding-right: 2.5rem;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 0.9rem center;
+    }
+
+    /* Terms: click to open, then scroll inside a box the same height as the description box */
+    .terms { margin-top: 0.5rem; }
+    .terms summary { cursor: pointer; color: var(--accent); font-weight: 700; padding: 0.25rem 0; }
+    .terms-box {
+      height: 8rem; overflow-y: auto; margin-top: 0.5rem; padding: 0.5rem;
+      border: 1px solid var(--text); background: var(--bg); box-sizing: border-box;
+    }
+    .terms-box p { margin: 0 0 0.75rem; }
+
+    /* Send button stays faded until the terms box is ticked */
+    form button[type="submit"]:disabled { opacity: 0.45; cursor: not-allowed; }
+
     /* Number of characters stepper */
     .stepper { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem; }
     .stepper button { width: 2.75rem; height: 2.75rem; margin: 0; padding: 0; font-size: 1.25rem; }
@@ -235,13 +256,19 @@
       </label>
       
     <h2>Terms</h2>
-    <p>TBD</p>
+    <details class="terms">
+      <summary>Read the terms</summary>
+      <div class="terms-box" tabindex="0" aria-label="Terms">
+        <!-- Write your terms here. Use one <p>...</p> per paragraph; the box scrolls. -->
+        <p>TBD</p>
+      </div>
+    </details>
       
       <label>
-        <input type="checkbox" name="agreed" required style="display:inline; width:auto; margin-right:0.5rem;">
+        <input type="checkbox" name="agreed" id="agreed" required style="display:inline; width:auto; margin-right:0.5rem;">
         I have read the terms above.
       </label>
-      <button type="submit" id="send">Send inquiry</button>
+      <button type="submit" id="send" disabled>Send inquiry</button>
       <p class="hint" id="form-error" role="alert" hidden>Sorry, something went wrong. Please try again, or email me directly.</p>
     </form>
   </main>
@@ -307,6 +334,10 @@
     const form = document.getElementById("inquiry");
     const send = document.getElementById("send");
     const error = document.getElementById("form-error");
+    const agreed = document.getElementById("agreed");
+
+    // The Send button only works once the terms box is ticked.
+    agreed.addEventListener("change", () => { send.disabled = !agreed.checked; });
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
       send.disabled = true;
@@ -322,7 +353,7 @@
         window.location.href = "thanks.html";
       } catch {
         error.hidden = false;
-        send.disabled = false;
+        send.disabled = !agreed.checked;
         send.textContent = "Send inquiry";
       }
     });
