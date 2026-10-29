@@ -16,8 +16,8 @@
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: 1.5rem; text-align: center;
     }
-    /* Your illustration. Change 420px to make it bigger or smaller. */
-    .thanks img { width: 100%; max-width: 420px; height: auto; }
+    /* Your illustration, with no white border. Change 420px to make it bigger or smaller. */
+    .thanks img { width: 100%; max-width: 420px; height: auto; border: 0; border-radius: 0; }
     /* Hidden on screen, but read aloud by screen readers. */
     .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
     .back {
@@ -30,9 +30,7 @@
 <body>
   <main class="thanks">
     <h1 class="sr-only">Thanks! I'll get to your message soon!</h1>
-    <!-- Put your drawing in the images folder named thanks.png
-         (or change the filename here to match yours). -->
-    <img src="https://github.com/Ty9err/ty9err.github.io/blob/main/images/tykk1.png?raw=true">
+    <img src="images/tykk1.png" alt="My character saying Thanks!">
     <a class="back" href="index.html">Return to website</a>
   </main>
 </body>
