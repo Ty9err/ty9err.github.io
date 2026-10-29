@@ -20,7 +20,8 @@
 
     /* Price table */
     .table-wrap { overflow-x: auto; margin: 1rem 0; }
-    table { border-collapse: collapse; width: 100%; min-width: 440px; }
+    table { border-collapse: collapse; width: 100%; min-width: 560px; }
+    table.small { min-width: 0; max-width: 480px; }
     th, td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--line); }
     th { color: var(--accent); font-weight: 700; }
 
@@ -73,7 +74,7 @@
 
     <h2>What I draw</h2>
     <p>Character illustrations, original character designs, stylized portraits, expression sheets, and storyboards.</p>
-    <p>Each can be done <strong>digital</strong> or <strong>traditional</strong>, as either a <strong>sketch</strong> or a <strong>complete illustration</strong>. Traditional pieces can also be done as an <strong>ink</strong> finish.</p>
+    <p>Each can be done <strong>digital</strong> or <strong>traditional</strong>, as a <strong>sketch</strong>, <strong>line art</strong>, <strong>ink</strong>, or a <strong>complete illustration</strong>.</p>
     <p>I also design <strong>logos</strong> and <strong>posters</strong>.</p>
 
     <h2>Examples</h2>
@@ -105,6 +106,30 @@
           <figcaption>Expression sheet<span>***</span></figcaption>
         </figure>
       </li>
+      <li>
+        <figure>
+          <div class="ph" role="img" aria-label="Example placeholder"></div>
+          <figcaption>Line art<span>***</span></figcaption>
+        </figure>
+      </li>
+      <li>
+        <figure>
+          <div class="ph" role="img" aria-label="Example placeholder"></div>
+          <figcaption>Ink<span>***</span></figcaption>
+        </figure>
+      </li>
+      <li>
+        <figure>
+          <div class="ph" role="img" aria-label="Example placeholder"></div>
+          <figcaption>Logo<span>***</span></figcaption>
+        </figure>
+      </li>
+      <li>
+        <figure>
+          <div class="ph" role="img" aria-label="Example placeholder"></div>
+          <figcaption>Poster<span>***</span></figcaption>
+        </figure>
+      </li>
     </ul>
 
     <h2>Prices</h2>
@@ -114,14 +139,28 @@
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th>Type</th><th>Sketch</th><th>Complete Illustration</th></tr>
+          <tr><th>Type</th><th>Sketch</th><th>Line art</th><th>Ink</th><th>Complete Illustration</th></tr>
         </thead>
         <tbody>
-          <tr><td>Character illustration</td><td>TBD</td><td>TBD</td></tr>
-          <tr><td>Original character design</td><td>TBD</td><td>TBD</td></tr>
-          <tr><td>Stylized portrait</td><td>TBD</td><td>TBD</td></tr>
-          <tr><td>Expression sheet</td><td>TBD</td><td>TBD</td></tr>
-          <tr><td>Each additional character</td><td>+ TBD</td><td>+ TBD</td></tr>
+          <tr><td>Character illustration</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+          <tr><td>Original character design</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+          <tr><td>Stylized portrait</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+          <tr><td>Expression sheet</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+          <tr><td>Each additional character</td><td>+ TBD</td><td>+ TBD</td><td>+ TBD</td><td>+ TBD</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Logos and posters</h3>
+    <div class="table-wrap">
+      <table class="small">
+        <thead>
+          <tr><th>Type</th><th>Price</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Logo</td><td>TBD</td></tr>
+          <tr><td>Poster</td><td>TBD</td></tr>
+          <tr><td>Each character on a poster</td><td>+ TBD</td></tr>
         </tbody>
       </table>
     </div>
@@ -165,7 +204,8 @@
           <select name="finish" id="finish" required>
             <option value="">Choose one</option>
             <option>Sketch</option>
-            <option id="ink-option" hidden disabled>Ink</option>
+            <option>Line art</option>
+            <option>Ink</option>
             <option>Complete illustration</option>
           </select>
           <span class="hint price-note" id="double-note" hidden>Traditional complete illustrations cost double.</span>
@@ -215,7 +255,6 @@
     const type = document.getElementById("type");
     const medium = document.getElementById("medium");
     const finish = document.getElementById("finish");
-    const ink = document.getElementById("ink-option");
     const count = document.getElementById("characters");
     const hint = document.getElementById("character-hint");
     let lastType = "";
@@ -246,8 +285,6 @@
         : "Price increases for each additional character.";
 
       const traditional = medium.value === "Traditional";
-      ink.hidden = ink.disabled = !traditional;
-      if (!traditional && finish.value === "Ink") finish.value = "";
       document.getElementById("double-note").hidden =
         !(traditional && finish.value === "Complete illustration");
     }
