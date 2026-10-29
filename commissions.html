@@ -43,6 +43,13 @@
     th, td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--line); }
     th { color: var(--accent); font-weight: 700; }
 
+    /* Digital / Traditional switch above the price table */
+    .medium-switch { display: inline-flex; gap: 0.25rem; padding: 0.25rem; margin-top: 0.5rem;
+                     border-radius: 0.75rem; background: var(--bg); border: 1px solid var(--line); }
+    .medium-switch button { min-height: 2.75rem; padding: 0 1.25rem; border: 0; border-radius: 0.55rem;
+                            background: transparent; color: var(--text); font: inherit; cursor: pointer; }
+    .medium-switch button[aria-pressed="true"] { background: var(--accent); color: var(--dark); font-weight: 700; }
+
     /* Form styles */
     form label { display: block; margin-top: 1rem; }
     form input, form select, form textarea {
@@ -113,7 +120,7 @@
 
     <h2>What I draw</h2>
     <p>Character illustrations, original character designs, stylized portraits, and expression sheets.</p>
-    <p>Each can be done <strong>digital</strong> or <strong>traditional</strong>, as a <strong>sketch</strong>, <strong>line art</strong>, <strong>ink</strong>, or a <strong>complete illustration</strong>.</p>
+    <p>Each can be done <strong>digital</strong> or <strong>traditional</strong> (character designs are digital only), as a <strong>sketch</strong>, <strong>line art</strong>, <strong>ink</strong>, or a <strong>complete illustration</strong>.</p>
     <p>I also design <strong>logos</strong> and <strong>posters</strong>.</p>
 
     <h2>Examples</h2>
@@ -228,7 +235,14 @@
     <p>Prices are per character: each additional character adds to the total.</p>
     <!-- Replace each TBD with your price (for example $25). If digital and traditional
          will cost differently, copy this table and label one of each. -->
-    <div class="table-wrap">
+    <!-- The buttons switch between the two price tables below.
+         Fill in each table's TBDs with that medium's prices. -->
+    <div class="medium-switch" role="group" aria-label="Show prices for">
+      <button type="button" data-show="prices-digital" aria-pressed="true">Digital</button>
+      <button type="button" data-show="prices-traditional" aria-pressed="false">Traditional</button>
+    </div>
+
+    <div class="table-wrap" id="prices-digital">
       <table>
         <thead>
           <tr><th>Type</th><th>Sketch</th><th>Line art</th><th>Ink</th><th>Complete Illustration</th></tr>
@@ -244,7 +258,21 @@
         </tbody>
       </table>
     </div>
-    <p class="hint">Traditional complete illustrations cost double. Logos and posters are only offered as finished digital pieces.</p>
+
+    <div class="table-wrap" id="prices-traditional" hidden>
+      <table>
+        <thead>
+          <tr><th>Type</th><th>Sketch</th><th>Line art</th><th>Ink</th><th>Complete Illustration</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Character illustration</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+          <tr><td>Stylized portrait</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+          <tr><td>Expression sheet</td><td>TBD</td><td>TBD</td><td>TBD</td><td>TBD</td></tr>
+          <tr><td>Each additional character</td><td>+ TBD</td><td>+ TBD</td><td>+ TBD</td><td>+ TBD</td></tr>
+        </tbody>
+      </table>
+      <p class="hint">Traditional pieces are drawn by hand on paper. Original character designs, logos, and posters are digital only.</p>
+    </div>
 
     <h2>Process</h2>
     <p>You send an inquiry, I reply with a quote, payment is made via PayPal or CashApp, I send a sketch for approval, once the sketch is to your liking I will move onto finalizing the drawing.</p>
@@ -278,7 +306,7 @@
           <select name="medium" id="medium" required>
             <option value="">Choose one</option>
             <option>Digital</option>
-            <option>Traditional</option>
+            <option id="traditional-option">Traditional</option>
           </select>
         </label>
         <label>Finish
@@ -289,10 +317,10 @@
             <option>Ink</option>
             <option>Complete illustration</option>
           </select>
-          <span class="hint price-note" id="double-note" hidden>Traditional complete illustrations cost double.</span>
+          <span class="hint price-note" id="double-note" hidden>Traditional pieces use the Traditional price table above.</span>
         </label>
       </div>
-      <p class="hint" id="digital-note" hidden>Logos and posters are made digitally.</p>
+      <p class="hint" id="digital-note" hidden></p>
 
       <div id="character-count">
         <label for="characters">Number of characters</label>
@@ -338,6 +366,18 @@
   </footer>
 
   <script>
+    /* Price table switch: shows the Digital or Traditional table. */
+    const switchButtons = document.querySelectorAll(".medium-switch button");
+    switchButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        switchButtons.forEach(other => {
+          const on = other === btn;
+          other.setAttribute("aria-pressed", on);
+          document.getElementById(other.dataset.show).hidden = !on;
+        });
+      });
+    });
+
     /* Example cards: clicking one opens the pop-up sheet with its picture and details. */
     const sheet = document.getElementById("sheet");
     document.querySelectorAll(".example").forEach(card => {
@@ -371,7 +411,15 @@
     function update() {
       const design = type.value === "Logo" || type.value === "Poster";
       toggle("art-options", !design);
-      document.getElementById("digital-note").hidden = !design;
+      // Character designs keep the Medium question, but only digital is allowed.
+      const designOnlyDigital = type.value === "Original character design";
+      const tradOption = document.getElementById("traditional-option");
+      tradOption.disabled = designOnlyDigital;
+      if (designOnlyDigital && medium.value === "Traditional") medium.value = "";
+      const note = document.getElementById("digital-note");
+      note.hidden = !(design || designOnlyDigital);
+      note.textContent = design ? "Logos and posters are made digitally."
+                                : "Original character designs are made digitally.";
       toggle("character-count", type.value !== "Logo");
 
       // Posters can have no characters, so they start at 0. Everything else starts at 1.
@@ -387,8 +435,7 @@
         : "Price increases for each additional character.";
 
       const traditional = medium.value === "Traditional";
-      document.getElementById("double-note").hidden =
-        !(traditional && finish.value === "Complete illustration");
+      document.getElementById("double-note").hidden = !traditional;
     }
 
     function step(by) {
