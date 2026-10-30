@@ -37,11 +37,29 @@
     @media (prefers-reduced-motion: reduce) { .example img, .example .ph { transition: none; } }
 
     /* Price table */
-    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; color-scheme: dark; }   /* dark sideways scrollbar */
     table { border-collapse: collapse; width: 100%; min-width: 560px; }
     table.small { min-width: 0; max-width: 480px; }
     th, td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--line); }
     th { color: var(--accent); font-weight: 700; }
+    .plus { display: inline-block; width: 0; direction: rtl; }   /* "+" hangs left so the $ lines up */
+
+    /* Swipe cues for the price table. These only switch on when the table is wider than the
+       screen (phones), so the desktop view stays exactly the same. */
+    .scroll-hint { margin: 0.75rem 0 0; color: var(--accent); font-weight: 700; font-size: 0.85rem; }
+    .scroll-hint .arrow { display: inline-block; animation: nudge 1.2s ease-in-out infinite; }
+    @keyframes nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(6px); } }
+    @media (prefers-reduced-motion: reduce) { .scroll-hint .arrow { animation: none; } }
+    /* The "Type" column stays put while the prices slide underneath it */
+    .table-wrap.scrollable th:first-child, .table-wrap.scrollable td:first-child {
+      position: sticky; left: 0; z-index: 1; background: var(--dark); width: 8rem; }
+    .table-wrap.scrollable > .hint { position: sticky; left: 0; }   /* footnote stays in view too */
+    .table-wrap.scrolled th:first-child, .table-wrap.scrolled td:first-child {
+      box-shadow: 8px 0 8px -6px rgba(0, 0, 0, 0.8); }
+    /* Prices fade out at the right edge while there's more to see */
+    .table-wrap.more-right {
+      -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent);
+              mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent); }
 
     /* Digital / Traditional switch above the price table */
     .medium-switch { display: inline-flex; gap: 0.25rem; padding: 0.25rem; margin-top: 0.5rem;
@@ -147,7 +165,7 @@
           <span class="ex-more">View details</span>
         </button>
         <div class="ex-info" hidden>
-         <p>An original character design sheets include 3 pose illustrations, 3 expressions, and a mini turn around view of the character.</p>
+         <p>An original character design sheet includes 3 pose illustrations, 3 expressions, and a mini turn around view of the character.</p>
         </div>
       </li>
       <li>
@@ -187,7 +205,7 @@
           <span class="ex-more">View details</span>
         </button>
         <div class="ex-info" hidden>
-          <p>Traditional ink pieces are drawn with real ink on paper. Digital ink illustrations imitates the look of traditional ink on screen for a lower price.</p> -->
+          <p>Traditional ink pieces are drawn with real ink on paper. Digital ink illustrations imitate the look of traditional ink on screen for a lower price.</p>
         </div>
       </li>
       <li>
@@ -207,7 +225,7 @@
           <span class="ex-more">View details</span>
         </button>
         <div class="ex-info" hidden>
-        <p>Poster / Flyer designs are sent digitally only, I do not handle any printing.</p> -->
+        <p>Poster / Flyer designs are sent digitally only, I do not handle any printing.</p>
         </div>
       </li>
     </ul>
@@ -232,6 +250,7 @@
       <button type="button" data-show="prices-digital" aria-pressed="true">Digital</button>
       <button type="button" data-show="prices-traditional" aria-pressed="false">Traditional</button>
     </div>
+    <p class="scroll-hint" id="scroll-hint" hidden>Swipe to see all prices <span class="arrow" aria-hidden="true">→</span></p>
 
     <div class="table-wrap" id="prices-digital">
       <table>
@@ -245,7 +264,7 @@
           <tr><td>Expression sheet</td><td>$35</td><td>$45</td><td>$50</td><td>$80</td></tr>
           <tr><td>Logo</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>$60</td></tr>
           <tr><td>Poster</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>$70</td></tr>
-          <tr><td>Each additional character</td><td>+$35</td><td>+$45</td><td>+$50</td><td>+$70</td></tr>
+          <tr><td>Each additional character</td><td><span class="plus">+</span>$35</td><td><span class="plus">+</span>$45</td><td><span class="plus">+</span>$50</td><td><span class="plus">+</span>$70</td></tr>
         </tbody>
       </table>
        <p class="hint">*Additional characters unavailable for original character designs</p>
@@ -260,7 +279,7 @@
           <tr><td>Character illustration</td><td>$60</td><td>$75</td><td>$120</td><td>$150</td></tr>
           <tr><td>Stylized portrait</td><td>$50</td><td>$65</td><td>$100</td><td>$130</td></tr>
           <tr><td>Expression sheet</td><td>$45</td><td>$60</td><td>$100</td><td>$120</td></tr>
-          <tr><td>Each additional character</td><td>+$40</td><td>+$60</td><td>+$80</td><td>+$100</td></tr>
+          <tr><td>Each additional character</td><td><span class="plus">+</span>$40</td><td><span class="plus">+</span>$60</td><td><span class="plus">+</span>$80</td><td><span class="plus">+</span>$100</td></tr>
         </tbody>
       </table>
       <p class="hint">*Traditional pieces are drawn on paper. Original character designs, logos, and posters are digital only.</p>
@@ -364,8 +383,28 @@
           other.setAttribute("aria-pressed", on);
           document.getElementById(other.dataset.show).hidden = !on;
         });
+        updateScrollCues();
       });
     });
+
+    /* Swipe cues: turns on the hint, fade and pinned column only when the table overflows. */
+    const scrollHint = document.getElementById("scroll-hint");
+    const tableWraps = document.querySelectorAll(".table-wrap");
+    function updateScrollCues() {
+      tableWraps.forEach(wrap => {
+        const overflow = wrap.scrollWidth > wrap.clientWidth + 1;
+        const atEnd = wrap.scrollLeft + wrap.clientWidth >= wrap.scrollWidth - 2;
+        wrap.classList.toggle("scrollable", overflow);
+        wrap.classList.toggle("more-right", overflow && !atEnd);
+        wrap.classList.toggle("scrolled", overflow && wrap.scrollLeft > 2);
+      });
+      const shown = document.querySelector(".table-wrap:not([hidden])");
+      scrollHint.hidden = !(shown && shown.classList.contains("scrollable"));
+    }
+    tableWraps.forEach(wrap => wrap.addEventListener("scroll", updateScrollCues, { passive: true }));
+    window.addEventListener("resize", updateScrollCues);
+    window.addEventListener("load", updateScrollCues);   // re-check once the fonts have loaded
+    updateScrollCues();
 
     /* Example cards: clicking one opens the pop-up sheet with its picture and details. */
     const sheet = document.getElementById("sheet");
