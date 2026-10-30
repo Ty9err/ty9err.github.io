@@ -82,6 +82,12 @@
     }
     .hint { color: var(--muted); font-size: 0.95rem; margin: 0.25rem 0 0; }
 
+    /* Sharing question: two round choices */
+    .choice { border: 0; padding: 0; margin: 1rem 0 0; }
+    .choice legend { padding: 0; }
+    .choice label { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.4rem; cursor: pointer; }
+    .choice input { display: inline-block; width: auto; margin: 0; accent-color: var(--accent); }
+
     /* Dropdowns: our own arrow, moved in from the right edge.
        Change "right 0.9rem" to move it further left or right. */
     form select {
@@ -350,13 +356,25 @@
       <label>Deadline
         <input type="text" name="deadline">
       </label>
+
+      <fieldset class="choice">
+        <legend>Can I share your commission?</legend>
+        <label><input type="radio" name="sharing" value="Yes, OK to show in gallery and portfolio" required> Yes, you can show it in your gallery and portfolio</label>
+        <label><input type="radio" name="sharing" value="No, keep it private"> No, please keep it private</label>
+      </fieldset>
       
     <h2>Terms</h2>
     <details class="terms">
       <summary>Read the terms</summary>
       <div class="terms-box" tabindex="0" aria-label="Terms">
-        <!-- Write your terms here. Use one <p>...</p> per paragraph; the box scrolls. -->
-        <p>TBD</p>
+        <!-- Your terms. Use one <p>...</p> per paragraph; the box scrolls. -->
+        <p><strong>Payment.</strong> 50% of the quoted price is paid upfront before I start. The remaining 50% is due before I send you the finished piece.</p>
+        <p><strong>Revisions.</strong> Ask for as many changes as you'd like during the sketch and concept stage, that's what it's there for! Once we move into finalizing, I can make small changes within reason. After the piece reaches the final stage we agreed on, further revisions may no longer be possible.</p>
+        <p><strong>Refunds.</strong> If you cancel before your commission reaches the finalization stage, your 50% deposit can be refunded. Once the piece is in finalization or beyond, refunds are no longer available.</p>
+        <p><strong>Turnaround.</strong> Characters are my specialty. If you choose "Other" and ask for something I don't draw often, like a car or another object, it may take a good bit longer. I'll give you a time estimate with your quote, and if you have a deadline, let me know in the form so I can tell you whether I can meet it.</p>
+        <p><strong>What I don't draw.</strong> I'm open to most ideas, but I don't take NSFW commissions. I may also decline any request I'm not comfortable with.</p>
+        <p><strong>Using your commission.</strong> Once your commission is paid for and sent to you, it's yours to use however you like.</p>
+        <p><strong>Sharing.</strong> In the form, you can choose whether I may show your commission in my gallery and portfolio or keep it private. I'll respect whichever you pick.</p>
       </div>
     </details>
       
