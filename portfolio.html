@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Portfolio | TYGERR</title>
-  <meta name="description" content="Personal art projects by Your Name.">
+  <meta name="description" content="Illustration and design work by Jaleesa Zachery.">
   <link rel="stylesheet" href="style.css">
 <link rel="icon" href="/images/favicon.ico" sizes="any">
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
@@ -29,27 +29,60 @@
     <h1>Portfolio</h1>
     <p>A selection of polished personal works I've made on my own. For everything else, see the <a href="gallery.html">gallery</a>.</p>
 
-    <!-- PROJECT BLOCK: copy everything from <article> to </article> for each new project -->
-    <article class="project">
-      <div class="project-img" role="img" aria-label="Project image placeholder"></div>
-      <h2>Project title</h2>
-      <p class="project-meta">2026 &middot; Digital</p>
-      <p>Project 1</p>
-    </article>
+    <!-- Tabs: each button shows the section with the matching id. -->
+    <div class="tabs" role="group" aria-label="Show">
+      <button type="button" data-show="illustration" aria-pressed="true">Illustration</button>
+      <button type="button" data-show="design" aria-pressed="false">Design</button>
+    </div>
 
-    <article class="project">
-      <div class="project-img" role="img" aria-label="Project image placeholder"></div>
-      <h2>Project title</h2>
-      <p class="project-meta">2025 &middot; Ink</p>
-      <p>Project 2</p>
-    </article>
+    <!-- ===== ILLUSTRATION TAB ===== -->
+    <section id="illustration">
+      <!-- PROJECT BLOCK: copy everything from <article> to </article> for each new project -->
+      <article class="project">
+        <div class="project-img" role="img" aria-label="Project image placeholder"></div>
+        <h2>Project title</h2>
+        <p class="project-meta">2026 &middot; Digital</p>
+        <p>Project 1</p>
+      </article>
 
-    <article class="project">
-      <div class="project-img" role="img" aria-label="Project image placeholder"></div>
-      <h2>Project title</h2>
-      <p class="project-meta">2025 &middot; Sketchbook</p>
-      <p>Project 3</p>
-    </article>
+      <article class="project">
+        <div class="project-img" role="img" aria-label="Project image placeholder"></div>
+        <h2>Project title</h2>
+        <p class="project-meta">2025 &middot; Ink</p>
+        <p>Project 2</p>
+      </article>
+
+      <article class="project">
+        <div class="project-img" role="img" aria-label="Project image placeholder"></div>
+        <h2>Project title</h2>
+        <p class="project-meta">2025 &middot; Sketchbook</p>
+        <p>Project 3</p>
+      </article>
+    </section>
+
+    <!-- ===== DESIGN TAB (logos and posters) ===== -->
+    <section id="design" hidden>
+      <article class="project">
+        <div class="project-img" role="img" aria-label="Project image placeholder"></div>
+        <h2>Project title</h2>
+        <p class="project-meta">2026 &middot; Digital</p>
+        <p>Project 1</p>
+      </article>
+
+      <article class="project">
+        <div class="project-img" role="img" aria-label="Project image placeholder"></div>
+        <h2>Project title</h2>
+        <p class="project-meta">2025 &middot; Ink</p>
+        <p>Project 2</p>
+      </article>
+
+      <article class="project">
+        <div class="project-img" role="img" aria-label="Project image placeholder"></div>
+        <h2>Project title</h2>
+        <p class="project-meta">2025 &middot; Sketchbook</p>
+        <p>Project 3</p>
+      </article>
+    </section>
   </main>
 
   <footer>
@@ -62,7 +95,28 @@
     .project-img { width: 100%; aspect-ratio: 16 / 9; background: var(--line); }
     .project h2 { margin-bottom: 0; }
     .project-meta { color: var(--muted); margin-top: 0.25rem; }
+
+    /* Illustration / Design tabs (same look as the switch on the Commissions page) */
+    .tabs { display: inline-flex; gap: 0.25rem; padding: 0.25rem; margin-top: 0.5rem;
+            border-radius: 0.75rem; background: var(--bg); border: 1px solid var(--line); }
+    .tabs button { min-height: 2.75rem; padding: 0 1.25rem; border: 0; border-radius: 0.55rem;
+                   background: transparent; color: var(--text); font: inherit; cursor: pointer; }
+    .tabs button[aria-pressed="true"] { background: var(--accent); color: var(--dark); font-weight: 700; }
   </style>
+
+  <script>
+    /* Tabs: show the section that matches the clicked button, hide the other. */
+    const tabs = document.querySelectorAll(".tabs button");
+    tabs.forEach(btn => {
+      btn.addEventListener("click", () => {
+        tabs.forEach(other => {
+          const on = other === btn;
+          other.setAttribute("aria-pressed", on);
+          document.getElementById(other.dataset.show).hidden = !on;
+        });
+      });
+    });
+  </script>
 
 </body>
 </html>
