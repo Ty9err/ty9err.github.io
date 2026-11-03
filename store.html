@@ -4,8 +4,57 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Store | TYGERR</title>
-  <meta name="description" content="Prints and merchandise by Jaleesa, coming soon.">
+  <meta name="description" content="Stickers, keychains, prints, apparel and original art by Jaleesa Zachery.">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Page styles. Move into style.css later. */
+
+    /* Category filter buttons (same look as the Digital / Traditional switch) */
+    .filters { display: flex; flex-wrap: wrap; gap: 0.25rem; padding: 0.25rem; margin: 0.5rem 0 1.5rem;
+               border-radius: 0.75rem; background: var(--bg); border: 1px solid var(--line); width: fit-content; max-width: 100%; }
+    .filters button { min-height: 2.75rem; padding: 0 1.1rem; border: 0; border-radius: 0.55rem;
+                      background: transparent; color: var(--text); font: inherit; cursor: pointer; }
+    .filters button[aria-pressed="true"] { background: var(--accent); color: var(--dark); font-weight: 700; }
+
+    /* Product grid */
+    .products { list-style: none; margin: 0; padding: 0; display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 1.5rem; }
+    .product { display: flex; flex-direction: column; }
+    .product[hidden] { display: none; }   /* lets the filter hide cards */
+    .product .ph, .product img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 0.75rem; }
+    .product .ph { background: var(--line); display: flex; align-items: center; justify-content: center;
+                   color: var(--muted); font-size: 0.85rem; }
+    .product .media { position: relative; }
+    .tag { position: absolute; top: 0.6rem; left: 0.6rem; padding: 0.1rem 0.6rem; border-radius: 999px;
+           background: var(--dark); color: var(--accent); font-size: 0.75rem; font-weight: 700; }
+    .product h3 { margin: 0.75rem 0 0; font-size: 1rem; line-height: 1.4; }
+    .product .details { margin: 0.15rem 0 0; color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
+    .product .row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; margin-top: auto; padding-top: 0.75rem; }
+    .price { font-weight: 700; font-size: 1.05rem; }
+    .buy { display: inline-flex; align-items: center; min-height: 2.5rem; padding: 0 1rem; border-radius: 0.55rem;
+           background: var(--accent); color: var(--dark) !important; font-weight: 700; text-decoration: none; white-space: nowrap; }
+    .buy:hover { filter: brightness(1.1); }
+    .buy.soon { background: var(--line); color: var(--muted) !important; cursor: default; font-weight: 400; }
+    .buy.soon:hover { filter: none; }
+    .empty { color: var(--muted); }
+
+    /* "Tell me when the store opens" signup */
+    .notify { margin-top: 2.5rem; padding: 1.25rem; border: 1px solid var(--line); border-radius: 1rem; }
+    .notify h2 { margin-top: 0; }
+    .notify form { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .notify input { flex: 1 1 14rem; padding: 0.5rem; font: inherit; color: var(--text);
+                    background: var(--bg); border: 1px solid var(--text); }
+    .notify button { padding: 0.5rem 1.25rem; font: inherit; cursor: pointer; color: var(--bg);
+                     background: var(--accent); border: 0; }
+    .notify .hint { color: var(--muted); font-size: 0.9rem; margin: 0.5rem 0 0; }
+
+    /* Phones: two smaller cards per row */
+    @media (max-width: 600px) {
+      .products { grid-template-columns: 1fr 1fr; gap: 1.25rem 0.75rem; }
+      .product h3 { font-size: 0.9rem; }
+      .buy { width: 100%; justify-content: center; min-height: 2.5rem; }
+    }
+  </style>
 <link rel="icon" href="/images/favicon.ico" sizes="any">
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
@@ -27,16 +76,141 @@
 
   <main class="card">
     <h1>Store</h1>
-    <p>Coming soon!</p>
-    <p>In the meantime, you can <a href="commissions.html">request a commission</a>.</p>
+    <p><strong>Opening soon!</strong> Here's a peek at what's coming. In the meantime, you can <a href="commissions.html">request a commission</a>.</p>
 
-    <!-- LATER: add an email signup here (Buttondown, Mailchimp, or a Formspree form)
-         so people can be notified at launch. -->
+    <div class="filters" role="group" aria-label="Show">
+      <button type="button" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" data-filter="stickers" aria-pressed="false">Stickers</button>
+      <button type="button" data-filter="keychains" aria-pressed="false">Keychains</button>
+      <button type="button" data-filter="prints" aria-pressed="false">Prints</button>
+      <button type="button" data-filter="apparel" aria-pressed="false">Apparel</button>
+      <button type="button" data-filter="originals" aria-pressed="false">Originals</button>
+    </div>
+
+    <!-- HOW TO EDIT A PRODUCT
+         - data-category: stickers, keychains, prints, apparel or originals (decides which filter shows it)
+         - Picture: replace the <span class="ph">...</span> line with
+             <img src="images/store/your-file.jpg" alt="Describe the item">
+         - Price: change the text inside <span class="price">
+         - Buy link: put your checkout link inside data-link="" (from Ko-fi, Big Cartel, Stripe, etc).
+           Leave it empty and the button says "Coming soon". Fill it in and it becomes a "Buy" button.
+         - Sold original: add data-sold="true" and the button says "Sold".
+         - To add a product, copy a whole <li class="product">...</li> block. To remove one, delete its block. -->
+    <ul class="products">
+      <li class="product" data-category="stickers">
+        <div class="media"><span class="ph">Sticker photo</span></div>
+        <h3>Sticker name</h3>
+        <p class="details">3 in. vinyl, waterproof</p>
+        <div class="row"><span class="price">$4</span><a class="buy" data-link="">Buy</a></div>
+      </li>
+      <li class="product" data-category="stickers">
+        <div class="media"><span class="ph">Sticker sheet photo</span></div>
+        <h3>Sticker sheet name</h3>
+        <p class="details">A5 sheet, 6 stickers</p>
+        <div class="row"><span class="price">$8</span><a class="buy" data-link="">Buy</a></div>
+      </li>
+      <li class="product" data-category="keychains">
+        <div class="media"><span class="ph">Keychain photo</span></div>
+        <h3>Keychain name</h3>
+        <p class="details">2.5 in. double-sided acrylic</p>
+        <div class="row"><span class="price">$12</span><a class="buy" data-link="">Buy</a></div>
+      </li>
+      <li class="product" data-category="prints">
+        <div class="media"><span class="ph">Print photo</span></div>
+        <h3>Print name</h3>
+        <p class="details">8×10 in. or 11×14 in. matte print</p>
+        <div class="row"><span class="price">From $20</span><a class="buy" data-link="">Buy</a></div>
+      </li>
+      <li class="product" data-category="apparel">
+        <div class="media"><span class="ph">Shirt photo</span></div>
+        <h3>T-shirt name</h3>
+        <p class="details">Unisex, sizes S–3XL</p>
+        <div class="row"><span class="price">$28</span><a class="buy" data-link="">Buy</a></div>
+      </li>
+      <li class="product" data-category="apparel">
+        <div class="media"><span class="ph">Hoodie photo</span></div>
+        <h3>Hoodie name</h3>
+        <p class="details">Unisex, sizes S–3XL</p>
+        <div class="row"><span class="price">$50</span><a class="buy" data-link="">Buy</a></div>
+      </li>
+      <li class="product" data-category="originals">
+        <div class="media"><span class="ph">Drawing photo</span><span class="tag">One of a kind</span></div>
+        <h3>Original drawing title</h3>
+        <p class="details">Ink on paper, 9×12 in.</p>
+        <div class="row"><span class="price">$80</span><a class="buy" data-link="">Buy</a></div>
+      </li>
+      <li class="product" data-category="originals">
+        <div class="media"><span class="ph">Painting photo</span><span class="tag">One of a kind</span></div>
+        <h3>Original painting title</h3>
+        <p class="details">Acrylic on canvas, 11×14 in.</p>
+        <div class="row"><span class="price">$150</span><a class="buy" data-link="" data-sold="true">Buy</a></div>
+      </li>
+    </ul>
+    <p class="empty" id="empty" hidden>Nothing here yet, check back soon!</p>
+
+    <section class="notify">
+      <h2>Get notified when the store opens</h2>
+      <!-- Uses your existing Formspree form. Signups arrive in your Formspree inbox
+           labeled "Store launch signup". -->
+      <form id="notify" action="https://formspree.io/f/xoejnbzn" method="POST">
+        <input type="hidden" name="form" value="Store launch signup">
+        <input type="email" name="email" placeholder="Your email" aria-label="Your email" required>
+        <button type="submit" id="notify-send">Notify me</button>
+      </form>
+      <p class="hint" id="notify-msg" role="status">I'll only email you about the store opening and new drops.</p>
+    </section>
   </main>
 
   <footer>
     <p>&copy; 2026 Jaleesa Zachery. All artwork is copyrighted and may not be used without permission.</p>
   </footer>
+
+  <script>
+    /* Buy buttons: a filled-in data-link becomes a real "Buy" link; an empty one says "Coming soon". */
+    document.querySelectorAll(".buy").forEach(btn => {
+      const link = btn.dataset.link.trim();
+      if (btn.dataset.sold === "true") {
+        btn.textContent = "Sold"; btn.classList.add("soon"); btn.setAttribute("aria-disabled", "true");
+      } else if (link) {
+        btn.href = link; btn.target = "_blank"; btn.rel = "noopener";
+      } else {
+        btn.textContent = "Coming soon"; btn.classList.add("soon"); btn.setAttribute("aria-disabled", "true");
+      }
+    });
+
+    /* Category filter */
+    const filterButtons = document.querySelectorAll(".filters button");
+    const products = document.querySelectorAll(".product");
+    filterButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        filterButtons.forEach(b => b.setAttribute("aria-pressed", b === btn));
+        let shown = 0;
+        products.forEach(p => {
+          const show = btn.dataset.filter === "all" || p.dataset.category === btn.dataset.filter;
+          p.hidden = !show; if (show) shown++;
+        });
+        document.getElementById("empty").hidden = shown > 0;
+      });
+    });
+
+    /* Notify-me signup: sends in the background and shows a thank-you line. */
+    const notify = document.getElementById("notify");
+    const msg = document.getElementById("notify-msg");
+    notify.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const send = document.getElementById("notify-send");
+      send.disabled = true;
+      try {
+        const r = await fetch(notify.action, { method: "POST", body: new FormData(notify), headers: { Accept: "application/json" } });
+        if (!r.ok) throw new Error();
+        notify.hidden = true;
+        msg.textContent = "Thanks! You'll hear from me when the store opens.";
+      } catch {
+        msg.textContent = "Sorry, something went wrong. Please try again.";
+        send.disabled = false;
+      }
+    });
+  </script>
 
 </body>
 </html>
