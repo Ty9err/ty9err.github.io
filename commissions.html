@@ -72,6 +72,7 @@
        Same look as the Digital / Traditional switch; wraps onto two lines on small phones. */
     .stage-switch { flex-wrap: wrap; margin: 0 0 1rem; }
     .stage-switch[hidden] { display: none; }
+    .medium-switch button:disabled { opacity: 0.35; cursor: not-allowed; }
 
     /* Grayed-out price cells (things I don't offer, like traditional Complete illustration) */
     th.na, td.na { color: var(--muted); font-weight: 400; }
@@ -168,7 +169,8 @@
          pictures. Each one says which medium and stage it is. To add a real picture, replace its
          <span class="ph" ...></span> with, for example:
            <img src="images/commissions/portrait-trad-ink.jpg" alt="Describe the artwork" data-medium="Traditional" data-stage="Ink">
-         - Digital / Traditional buttons appear above the picture when a card has both mediums.
+         - Digital / Traditional buttons appear above the picture on every card. Traditional is
+           grayed out when a card has no traditional pictures (character designs, logos, posters).
          - Stage buttons (Sketch / Line art / Ink / Complete illustration) appear under the picture
            when that medium has more than one stage. Their labels come from data-stage.
          - The pop-up opens on Digital, last stage. Switching medium keeps the same stage when it
@@ -355,7 +357,7 @@
         </tbody>
       </table>
       <p class="hint">*I don't color traditionally, so Ink is the finished version of a traditional piece.</p>
-      <p class="hint">*Traditional pieces are drawn on [PAPER SIZE] paper and shipped to you. Original character designs, logos, and posters are digital only.</p>
+      <p class="hint">*Traditional pieces are drawn on 8x10 sketch paper and shipped to you. Original character designs, logos, and posters are digital only.</p>
     </div>
 
     <h2>Process</h2>
@@ -401,7 +403,7 @@
             <option>Ink</option>
             <option id="complete-option">Complete illustration</option>
           </select>
-          <span class="hint price-note" id="double-note" hidden>Traditional pieces use the Traditional price table above. Ink is the finished traditional version (no color), and your piece is drawn on [PAPER SIZE] paper and shipped to you.</span>
+          <span class="hint price-note" id="double-note" hidden>Traditional pieces use the Traditional price table above. Ink is the finished traditional version (no color), and your piece is drawn on 8x10 sketch paper and shipped to you.</span>
         </label>
       </div>
       <p class="hint" id="digital-note" hidden></p>
@@ -439,7 +441,7 @@
         <p><strong>Revisions.</strong> Ask for as many changes as you'd like during the sketch and concept stage, that's what it's there for! Once we move into finalizing, I can make small changes within reason. After the piece reaches the final stage we agreed on, further revisions may no longer be possible.</p>
         <p><strong>Refunds.</strong> If you cancel before your commission reaches the finalization stage, your 50% deposit can be refunded. Once the piece is in finalization or beyond, refunds are no longer available.</p>
         <p><strong>Turnaround.</strong> Characters are my specialty. If you choose "Other" and ask for something I don't draw often, like a car or another object, it may take a good bit longer. I'll give you a time estimate with your quote, and if you have a deadline, let me know in the form so I can tell you whether I can meet it.</p>
-        <p><strong>Shipping.</strong> Traditional pieces are drawn on [PAPER SIZE] paper and shipped to you once the remaining payment is made. [SHIPPING COST, e.g. Shipping is added to your quote.] Digital pieces are sent digitally.</p>
+        <p><strong>Shipping.</strong> Traditional pieces are drawn on 8x10 sketch paper and shipped to you once the remaining payment is made. [SHIPPING COST, e.g. Shipping is added to your quote.] Digital pieces are sent digitally.</p>
         <p><strong>What I don't draw.</strong> I'm open to most ideas, but I don't take NSFW commissions. I may also decline any request I'm not comfortable with.</p>
         <p><strong>Using your commission.</strong> Once your commission is paid for and sent to you, it's yours to use however you like.</p>
         <p><strong>Sharing.</strong> In the form, you can choose whether I may show your commission in my gallery and portfolio or keep it private. I'll respect whichever you pick.</p>
@@ -501,12 +503,17 @@
     const stageBar = document.getElementById("sheet-stages");
 
     // Fills a button row with one button per label; the chosen one is highlighted.
-    function buttonRow(bar, labels, chosen, onPick) {
+    // Labels not in "available" are grayed out and can't be clicked.
+    function buttonRow(bar, labels, chosen, onPick, available = labels) {
       bar.replaceChildren(...labels.map(label => {
         const b = document.createElement("button");
         b.type = "button";
         b.textContent = label;
         b.setAttribute("aria-pressed", label === chosen);
+        if (!available.includes(label)) {
+          b.disabled = true;
+          b.title = label + " isn't available for this piece";
+        }
         b.addEventListener("click", () => {
           onPick(label);
           // keep keyboard focus on the button that was just pressed (the row gets rebuilt)
@@ -516,6 +523,10 @@
       }));
       bar.hidden = labels.length < 2;
     }
+
+    // The Digital / Traditional row is shown on every pop-up; Traditional is grayed out
+    // on digital-only pieces (original character designs, logos, posters).
+    const ALL_MEDIUMS = ["Digital", "Traditional"];
 
     document.querySelectorAll(".example").forEach(card => {
       card.addEventListener("click", () => {
@@ -532,13 +543,14 @@
             const stages = here.map(p => p.dataset.stage);
             if (!stages.includes(stage)) stage = stages[stages.length - 1];   // e.g. Complete -> Ink
             media.replaceChildren(here[stages.indexOf(stage)].cloneNode(true));
-            buttonRow(mediumBar, mediums, medium, m => { medium = m; render(); });
+            buttonRow(mediumBar, ALL_MEDIUMS, medium, m => { medium = m; render(); }, mediums);
             buttonRow(stageBar, stages, stage, s => { stage = s; render(); });
           }
           render();
         } else {
           media.replaceChildren(card.querySelector("img, .ph").cloneNode(true));
-          mediumBar.hidden = stageBar.hidden = true;
+          buttonRow(mediumBar, ALL_MEDIUMS, "Digital", () => {}, ["Digital"]);
+          stageBar.hidden = true;
         }
 
         const body = document.getElementById("sheet-body");
