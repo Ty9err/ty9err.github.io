@@ -119,6 +119,14 @@
     form button[type="submit"]:disabled { opacity: 0.45; cursor: not-allowed; }
     form.closed { opacity: 0.5; }   /* grayed out while commissions are closed */
 
+    /* Waitlist sign-up (shown while closed) */
+    .waitlist { margin: 1rem 0 1.5rem; padding: 1rem 1.25rem; border: 1px solid var(--accent); border-radius: 0.75rem; }
+    .waitlist h3 { margin: 0 0 0.25rem; color: var(--accent); }
+    .waitlist-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.25rem; }
+    .waitlist-row input { flex: 1 1 14rem; width: auto; margin: 0; }
+    form .waitlist-row button { margin: 0; min-height: 2.75rem; }
+    #waitlist-link { margin-left: 0.5rem; font-size: 0.95rem; }
+
     /* Number of characters stepper */
     .stepper { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem; }
     .stepper button { width: 2.75rem; height: 2.75rem; margin: 0; padding: 0; font-size: 1.25rem; }
@@ -151,7 +159,8 @@
   <main class="card" data-commissions="closed">
     <!-- OPEN / CLOSED: change "closed" above to "open" and the status line and form update themselves. -->
     <h1>Commissions</h1>
-    <p><strong>Status: <span id="status">***CLOSED***</span></strong></p>
+    <p><strong>Status: <span id="status">***CLOSED***</span></strong>
+      <a href="#waitlist-box" id="waitlist-link">Get notified when they open</a></p>
 
     <h2>What I draw</h2>
     <p>Character illustrations, original character designs, stylized portraits, and expression sheets.</p>
@@ -372,6 +381,24 @@
 
     <h2>Commission form</h2>
     <p class="price-note" id="closed-note" hidden>Commissions are currently closed.</p>
+
+    <!-- WAITLIST: only shows while commissions are closed. Sign-ups arrive in your Formspree inbox
+         marked "Commission waitlist". To switch to a mailing list service later (Kit, MailerLite,
+         Buttondown...), replace this form's action with the address the service gives you, and
+         rename the email field if the service asks you to. -->
+    <div class="waitlist" id="waitlist-box" hidden>
+      <h3>Get notified when commissions open</h3>
+      <p class="hint">Leave your email and I'll let you know as soon as I'm taking commissions again. No spam, just that.</p>
+      <form id="waitlist" action="https://formspree.io/f/xoejnbzn" method="POST">
+        <input type="hidden" name="form" value="Commission waitlist">
+        <label for="waitlist-email">Email</label>
+        <div class="waitlist-row">
+          <input type="email" name="email" id="waitlist-email" autocomplete="email" required>
+          <button type="submit" id="waitlist-send">Notify me</button>
+        </div>
+        <p class="hint" id="waitlist-msg" role="status" hidden></p>
+      </form>
+    </div>
     <form id="inquiry" action="https://formspree.io/f/xoejnbzn" method="POST">
       <!-- Tells you in your Formspree inbox which page the message came from. -->
       <input type="hidden" name="form" value="Commission inquiry">
@@ -576,6 +603,8 @@
     const closed = document.querySelector("main").dataset.commissions !== "open";
     document.getElementById("status").textContent = closed ? "***CLOSED***" : "OPEN";
     document.getElementById("closed-note").hidden = !closed;
+    document.getElementById("waitlist-box").hidden = !closed;
+    document.getElementById("waitlist-link").hidden = !closed;
     if (closed) {
       document.querySelectorAll("#inquiry select, #inquiry input, #inquiry textarea, #inquiry button")
         .forEach(el => el.disabled = true);
@@ -672,6 +701,31 @@
         send.disabled = !agreed.checked;
         send.textContent = "Send inquiry";
       }
+    });
+
+    /* Waitlist: sends the email in the background and shows a thank-you right here. */
+    const waitlist = document.getElementById("waitlist");
+    const waitSend = document.getElementById("waitlist-send");
+    const waitMsg = document.getElementById("waitlist-msg");
+    waitlist.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      waitSend.disabled = true;
+      waitSend.textContent = "Sending...";
+      try {
+        const response = await fetch(waitlist.action, {
+          method: "POST",
+          body: new FormData(waitlist),
+          headers: { Accept: "application/json" }
+        });
+        if (!response.ok) throw new Error();
+        waitlist.reset();
+        waitMsg.textContent = "You're on the list! I'll email you when commissions open.";
+      } catch {
+        waitMsg.textContent = "Sorry, something went wrong. Please try again.";
+      }
+      waitSend.textContent = "Notify me";
+      waitMsg.hidden = false;
+      waitSend.disabled = false;
     });
   </script>
 
