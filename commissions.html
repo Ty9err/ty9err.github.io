@@ -164,13 +164,18 @@
          The pop-up text is in the <div class="ex-info"> under each card. Use one <p>...</p> per paragraph.
          To add another example, copy a whole <li>...</li> block.
 
-         STAGE BUTTONS: a card whose pop-up has a <div class="ex-stages"> gets a button for each
-         picture inside it (Sketch / Line art / Ink / Complete illustration). To add a real picture,
-         replace that stage's <span class="ph" ...></span> with, for example:
-           <img src="images/commissions/portrait-lineart.jpg" alt="Describe the artwork" data-stage="Line art">
-         The data-stage text becomes the button label. Delete a line to drop that button.
-         The pop-up opens on the LAST stage in the list. Cards without an ex-stages box
-         (Line art, Ink, Logo, Poster) just show their one picture. -->
+         POP-UP PICTURES: everything inside a card's <div class="ex-stages"> box becomes the pop-up's
+         pictures. Each one says which medium and stage it is. To add a real picture, replace its
+         <span class="ph" ...></span> with, for example:
+           <img src="images/commissions/portrait-trad-ink.jpg" alt="Describe the artwork" data-medium="Traditional" data-stage="Ink">
+         - Digital / Traditional buttons appear above the picture when a card has both mediums.
+         - Stage buttons (Sketch / Line art / Ink / Complete illustration) appear under the picture
+           when that medium has more than one stage. Their labels come from data-stage.
+         - The pop-up opens on Digital, last stage. Switching medium keeps the same stage when it
+           exists (Complete illustration falls back to Ink for traditional).
+         - Delete a line to drop that picture. The card's own thumbnail (the first picture in the
+           <button>) is separate, so it can show digital and traditional side by side. Logo and
+           Poster have no ex-stages box and just show their thumbnail. -->
     <ul class="examples">
       <li>
         <button type="button" class="example" aria-haspopup="dialog">
@@ -180,10 +185,13 @@
         </button>
         <div class="ex-info" hidden>
           <div class="ex-stages">
-            <span class="ph" role="img" aria-label="Character illustration example, sketch" data-stage="Sketch"></span>
-            <span class="ph" role="img" aria-label="Character illustration example, line art" data-stage="Line art"></span>
-            <span class="ph" role="img" aria-label="Character illustration example, ink" data-stage="Ink"></span>
-            <span class="ph" role="img" aria-label="Character illustration example, complete illustration" data-stage="Complete illustration"></span>
+            <span class="ph" role="img" aria-label="Character illustration example, digital sketch" data-medium="Digital" data-stage="Sketch"></span>
+            <span class="ph" role="img" aria-label="Character illustration example, digital line art" data-medium="Digital" data-stage="Line art"></span>
+            <span class="ph" role="img" aria-label="Character illustration example, digital ink" data-medium="Digital" data-stage="Ink"></span>
+            <span class="ph" role="img" aria-label="Character illustration example, digital complete illustration" data-medium="Digital" data-stage="Complete illustration"></span>
+            <span class="ph" role="img" aria-label="Character illustration example, traditional sketch" data-medium="Traditional" data-stage="Sketch"></span>
+            <span class="ph" role="img" aria-label="Character illustration example, traditional line art" data-medium="Traditional" data-stage="Line art"></span>
+            <span class="ph" role="img" aria-label="Character illustration example, traditional ink" data-medium="Traditional" data-stage="Ink"></span>
           </div>
          <!-- <p>[Explain what a character illustration includes: pose, background, how many revisions, etc.]</p> -->
         </div>
@@ -196,10 +204,10 @@
         </button>
         <div class="ex-info" hidden>
           <div class="ex-stages">
-            <span class="ph" role="img" aria-label="Original character design sheet example, sketch" data-stage="Sketch"></span>
-            <span class="ph" role="img" aria-label="Original character design sheet example, line art" data-stage="Line art"></span>
-            <span class="ph" role="img" aria-label="Original character design sheet example, ink" data-stage="Ink"></span>
-            <span class="ph" role="img" aria-label="Original character design sheet example, complete illustration" data-stage="Complete illustration"></span>
+            <span class="ph" role="img" aria-label="Original character design sheet example, digital sketch" data-medium="Digital" data-stage="Sketch"></span>
+            <span class="ph" role="img" aria-label="Original character design sheet example, digital line art" data-medium="Digital" data-stage="Line art"></span>
+            <span class="ph" role="img" aria-label="Original character design sheet example, digital ink" data-medium="Digital" data-stage="Ink"></span>
+            <span class="ph" role="img" aria-label="Original character design sheet example, digital complete illustration" data-medium="Digital" data-stage="Complete illustration"></span>
           </div>
          <p>An original character design sheet includes 3 pose illustrations, 3 expressions, and a mini turn around view of the character.</p>
         </div>
@@ -212,10 +220,13 @@
         </button>
         <div class="ex-info" hidden>
           <div class="ex-stages">
-            <span class="ph" role="img" aria-label="Stylized portrait example, sketch" data-stage="Sketch"></span>
-            <span class="ph" role="img" aria-label="Stylized portrait example, line art" data-stage="Line art"></span>
-            <span class="ph" role="img" aria-label="Stylized portrait example, ink" data-stage="Ink"></span>
-            <span class="ph" role="img" aria-label="Stylized portrait example, complete illustration" data-stage="Complete illustration"></span>
+            <span class="ph" role="img" aria-label="Stylized portrait example, digital sketch" data-medium="Digital" data-stage="Sketch"></span>
+            <span class="ph" role="img" aria-label="Stylized portrait example, digital line art" data-medium="Digital" data-stage="Line art"></span>
+            <span class="ph" role="img" aria-label="Stylized portrait example, digital ink" data-medium="Digital" data-stage="Ink"></span>
+            <span class="ph" role="img" aria-label="Stylized portrait example, digital complete illustration" data-medium="Digital" data-stage="Complete illustration"></span>
+            <span class="ph" role="img" aria-label="Stylized portrait example, traditional sketch" data-medium="Traditional" data-stage="Sketch"></span>
+            <span class="ph" role="img" aria-label="Stylized portrait example, traditional line art" data-medium="Traditional" data-stage="Line art"></span>
+            <span class="ph" role="img" aria-label="Stylized portrait example, traditional ink" data-medium="Traditional" data-stage="Ink"></span>
           </div>
          <p>A stylized portrait is a full body illustration of anyone (including yourself!) you'd like to see drawn in my style.</p>
         </div>
@@ -228,10 +239,13 @@
         </button>
         <div class="ex-info" hidden>
           <div class="ex-stages">
-            <span class="ph" role="img" aria-label="Expression sheet example, sketch" data-stage="Sketch"></span>
-            <span class="ph" role="img" aria-label="Expression sheet example, line art" data-stage="Line art"></span>
-            <span class="ph" role="img" aria-label="Expression sheet example, ink" data-stage="Ink"></span>
-            <span class="ph" role="img" aria-label="Expression sheet example, complete illustration" data-stage="Complete illustration"></span>
+            <span class="ph" role="img" aria-label="Expression sheet example, digital sketch" data-medium="Digital" data-stage="Sketch"></span>
+            <span class="ph" role="img" aria-label="Expression sheet example, digital line art" data-medium="Digital" data-stage="Line art"></span>
+            <span class="ph" role="img" aria-label="Expression sheet example, digital ink" data-medium="Digital" data-stage="Ink"></span>
+            <span class="ph" role="img" aria-label="Expression sheet example, digital complete illustration" data-medium="Digital" data-stage="Complete illustration"></span>
+            <span class="ph" role="img" aria-label="Expression sheet example, traditional sketch" data-medium="Traditional" data-stage="Sketch"></span>
+            <span class="ph" role="img" aria-label="Expression sheet example, traditional line art" data-medium="Traditional" data-stage="Line art"></span>
+            <span class="ph" role="img" aria-label="Expression sheet example, traditional ink" data-medium="Traditional" data-stage="Ink"></span>
           </div>
          <p>Expression sheets include 6 expressions of your choice, or my choice if you're feeling indecisive!</p>
         </div>
@@ -243,6 +257,10 @@
           <span class="ex-more">View details</span>
         </button>
         <div class="ex-info" hidden>
+          <div class="ex-stages">
+            <span class="ph" role="img" aria-label="Line art example, digital line art" data-medium="Digital" data-stage="Line art"></span>
+            <span class="ph" role="img" aria-label="Line art example, traditional line art" data-medium="Traditional" data-stage="Line art"></span>
+          </div>
          <p>Line art is simply clean lines with no color, for all you minimalists out there.</p>
         </div>
       </li>
@@ -253,6 +271,10 @@
           <span class="ex-more">View details</span>
         </button>
         <div class="ex-info" hidden>
+          <div class="ex-stages">
+            <span class="ph" role="img" aria-label="Ink example, digital ink" data-medium="Digital" data-stage="Ink"></span>
+            <span class="ph" role="img" aria-label="Ink example, traditional ink" data-medium="Traditional" data-stage="Ink"></span>
+          </div>
           <p>Traditional ink pieces are drawn with real ink on paper. Digital ink illustrations imitate the look of traditional ink on screen for a lower price.</p>
         </div>
       </li>
@@ -283,6 +305,7 @@
       <div class="sheet-inner">
         <button type="button" class="sheet-close" id="sheet-close" aria-label="Close">&times;</button>
         <h2 id="sheet-title"></h2>
+        <div class="medium-switch stage-switch" id="sheet-mediums" role="group" aria-label="Show medium" hidden></div>
         <div class="sheet-media" id="sheet-media"></div>
         <div class="medium-switch stage-switch" id="sheet-stages" role="group" aria-label="Show stage" hidden></div>
         <div id="sheet-body"></div>
@@ -470,35 +493,52 @@
     updateScrollCues();
 
     /* Example cards: clicking one opens the pop-up sheet with its picture and details.
-       If the card has stage pictures (ex-stages), the pop-up gets a button for each one. */
+       If the card has pictures in an ex-stages box, the pop-up gets Digital / Traditional buttons
+       above the picture and stage buttons under it (each only when there's more than one choice). */
     const sheet = document.getElementById("sheet");
     const media = document.getElementById("sheet-media");
+    const mediumBar = document.getElementById("sheet-mediums");
     const stageBar = document.getElementById("sheet-stages");
+
+    // Fills a button row with one button per label; the chosen one is highlighted.
+    function buttonRow(bar, labels, chosen, onPick) {
+      bar.replaceChildren(...labels.map(label => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.textContent = label;
+        b.setAttribute("aria-pressed", label === chosen);
+        b.addEventListener("click", () => {
+          onPick(label);
+          // keep keyboard focus on the button that was just pressed (the row gets rebuilt)
+          [...bar.children].find(x => x.textContent === label)?.focus();
+        });
+        return b;
+      }));
+      bar.hidden = labels.length < 2;
+    }
+
     document.querySelectorAll(".example").forEach(card => {
       card.addEventListener("click", () => {
         const info = card.nextElementSibling;
         document.getElementById("sheet-title").textContent = card.querySelector(".ex-title").textContent;
 
-        const stages = [...info.querySelectorAll(".ex-stages [data-stage]")];
-        if (stages.length) {
-          const buttons = stages.map(pic => {
-            const b = document.createElement("button");
-            b.type = "button";
-            b.textContent = pic.dataset.stage;
-            b.addEventListener("click", () => show(pic, b));
-            return b;
-          });
-          function show(pic, button) {
-            media.replaceChildren(pic.cloneNode(true));
-            buttons.forEach(b => b.setAttribute("aria-pressed", b === button));
+        const pics = [...info.querySelectorAll(".ex-stages [data-stage]")];
+        if (pics.length) {
+          const mediums = [...new Set(pics.map(p => p.dataset.medium || "Digital"))];
+          let medium = mediums[0];
+          let stage = null;
+          function render() {
+            const here = pics.filter(p => (p.dataset.medium || "Digital") === medium);
+            const stages = here.map(p => p.dataset.stage);
+            if (!stages.includes(stage)) stage = stages[stages.length - 1];   // e.g. Complete -> Ink
+            media.replaceChildren(here[stages.indexOf(stage)].cloneNode(true));
+            buttonRow(mediumBar, mediums, medium, m => { medium = m; render(); });
+            buttonRow(stageBar, stages, stage, s => { stage = s; render(); });
           }
-          stageBar.replaceChildren(...buttons);
-          stageBar.hidden = false;
-          show(stages[stages.length - 1], buttons[buttons.length - 1]);   // opens on the last stage
+          render();
         } else {
           media.replaceChildren(card.querySelector("img, .ph").cloneNode(true));
-          stageBar.replaceChildren();
-          stageBar.hidden = true;
+          mediumBar.hidden = stageBar.hidden = true;
         }
 
         const body = document.getElementById("sheet-body");
