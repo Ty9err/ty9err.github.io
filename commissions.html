@@ -117,6 +117,7 @@
 
     /* Send button stays faded until the terms box is ticked */
     form button[type="submit"]:disabled { opacity: 0.45; cursor: not-allowed; }
+    form.closed { opacity: 0.5; }   /* grayed out while commissions are closed */
 
     /* Number of characters stepper */
     .stepper { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem; }
@@ -147,13 +148,16 @@
     </nav>
   </header>
 
-  <main class="card">
+  <main class="card" data-commissions="closed">
+    <!-- OPEN / CLOSED: change "closed" above to "open" and the status line and form update themselves. -->
     <h1>Commissions</h1>
-    <p><strong>Status: ***CLOSED***</strong></p>
+    <p><strong>Status: <span id="status">***CLOSED***</span></strong></p>
 
     <h2>What I draw</h2>
     <p>Character illustrations, original character designs, stylized portraits, and expression sheets.</p>
-    <p>Each can be done <strong>digital</strong> or <strong>traditional</strong>, as a <strong>sketch</strong>, <strong>line art</strong>, <strong>ink</strong>, or <strong>complete illustration</strong>.</p>
+    <p>Each can be done as a <strong>sketch</strong>, <strong>line art</strong>, <strong>ink</strong>, or <strong>complete illustration</strong>, in <strong>digital</strong> or <strong>traditional</strong>.</p>
+    <p>Original character designs and complete (colored) illustrations are <strong>digital only</strong>. I don't color traditionally, so ink is the finished version of a traditional piece.</p>
+    <p>Pieces come with a plain or simple background. Detailed backgrounds can be added for an extra fee, just ask in your inquiry.</p>
   
     <p>Traditional pieces are drawn on <strong>8x10</strong> sketch paper and <strong>shipped to you</strong>.</p>
     <p>I also design <strong>logos</strong> and <strong>posters</strong>.</p>
@@ -195,7 +199,7 @@
             <span class="ph" role="img" aria-label="Character illustration example, traditional line art" data-medium="Traditional" data-stage="Line art"></span>
             <span class="ph" role="img" aria-label="Character illustration example, traditional ink" data-medium="Traditional" data-stage="Ink"></span>
           </div>
-         <!-- <p>[Explain what a character illustration includes: pose, background, how many revisions, etc.]</p> -->
+         <p>A character illustration is a full body drawing of your character (or an idea you have) in the pose of your choice, with a plain or simple background.</p>
         </div>
       </li>
       <li>
@@ -230,7 +234,7 @@
             <span class="ph" role="img" aria-label="Stylized portrait example, traditional line art" data-medium="Traditional" data-stage="Line art"></span>
             <span class="ph" role="img" aria-label="Stylized portrait example, traditional ink" data-medium="Traditional" data-stage="Ink"></span>
           </div>
-         <p>A stylized portrait is a full body illustration of anyone (including yourself!) you'd like to see drawn in my style.</p>
+         <p>A stylized portrait is a full body illustration of a real person (including yourself!) drawn in my style. Send photos for reference.</p>
         </div>
       </li>
       <li>
@@ -287,7 +291,7 @@
           <span class="ex-more">View details</span>
         </button>
         <div class="ex-info" hidden>
-        <!--  <p>[Explain your logo process, revisions, and which files the client receives.]</p> -->
+        <p>A custom logo for your brand, channel, or project. I'll send a few concept sketches to choose from, then refine your favorite into the final design. You'll receive high-resolution PNG files, with and without a transparent background.</p>
         </div>
       </li>
       <li>
@@ -315,11 +319,8 @@
     </dialog>
 
     <h2>Prices</h2>
-    <p>Prices are per character: each additional character adds to the total.</p>
-    <!-- Replace each TBD with your price (for example $25). If digital and traditional
-         will cost differently, copy this table and label one of each. -->
-    <!-- The buttons switch between the two price tables below.
-         Fill in each table's TBDs with that medium's prices. -->
+    <p>Prices are in US dollars and include one character. Each additional character adds to the total. Logos and posters are flat prices.</p>
+    <!-- The buttons switch between the two price tables below. -->
     <div class="medium-switch" id="price-switch" role="group" aria-label="Show prices for">
       <button type="button" data-show="prices-digital" aria-pressed="true">Digital</button>
       <button type="button" data-show="prices-traditional" aria-pressed="false">Traditional</button>
@@ -356,14 +357,22 @@
           <tr><td>Each additional character</td><td><span class="plus">+</span>$40</td><td><span class="plus">+</span>$60</td><td><span class="plus">+</span>$80</td><td class="na">&ndash;</td></tr>
         </tbody>
       </table>
-      <p class="hint">*I do not offer colored traditional art.</p>
+      <p class="hint">*I don't color traditionally, so Ink is the finished version of a traditional piece.</p>
       <p class="hint">*Traditional pieces are drawn on 8x10 sketch paper and shipped to you. Original character designs, logos, and posters are digital only.</p>
     </div>
 
     <h2>Process</h2>
-    <p>Once an inquiry is sent, I reply with a quote, 50% partial payment is made upfront, concept is sent back for approval, once the design is to your liking we will move onto finalizing your commission.</p>
+    <ol>
+      <li>Send an inquiry with the form below.</li>
+      <li>I reply with a quote and a time estimate.</li>
+      <li>You pay 50% upfront.</li>
+      <li>I send a concept for your approval and make changes until you're happy with it.</li>
+      <li>I finalize your piece.</li>
+      <li>You pay the remaining 50%, and I send your finished piece (traditional pieces are shipped).</li>
+    </ol>
 
     <h2>Commission form</h2>
+    <p class="price-note" id="closed-note" hidden>Commissions are closed right now, so the form is turned off. Check back soon!</p>
     <form id="inquiry" action="https://formspree.io/f/xoejnbzn" method="POST">
       <!-- Tells you in your Formspree inbox which page the message came from. -->
       <input type="hidden" name="form" value="Commission inquiry">
@@ -437,13 +446,14 @@
       <summary>Read the terms</summary>
       <div class="terms-box" tabindex="0" aria-label="Terms">
         <!-- Your terms. Use one <p>...</p> per paragraph; the box scrolls. -->
-        <p><strong>Payment.</strong> 50% of the quoted price is paid upfront before I start. The remaining 50% is due before I send you the finished piece.</p>
+        <p><strong>Payment.</strong> Prices are in US dollars. I accept PayPal and Cash App. 50% of the quoted price is paid upfront before I start. The remaining 50% is due before I send you the finished piece.</p>
         <p><strong>Revisions.</strong> Ask for as many changes as you'd like during the sketch and concept stage, that's what it's there for! Once we move into finalizing, I can make small changes within reason. After the piece reaches the final stage we agreed on, further revisions may no longer be possible.</p>
-        <p><strong>Refunds.</strong> If you cancel before your commission reaches the finalization stage, your 50% deposit can be refunded. Once the piece is finalized refunds are no longer available.</p>
-        <p><strong>Turnaround.</strong> Characters are my specialty. If you choose "Other" and ask for something I don't draw often like a car or landscape, it may take longer. I'll give you a time estimate with your quote, and if you have a deadline, let me know in the form so I can tell you whether I can meet it.</p>
-        <p><strong>Shipping.</strong> Traditional pieces are drawn on 8x10 sketch paper and shipped to you once the remaining payment is made. Digital pieces are sent digitally.</p>
+        <p><strong>Refunds.</strong> If you cancel before your commission reaches the finalization stage, your 50% deposit can be refunded. Once the piece is in finalization or beyond, refunds are no longer available.</p>
+        <p><strong>Turnaround.</strong> Characters are my specialty. If you choose "Other" and ask for something I don't draw often, like a car or another object, it may take a good bit longer. Most pieces take about [2&ndash;4 weeks]. I'll give you a time estimate with your quote, and if you have a deadline, let me know in the form so I can tell you whether I can meet it.</p>
+        <p><strong>Shipping.</strong> Traditional pieces are drawn on 8x10 sketch paper and shipped to you once the remaining payment is made. Shipping is added to your quote and sent with tracking. If you live outside the US, ask in your inquiry and I'll let you know whether I can ship to you. I pack every piece carefully, but once it's with the carrier I can't be responsible for loss or damage. I'll help you file a claim if anything goes wrong.</p>
+        <p><strong>Digital delivery.</strong> Digital pieces are sent as high-resolution PNG files. Logos come with and without a transparent background.</p>
         <p><strong>What I don't draw.</strong> I'm open to most ideas, but I don't take NSFW commissions. I may also decline any request I'm not comfortable with.</p>
-        <p><strong>Using your commission.</strong> Once your commission is paid for and sent to you, it's yours to use however you like.</p>
+        <p><strong>Using your commission.</strong> Once your commission is paid for, you can use it personally: print it for yourself, use it as a profile picture, or share it online with credit to me. Commercial use, like selling prints or merch, needs my permission and may cost extra. Logos and posters are made for business use, so commercial use is included for those. I keep the copyright to all my artwork.</p>
         <p><strong>Sharing.</strong> In the form, you can choose whether I may show your commission in my gallery and portfolio or keep it private. I'll respect whichever you pick.</p>
       </div>
     </details>
@@ -563,6 +573,16 @@
     document.getElementById("sheet-close").addEventListener("click", () => sheet.close());
     sheet.addEventListener("click", (e) => { if (e.target === sheet) sheet.close(); });   // click outside to close
 
+    /* Open / closed: reads data-commissions on <main>. When closed, the whole form is turned off. */
+    const closed = document.querySelector("main").dataset.commissions !== "open";
+    document.getElementById("status").textContent = closed ? "***CLOSED***" : "OPEN";
+    document.getElementById("closed-note").hidden = !closed;
+    if (closed) {
+      document.querySelectorAll("#inquiry select, #inquiry input, #inquiry textarea, #inquiry button")
+        .forEach(el => el.disabled = true);
+      document.getElementById("inquiry").classList.add("closed");
+    }
+
     /* Shows and hides form questions based on the type of piece and medium. */
     const type = document.getElementById("type");
     const medium = document.getElementById("medium");
@@ -575,7 +595,7 @@
     function toggle(id, show) {
       const box = document.getElementById(id);
       box.hidden = !show;
-      box.querySelectorAll("select, input, button").forEach(el => el.disabled = !show);
+      box.querySelectorAll("select, input, button").forEach(el => el.disabled = !show || closed);
     }
 
     function update() {
@@ -590,7 +610,8 @@
       note.hidden = !(design || designOnlyDigital);
       note.textContent = design ? "Logos and posters are made digitally."
                                 : "Original character designs are made digitally.";
-      toggle("character-count", type.value !== "Logo");
+      // Logos have no characters; original character designs are one character only.
+      toggle("character-count", type.value !== "Logo" && type.value !== "Original character design");
 
       // Posters can have no characters, so they start at 0. Everything else starts at 1.
       const poster = type.value === "Poster";
@@ -632,9 +653,10 @@
     const agreed = document.getElementById("agreed");
 
     // The Send button only works once the terms box is ticked.
-    agreed.addEventListener("change", () => { send.disabled = !agreed.checked; });
+    agreed.addEventListener("change", () => { send.disabled = closed || !agreed.checked; });
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
+      if (closed) return;
       send.disabled = true;
       send.textContent = "Sending...";
       error.hidden = true;
