@@ -68,6 +68,14 @@
                             background: transparent; color: var(--text); font: inherit; cursor: pointer; }
     .medium-switch button[aria-pressed="true"] { background: var(--accent); color: var(--dark); font-weight: 700; }
 
+    /* Stage buttons inside the example pop-up (Sketch / Line art / Ink / Complete illustration).
+       Same look as the Digital / Traditional switch; wraps onto two lines on small phones. */
+    .stage-switch { flex-wrap: wrap; margin: 0 0 1rem; }
+    .stage-switch[hidden] { display: none; }
+
+    /* Grayed-out price cells (things I don't offer, like traditional Complete illustration) */
+    th.na, td.na { color: var(--muted); font-weight: 400; }
+
     /* Form styles */
     form label { display: block; margin-top: 1rem; }
     form input, form select, form textarea {
@@ -145,6 +153,8 @@
     <h2>What I draw</h2>
     <p>Character illustrations, original character designs, stylized portraits, and expression sheets.</p>
     <p>Each can be done <strong>digital</strong> or <strong>traditional</strong> (character designs are digital only), as a <strong>sketch</strong>, <strong>line art</strong>, <strong>ink</strong>, or a <strong>complete illustration</strong>.</p>
+    <p>I don't color traditionally, so <strong>ink</strong> is the finished version of a traditional piece. Complete (colored) illustrations are digital only.</p>
+    <p>Traditional pieces are drawn on <strong>[PAPER SIZE, e.g. 9 &times; 12 in]</strong> paper and <strong>shipped to you</strong>. [SHIPPING COST, e.g. Shipping is added to your quote.]</p>
     <p>I also design <strong>logos</strong> and <strong>posters</strong>.</p>
 
     <h2>Examples</h2>
@@ -152,7 +162,15 @@
          To add a real example, replace the <span class="ph" ...></span> line in a card with:
            <img src="images/commissions/your-file.jpg" alt="Describe the artwork">
          The pop-up text is in the <div class="ex-info"> under each card. Use one <p>...</p> per paragraph.
-         To add another example, copy a whole <li>...</li> block. -->
+         To add another example, copy a whole <li>...</li> block.
+
+         STAGE BUTTONS: a card whose pop-up has a <div class="ex-stages"> gets a button for each
+         picture inside it (Sketch / Line art / Ink / Complete illustration). To add a real picture,
+         replace that stage's <span class="ph" ...></span> with, for example:
+           <img src="images/commissions/portrait-lineart.jpg" alt="Describe the artwork" data-stage="Line art">
+         The data-stage text becomes the button label. Delete a line to drop that button.
+         The pop-up opens on the LAST stage in the list. Cards without an ex-stages box
+         (Line art, Ink, Logo, Poster) just show their one picture. -->
     <ul class="examples">
       <li>
         <button type="button" class="example" aria-haspopup="dialog">
@@ -161,6 +179,12 @@
           <span class="ex-more">View details</span>
         </button>
         <div class="ex-info" hidden>
+          <div class="ex-stages">
+            <span class="ph" role="img" aria-label="Character illustration example, sketch" data-stage="Sketch"></span>
+            <span class="ph" role="img" aria-label="Character illustration example, line art" data-stage="Line art"></span>
+            <span class="ph" role="img" aria-label="Character illustration example, ink" data-stage="Ink"></span>
+            <span class="ph" role="img" aria-label="Character illustration example, complete illustration" data-stage="Complete illustration"></span>
+          </div>
          <!-- <p>[Explain what a character illustration includes: pose, background, how many revisions, etc.]</p> -->
         </div>
       </li>
@@ -171,6 +195,12 @@
           <span class="ex-more">View details</span>
         </button>
         <div class="ex-info" hidden>
+          <div class="ex-stages">
+            <span class="ph" role="img" aria-label="Original character design sheet example, sketch" data-stage="Sketch"></span>
+            <span class="ph" role="img" aria-label="Original character design sheet example, line art" data-stage="Line art"></span>
+            <span class="ph" role="img" aria-label="Original character design sheet example, ink" data-stage="Ink"></span>
+            <span class="ph" role="img" aria-label="Original character design sheet example, complete illustration" data-stage="Complete illustration"></span>
+          </div>
          <p>An original character design sheet includes 3 pose illustrations, 3 expressions, and a mini turn around view of the character.</p>
         </div>
       </li>
@@ -181,6 +211,12 @@
           <span class="ex-more">View details</span>
         </button>
         <div class="ex-info" hidden>
+          <div class="ex-stages">
+            <span class="ph" role="img" aria-label="Stylized portrait example, sketch" data-stage="Sketch"></span>
+            <span class="ph" role="img" aria-label="Stylized portrait example, line art" data-stage="Line art"></span>
+            <span class="ph" role="img" aria-label="Stylized portrait example, ink" data-stage="Ink"></span>
+            <span class="ph" role="img" aria-label="Stylized portrait example, complete illustration" data-stage="Complete illustration"></span>
+          </div>
          <p>A stylized portrait is a full body illustration of anyone (including yourself!) you'd like to see drawn in my style.</p>
         </div>
       </li>
@@ -191,6 +227,12 @@
           <span class="ex-more">View details</span>
         </button>
         <div class="ex-info" hidden>
+          <div class="ex-stages">
+            <span class="ph" role="img" aria-label="Expression sheet example, sketch" data-stage="Sketch"></span>
+            <span class="ph" role="img" aria-label="Expression sheet example, line art" data-stage="Line art"></span>
+            <span class="ph" role="img" aria-label="Expression sheet example, ink" data-stage="Ink"></span>
+            <span class="ph" role="img" aria-label="Expression sheet example, complete illustration" data-stage="Complete illustration"></span>
+          </div>
          <p>Expression sheets include 6 expressions of your choice, or my choice if you're feeling indecisive!</p>
         </div>
       </li>
@@ -242,6 +284,7 @@
         <button type="button" class="sheet-close" id="sheet-close" aria-label="Close">&times;</button>
         <h2 id="sheet-title"></h2>
         <div class="sheet-media" id="sheet-media"></div>
+        <div class="medium-switch stage-switch" id="sheet-stages" role="group" aria-label="Show stage" hidden></div>
         <div id="sheet-body"></div>
       </div>
     </dialog>
@@ -252,7 +295,7 @@
          will cost differently, copy this table and label one of each. -->
     <!-- The buttons switch between the two price tables below.
          Fill in each table's TBDs with that medium's prices. -->
-    <div class="medium-switch" role="group" aria-label="Show prices for">
+    <div class="medium-switch" id="price-switch" role="group" aria-label="Show prices for">
       <button type="button" data-show="prices-digital" aria-pressed="true">Digital</button>
       <button type="button" data-show="prices-traditional" aria-pressed="false">Traditional</button>
     </div>
@@ -279,16 +322,17 @@
     <div class="table-wrap" id="prices-traditional" hidden>
       <table>
         <thead>
-          <tr><th>Type</th><th>Sketch</th><th>Line art</th><th>Ink</th><th>Complete Illustration</th></tr>
+          <tr><th>Type</th><th>Sketch</th><th>Line art</th><th>Ink</th><th class="na">Complete Illustration</th></tr>
         </thead>
         <tbody>
-          <tr><td>Character illustration</td><td>$60</td><td>$75</td><td>$120</td><td>$150</td></tr>
-          <tr><td>Stylized portrait</td><td>$50</td><td>$65</td><td>$100</td><td>$130</td></tr>
-          <tr><td>Expression sheet</td><td>$45</td><td>$60</td><td>$100</td><td>$120</td></tr>
-          <tr><td>Each additional character</td><td><span class="plus">+</span>$40</td><td><span class="plus">+</span>$60</td><td><span class="plus">+</span>$80</td><td><span class="plus">+</span>$100</td></tr>
+          <tr><td>Character illustration</td><td>$60</td><td>$75</td><td>$120</td><td class="na">&ndash;</td></tr>
+          <tr><td>Stylized portrait</td><td>$50</td><td>$65</td><td>$100</td><td class="na">&ndash;</td></tr>
+          <tr><td>Expression sheet</td><td>$45</td><td>$60</td><td>$100</td><td class="na">&ndash;</td></tr>
+          <tr><td>Each additional character</td><td><span class="plus">+</span>$40</td><td><span class="plus">+</span>$60</td><td><span class="plus">+</span>$80</td><td class="na">&ndash;</td></tr>
         </tbody>
       </table>
-      <p class="hint">*Traditional pieces are drawn on paper. Original character designs, logos, and posters are digital only.</p>
+      <p class="hint">*I don't color traditionally, so Ink is the finished version of a traditional piece.</p>
+      <p class="hint">*Traditional pieces are drawn on [PAPER SIZE] paper and shipped to you. Original character designs, logos, and posters are digital only.</p>
     </div>
 
     <h2>Process</h2>
@@ -332,9 +376,9 @@
             <option>Sketch</option>
             <option>Line art</option>
             <option>Ink</option>
-            <option>Complete illustration</option>
+            <option id="complete-option">Complete illustration</option>
           </select>
-          <span class="hint price-note" id="double-note" hidden>Traditional pieces use the Traditional price table above.</span>
+          <span class="hint price-note" id="double-note" hidden>Traditional pieces use the Traditional price table above. Ink is the finished traditional version (no color), and your piece is drawn on [PAPER SIZE] paper and shipped to you.</span>
         </label>
       </div>
       <p class="hint" id="digital-note" hidden></p>
@@ -372,6 +416,7 @@
         <p><strong>Revisions.</strong> Ask for as many changes as you'd like during the sketch and concept stage, that's what it's there for! Once we move into finalizing, I can make small changes within reason. After the piece reaches the final stage we agreed on, further revisions may no longer be possible.</p>
         <p><strong>Refunds.</strong> If you cancel before your commission reaches the finalization stage, your 50% deposit can be refunded. Once the piece is in finalization or beyond, refunds are no longer available.</p>
         <p><strong>Turnaround.</strong> Characters are my specialty. If you choose "Other" and ask for something I don't draw often, like a car or another object, it may take a good bit longer. I'll give you a time estimate with your quote, and if you have a deadline, let me know in the form so I can tell you whether I can meet it.</p>
+        <p><strong>Shipping.</strong> Traditional pieces are drawn on [PAPER SIZE] paper and shipped to you once the remaining payment is made. [SHIPPING COST, e.g. Shipping is added to your quote.] Digital pieces are sent digitally.</p>
         <p><strong>What I don't draw.</strong> I'm open to most ideas, but I don't take NSFW commissions. I may also decline any request I'm not comfortable with.</p>
         <p><strong>Using your commission.</strong> Once your commission is paid for and sent to you, it's yours to use however you like.</p>
         <p><strong>Sharing.</strong> In the form, you can choose whether I may show your commission in my gallery and portfolio or keep it private. I'll respect whichever you pick.</p>
@@ -393,7 +438,7 @@
 
   <script>
     /* Price table switch: shows the Digital or Traditional table. */
-    const switchButtons = document.querySelectorAll(".medium-switch button");
+    const switchButtons = document.querySelectorAll("#price-switch button");
     switchButtons.forEach(btn => {
       btn.addEventListener("click", () => {
         switchButtons.forEach(other => {
@@ -424,15 +469,42 @@
     window.addEventListener("load", updateScrollCues);   // re-check once the fonts have loaded
     updateScrollCues();
 
-    /* Example cards: clicking one opens the pop-up sheet with its picture and details. */
+    /* Example cards: clicking one opens the pop-up sheet with its picture and details.
+       If the card has stage pictures (ex-stages), the pop-up gets a button for each one. */
     const sheet = document.getElementById("sheet");
+    const media = document.getElementById("sheet-media");
+    const stageBar = document.getElementById("sheet-stages");
     document.querySelectorAll(".example").forEach(card => {
       card.addEventListener("click", () => {
+        const info = card.nextElementSibling;
         document.getElementById("sheet-title").textContent = card.querySelector(".ex-title").textContent;
-        const media = document.getElementById("sheet-media");
-        media.replaceChildren(card.querySelector("img, .ph").cloneNode(true));
+
+        const stages = [...info.querySelectorAll(".ex-stages [data-stage]")];
+        if (stages.length) {
+          const buttons = stages.map(pic => {
+            const b = document.createElement("button");
+            b.type = "button";
+            b.textContent = pic.dataset.stage;
+            b.addEventListener("click", () => show(pic, b));
+            return b;
+          });
+          function show(pic, button) {
+            media.replaceChildren(pic.cloneNode(true));
+            buttons.forEach(b => b.setAttribute("aria-pressed", b === button));
+          }
+          stageBar.replaceChildren(...buttons);
+          stageBar.hidden = false;
+          show(stages[stages.length - 1], buttons[buttons.length - 1]);   // opens on the last stage
+        } else {
+          media.replaceChildren(card.querySelector("img, .ph").cloneNode(true));
+          stageBar.replaceChildren();
+          stageBar.hidden = true;
+        }
+
         const body = document.getElementById("sheet-body");
-        body.replaceChildren(...[...card.nextElementSibling.children].map(el => el.cloneNode(true)));
+        body.replaceChildren(...[...info.children]
+          .filter(el => !el.classList.contains("ex-stages"))
+          .map(el => el.cloneNode(true)));
         sheet.showModal();
       });
     });
@@ -480,7 +552,10 @@
         ? "Optional: add characters if you'd like them on your poster. Price increases for each one."
         : "Price increases for each additional character.";
 
+      // I don't color traditionally: Complete illustration is grayed out for traditional pieces.
       const traditional = medium.value === "Traditional";
+      document.getElementById("complete-option").disabled = traditional;
+      if (traditional && finish.value === "Complete illustration") finish.value = "";
       document.getElementById("double-note").hidden = !traditional;
     }
 
