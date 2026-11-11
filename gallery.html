@@ -8,28 +8,35 @@
   <link rel="stylesheet" href="style.css">
   <style>
     /* Gallery styles. Colors come from the variables in style.css. */
-    /* Filters: the "Medium" and "Type" boxes sit side by side (and stack on narrow phones),
-       the Year menu sits under them, and Shuffle is centered below everything. */
-    .controls { display: flex; flex-direction: column; gap: 1rem; margin: 1rem 0; }
-    #filters { display: flex; flex-wrap: wrap; align-items: stretch; gap: 1rem 2.5rem; }
-    .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
-                  margin: 0; padding: 0.5rem 0.75rem 0.75rem; border: 1px solid var(--line); border-radius: 0.75rem; }
-    .filter-row legend { padding: 0 0.4rem; color: var(--muted); font-size: 0.9rem; }
-    .year-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; }
-    .year-row label { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); }
-    #year { font: inherit; min-height: 2.75rem; padding: 0 2.5rem 0 0.8rem; cursor: pointer;
-            border: 1px solid var(--text); background-color: var(--bg); color: var(--text);
-            appearance: none; -webkit-appearance: none;
+    /* Filters: Medium, Type and Year sit on one line on desktop (and wrap on phones), each a
+       rounded box like the store page's category switch. Shuffle is centered underneath. */
+    .controls { display: flex; flex-direction: column; gap: 1.25rem; margin: 1rem 0; }
+    #filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1rem 2rem; }
+    .filter-group { display: flex; flex-direction: column; gap: 0.35rem; }
+    .filter-label { color: var(--muted); font-size: 0.9rem; padding-left: 0.25rem; }
+    .filter-box { display: flex; flex-wrap: wrap; gap: 0.25rem; padding: 0.25rem;
+                  border-radius: 0.75rem; background: var(--bg); border: 1px solid var(--line); width: fit-content; max-width: 100%; }
+    .controls .filter-box button { min-height: 2.75rem; padding: 0 1.1rem; border: 0; border-radius: 0.55rem;
+                                   background: transparent; color: var(--text); }
+    .controls .filter-box button[aria-pressed="true"] { background: var(--accent); color: var(--dark); font-weight: 700; }
+    /* The Year menu lives inside the same kind of box, with our own arrow */
+    #year { font: inherit; min-height: 2.75rem; padding: 0 2.5rem 0 1.1rem; border: 0; border-radius: 0.55rem; cursor: pointer;
+            background-color: transparent; color: var(--text); appearance: none; -webkit-appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
             background-repeat: no-repeat; background-position: right 0.9rem center; }
-    #year.on { border-color: var(--accent); color: var(--accent); font-weight: 700; }
-    #shuffle { align-self: center; }
+    #year option { background: var(--bg); color: var(--text); }
+    #year.on { background-color: var(--accent); color: var(--dark); font-weight: 700;
+               background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%232c2c2c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+    /* Shuffle stays dead center; "Clear filters" appears to its right without pushing it over */
+    .controls-bottom { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem; }
+    .controls-bottom #shuffle { grid-column: 2; }
+    .controls-bottom #clearFilters { grid-column: 3; justify-self: start; }
+    .controls #shuffle { min-height: 2.75rem; padding: 0 1.25rem; border: 1px solid var(--line); border-radius: 0.75rem; }
+    .controls #shuffle:hover { border-color: var(--accent); }
     .controls button, #more, #clearTag, dialog button {
       font: inherit; padding: 0.35rem 0.8rem; border: 1px solid var(--text);
       background: var(--bg); color: var(--text); cursor: pointer;
     }
-    .controls button { min-height: 2.75rem; }
-    .controls button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 700; }
     #clearFilters { border-color: transparent; color: var(--accent); text-decoration: underline; padding-left: 0; }
     #clearFilters[hidden] { display: none; }
     #status { color: var(--muted); }
@@ -84,14 +91,19 @@
 
     <!-- The filter buttons are built from the FILTERS list in the script below. -->
     <div class="controls">
-      <div id="filters"></div>
-      <div class="year-row">
-        <label for="year">Year
-          <select id="year"><option value="">All</option></select>
-        </label>
+      <div id="filters">
+        <!-- Medium and Type are added here by the script. Year stays last. -->
+        <div class="filter-group" id="yearGroup">
+          <label class="filter-label" for="year">Year</label>
+          <div class="filter-box">
+            <select id="year"><option value="">All</option></select>
+          </div>
+        </div>
+      </div>
+      <div class="controls-bottom">
+        <button type="button" id="shuffle">Shuffle</button>
         <button type="button" id="clearFilters" hidden>Clear filters</button>
       </div>
-      <button type="button" id="shuffle">Shuffle</button>
     </div>
 
     <p id="activeTag" hidden>Tag: <strong id="tagName"></strong> <button type="button" id="clearTag">Clear tag</button></p>
@@ -131,7 +143,7 @@
        How buttons combine:
          - Buttons in the same "set" mean OR: Digital + Traditional shows both.
          - Different sets/rows mean AND: Traditional + Ink shows only traditional ink pieces.
-       The Year menu (under the buttons) lists this year back to FIRST_YEAR and matches a
+       The Year menu (last on the line) lists this year back to FIRST_YEAR and matches a
        four-digit tag like "2019". */
     const FIRST_YEAR = 2010;
     const FILTERS = [
@@ -185,13 +197,12 @@
       return Object.values(sets).every(list => list.some(o => hits(a, o)));
     }
 
-    // Build one row of toggle buttons per category.
-    $("filters").replaceChildren(...FILTERS.map(f => {
-      const row = document.createElement("fieldset");
-      row.className = "filter-row";
-      const legend = document.createElement("legend");
-      legend.textContent = f.name;
-      row.appendChild(legend);
+    // Build one rounded box of toggle buttons per category, in front of the Year menu.
+    $("filters").prepend(...FILTERS.map(f => {
+      const group = document.createElement("div"), label = document.createElement("span"), box = document.createElement("div");
+      group.className = "filter-group";
+      label.className = "filter-label"; label.textContent = f.name; label.id = "label-" + f.name.toLowerCase();
+      box.className = "filter-box"; box.setAttribute("role", "group"); box.setAttribute("aria-labelledby", label.id);
       f.options.forEach(o => {
         const b = document.createElement("button");
         b.type = "button"; b.textContent = o.label; b.setAttribute("aria-pressed", "false");
@@ -201,9 +212,10 @@
           refresh(false);
         });
         o.button = b;
-        row.appendChild(b);
+        box.appendChild(b);
       });
-      return row;
+      group.append(label, box);
+      return group;
     }));
 
     function makeImage(src, alt, cls) {
