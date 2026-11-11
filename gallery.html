@@ -27,6 +27,16 @@
     dialog img { max-height: 70vh; margin: 0 auto; display: block; }
     dialog .ph { width: 100%; aspect-ratio: 4 / 3; background: var(--line); }
     #lbTags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.5rem 0; }
+
+    /* Previous / next arrows on either side of the picture in the pop-up */
+    .lb-stage { position: relative; touch-action: pan-y; }   /* lets phones swipe sideways */
+    .lb-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 1;
+                width: 2.75rem; height: 2.75rem; padding: 0; border-radius: 50%;
+                font-size: 1.4rem; line-height: 1; opacity: 0.85; }
+    .lb-arrow:hover, .lb-arrow:focus-visible { opacity: 1; background: var(--text); color: var(--bg); }
+    #lbPrev { left: 0.25rem; }
+    #lbNext { right: 0.25rem; }
+    #lbCount { color: var(--muted); font-size: 0.9rem; margin: 0.5rem 0 0; text-align: center; }
   </style>
 <link rel="icon" href="/images/favicon.ico" sizes="any">
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
@@ -69,7 +79,12 @@
     <button type="button" id="more" hidden>Load more</button>
 
     <dialog id="lightbox" aria-labelledby="lbTitle">
-      <div id="lbImg"></div>
+      <div class="lb-stage">
+        <button type="button" class="lb-arrow" id="lbPrev" aria-label="Previous piece">&larr;</button>
+        <div id="lbImg"></div>
+        <button type="button" class="lb-arrow" id="lbNext" aria-label="Next piece">&rarr;</button>
+      </div>
+      <p id="lbCount" aria-live="polite"></p>
       <h2 id="lbTitle"></h2>
       <p id="lbMeta"></p>
       <div id="lbTags"></div>
@@ -125,19 +140,34 @@
     }
 
     function showMore() {
-      current.slice(shown, shown + PAGE).forEach(i => {
+      current.slice(shown, shown + PAGE).forEach((i, k) => {
         const a = ARTWORKS[i], li = document.createElement("li"), b = document.createElement("button");
         b.type = "button"; b.className = "thumb"; b.setAttribute("aria-label", "View " + a.title);
         b.appendChild(makeImage(a.thumb, a.title));
-        b.addEventListener("click", () => openLightbox(a));
+        const place = shown + k;   // this piece's place in the filtered list
+        b.addEventListener("click", () => openLightbox(place));
         li.appendChild(b); grid.appendChild(li);
       });
       shown = Math.min(shown + PAGE, current.length);
       $("more").hidden = shown >= current.length;
     }
 
-    function openLightbox(a) {
+    /* Pop-up viewer. "pos" is the piece's place in the current (filtered, shuffled) list,
+       so the arrows step through exactly what the grid shows, and wrap around at the ends. */
+    let pos = 0;
+
+    function openLightbox(p) {
+      pos = (p + current.length) % current.length;
+      const a = ARTWORKS[current[pos]];
+      const many = current.length > 1;
+      $("lbPrev").hidden = $("lbNext").hidden = !many;
+      $("lbCount").textContent = many ? (pos + 1) + " / " + current.length : "";
       $("lbImg").replaceChildren(makeImage(a.full || a.thumb, a.title));
+      // Load the next and previous pictures in the background so arrowing feels instant
+      [pos + 1, pos - 1].forEach(n => {
+        const next = ARTWORKS[current[(n + current.length) % current.length]];
+        if (next.full) new Image().src = next.full;
+      });
       $("lbTitle").textContent = a.title;
       $("lbMeta").textContent = a.medium.charAt(0).toUpperCase() + a.medium.slice(1);
       $("lbTags").replaceChildren(...a.tags.map(t => {
@@ -146,8 +176,31 @@
         b.addEventListener("click", () => { tag = t; lb.close(); refresh(false); window.scrollTo(0, 0); });
         return b;
       }));
-      lb.showModal();
+      if (!lb.open) lb.showModal();
     }
+
+    const step = by => openLightbox(pos + by);
+    $("lbPrev").addEventListener("click", () => step(-1));
+    $("lbNext").addEventListener("click", () => step(1));
+
+    // Keyboard: left and right arrow keys (Escape already closes the pop-up)
+    lb.addEventListener("keydown", e => {
+      if (e.key === "ArrowLeft") { e.preventDefault(); step(-1); }
+      if (e.key === "ArrowRight") { e.preventDefault(); step(1); }
+    });
+
+    // Phones: swipe left or right on the picture
+    let touchX = null, touchY = null;
+    const stage = lb.querySelector(".lb-stage");
+    stage.addEventListener("touchstart", e => {
+      touchX = e.touches[0].clientX; touchY = e.touches[0].clientY;
+    }, { passive: true });
+    stage.addEventListener("touchend", e => {
+      if (touchX === null) return;
+      const dx = e.changedTouches[0].clientX - touchX, dy = e.changedTouches[0].clientY - touchY;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) step(dx < 0 ? 1 : -1);
+      touchX = null;
+    }, { passive: true });
 
     document.querySelectorAll("[data-medium]").forEach(b => b.addEventListener("click", () => {
       medium = b.dataset.medium;
