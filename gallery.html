@@ -30,10 +30,13 @@
 
     /* Previous / next arrows on either side of the picture in the pop-up */
     .lb-stage { position: relative; touch-action: pan-y; }   /* lets phones swipe sideways */
-    .lb-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 1;
-                width: 2.75rem; height: 2.75rem; padding: 0; border-radius: 50%;
-                font-size: 1.4rem; line-height: 1; opacity: 0.85; }
-    .lb-arrow:hover, .lb-arrow:focus-visible { opacity: 1; background: var(--text); color: var(--bg); }
+    dialog .lb-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 1;
+                width: 2.75rem; height: 2.75rem; padding: 0; border: 0; border-radius: 50%;
+                display: flex; align-items: center; justify-content: center;   /* centers the < in the circle */
+                background: rgba(0, 0, 0, 0.55); color: var(--text); }
+    dialog .lb-arrow svg { width: 1.4rem; height: 1.4rem; display: block; }
+    dialog .lb-arrow:hover, dialog .lb-arrow:focus-visible { background: var(--accent); color: var(--bg); }
+    dialog .lb-arrow:focus:not(:focus-visible) { outline: none; }
     #lbPrev { left: 0.25rem; }
     #lbNext { right: 0.25rem; }
     #lbCount { color: var(--muted); font-size: 0.9rem; margin: 0.5rem 0 0; text-align: center; }
@@ -80,15 +83,15 @@
 
     <dialog id="lightbox" aria-labelledby="lbTitle">
       <div class="lb-stage">
-        <button type="button" class="lb-arrow" id="lbPrev" aria-label="Previous piece">&larr;</button>
+        <button type="button" class="lb-arrow" id="lbPrev" aria-label="Previous piece"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
         <div id="lbImg"></div>
-        <button type="button" class="lb-arrow" id="lbNext" aria-label="Next piece">&rarr;</button>
+        <button type="button" class="lb-arrow" id="lbNext" aria-label="Next piece"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
       </div>
       <p id="lbCount" aria-live="polite"></p>
       <h2 id="lbTitle"></h2>
       <p id="lbMeta"></p>
       <div id="lbTags"></div>
-      <button type="button" id="lbClose">Close</button>
+      <button type="button" id="lbClose" autofocus>Close</button>
     </dialog>
   </main>
 
