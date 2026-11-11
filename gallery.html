@@ -28,18 +28,19 @@
     dialog .ph { width: 100%; aspect-ratio: 4 / 3; background: var(--line); }
     #lbTags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.5rem 0; }
 
-    /* Previous / next arrows on either side of the picture in the pop-up */
-    .lb-stage { position: relative; touch-action: pan-y; }   /* lets phones swipe sideways */
-    dialog .lb-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 1;
+    /* Previous / next arrows on either side of the "3 / 257" counter, under the picture */
+    .lb-stage { touch-action: pan-y; }   /* lets phones swipe sideways on the picture */
+    .lb-nav { display: flex; align-items: center; justify-content: center; gap: 1.25rem; margin-top: 0.75rem; }
+    .lb-nav[hidden] { display: none; }
+    dialog .lb-arrow { flex: none;
                 width: 2.75rem; height: 2.75rem; padding: 0; border: 0; border-radius: 50%;
                 display: flex; align-items: center; justify-content: center;   /* centers the < in the circle */
-                background: rgba(0, 0, 0, 0.55); color: var(--text); }
+                background: var(--line); color: var(--text); }   /* same look as the commissions pop-up's close button */
     dialog .lb-arrow svg { width: 1.4rem; height: 1.4rem; display: block; }
     dialog .lb-arrow:hover, dialog .lb-arrow:focus-visible { background: var(--accent); color: var(--bg); }
     dialog .lb-arrow:focus:not(:focus-visible) { outline: none; }
-    #lbPrev { left: 0.25rem; }
-    #lbNext { right: 0.25rem; }
-    #lbCount { color: var(--muted); font-size: 0.9rem; margin: 0.5rem 0 0; text-align: center; }
+    #lbCount { color: var(--muted); font-size: 0.95rem; margin: 0; min-width: 5.5rem; text-align: center;
+               font-variant-numeric: tabular-nums; }   /* keeps the arrows still as the numbers change */
   </style>
 <link rel="icon" href="/images/favicon.ico" sizes="any">
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
@@ -83,11 +84,13 @@
 
     <dialog id="lightbox" aria-labelledby="lbTitle">
       <div class="lb-stage">
-        <button type="button" class="lb-arrow" id="lbPrev" aria-label="Previous piece"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
         <div id="lbImg"></div>
+      </div>
+      <div class="lb-nav">
+        <button type="button" class="lb-arrow" id="lbPrev" aria-label="Previous piece"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+        <p id="lbCount" aria-live="polite"></p>
         <button type="button" class="lb-arrow" id="lbNext" aria-label="Next piece"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
       </div>
-      <p id="lbCount" aria-live="polite"></p>
       <h2 id="lbTitle"></h2>
       <p id="lbMeta"></p>
       <div id="lbTags"></div>
@@ -163,8 +166,8 @@
       pos = (p + current.length) % current.length;
       const a = ARTWORKS[current[pos]];
       const many = current.length > 1;
-      $("lbPrev").hidden = $("lbNext").hidden = !many;
-      $("lbCount").textContent = many ? (pos + 1) + " / " + current.length : "";
+      lb.querySelector(".lb-nav").hidden = !many;
+      $("lbCount").textContent = (pos + 1) + " / " + current.length;
       $("lbImg").replaceChildren(makeImage(a.full || a.thumb, a.title));
       // Load the next and previous pictures in the background so arrowing feels instant
       [pos + 1, pos - 1].forEach(n => {
