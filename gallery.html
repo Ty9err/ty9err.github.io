@@ -8,13 +8,19 @@
   <link rel="stylesheet" href="style.css">
   <style>
     /* Gallery styles. Colors come from the variables in style.css. */
-    .controls { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; align-items: center; margin: 1rem 0; }
+    /* Filter toggles: one row per category ("Medium", "Type", "Year") */
+    .controls { display: flex; flex-direction: column; gap: 0.75rem; margin: 1rem 0; }
+    .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.5rem; border: 0; padding: 0; margin: 0; }
+    .filter-row[hidden] { display: none; }
+    .filter-row legend { float: left; width: 4.5rem; padding: 0; margin-right: 0.25rem; color: var(--muted); }
     .controls button, #more, #clearTag, dialog button {
       font: inherit; padding: 0.35rem 0.8rem; border: 1px solid var(--text);
       background: var(--bg); color: var(--text); cursor: pointer;
     }
-    .controls button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
-    .controls input { font: inherit; padding: 0.35rem; border: 1px solid var(--text); }
+    .controls button { min-height: 2.75rem; }
+    .controls button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 700; }
+    #clearFilters { align-self: flex-start; border-color: transparent; color: var(--accent); text-decoration: underline; padding-left: 0; }
+    #clearFilters[hidden] { display: none; }
     #status { color: var(--muted); }
     .grid { list-style: none; margin: 1rem 0; padding: 0; display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.75rem; }
@@ -63,17 +69,15 @@
 
   <main class="card">
     <h1>Gallery</h1>
-    <p>A random mix of my work. Pick a medium, search, or click a tag to find related pieces.</p>
+    <p>A random mix of my work. Turn on any filters below to narrow it down, or click a tag on a piece to find related ones.</p>
 
+    <!-- The filter buttons are built from the FILTERS list in the script below. -->
     <div class="controls">
-      <div role="group" aria-label="Medium">
-        <button type="button" data-medium="all" aria-pressed="true">All</button>
-        <button type="button" data-medium="digital" aria-pressed="false">Digital</button>
-        <button type="button" data-medium="traditional" aria-pressed="false">Traditional</button>
-        <button type="button" data-medium="mixed media" aria-pressed="false">Mixed Media</button>
+      <div id="filters"></div>
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center">
+        <button type="button" id="shuffle">Shuffle</button>
+        <button type="button" id="clearFilters" hidden>Clear filters</button>
       </div>
-      <label>Search <input type="search" id="q" placeholder="title or tag"></label>
-      <button type="button" id="shuffle">Shuffle</button>
     </div>
 
     <p id="activeTag" hidden>Tag: <strong id="tagName"></strong> <button type="button" id="clearTag">Clear tag</button></p>
@@ -105,7 +109,34 @@
   <script src="artworks.js"></script>
   <script>
     const PAGE = 48;                       // how many pieces to show at a time
-    let medium = "all", tag = "", query = "", order = [], current = [], shown = 0;
+
+    /* FILTER BUTTONS
+       Each row is a category; each button either checks the piece's medium (from make_gallery.py)
+       or looks for a tag. To add a button, copy a line and change the label and tag.
+       Tags are matched without caring about capitals, so "Ink" and "ink" are the same.
+       How buttons combine:
+         - Buttons in the same "set" mean OR: Digital + Traditional shows both.
+         - Different sets/rows mean AND: Traditional + Ink shows only traditional ink pieces.
+       The Year row builds itself from any four-digit tag like "2019", and stays hidden until you
+       add some. */
+    const FILTERS = [
+      { name: "Medium", options: [
+        { label: "Digital",      medium: "digital",     set: "medium" },
+        { label: "Traditional",  medium: "traditional", set: "medium" },
+        { label: "Mixed media",  medium: "mixed media", set: "medium" },
+        { label: "Paint",        tag: "paint",          set: "technique" },
+        { label: "Ink",          tag: "ink",            set: "technique" },
+      ]},
+      { name: "Type", options: [
+        { label: "Original",     tag: "original",       set: "type" },
+        { label: "Fan art",      tag: "fanart",         set: "type" },
+      ]},
+      { name: "Year", years: true },
+    ];
+
+    let tag = "", order = [], current = [], shown = 0;
+    const active = new Set();               // the filter buttons that are switched on
+    const lower = a => a.tags.map(t => t.toLowerCase());
 
     const $ = id => document.getElementById(id);
     const grid = $("grid"), lb = $("lightbox");
@@ -119,15 +150,45 @@
       return arr;
     }
 
-    function matches(a) {
-      if (medium !== "all" && a.medium !== medium) return false;
-      if (tag && !a.tags.includes(tag)) return false;
-      if (query) {
-        const text = (a.title + " " + a.tags.join(" ")).toLowerCase();
-        if (!text.includes(query)) return false;
-      }
-      return true;
+    // Year buttons: every four-digit tag in the art list, newest first.
+    const yearRow = FILTERS.find(f => f.years);
+    yearRow.options = [...new Set(ARTWORKS.flatMap(a => lower(a).filter(t => /^\d{4}$/.test(t))))]
+      .sort((x, y) => y - x)
+      .map(y => ({ label: y, tag: y, set: "year" }));
+
+    function hits(a, o) {
+      return o.medium ? a.medium === o.medium : lower(a).includes(o.tag);
     }
+
+    function matches(a) {
+      if (tag && !a.tags.includes(tag)) return false;
+      // Group the switched-on buttons by set; the piece has to match at least one in every set.
+      const sets = {};
+      active.forEach(o => (sets[o.set] = sets[o.set] || []).push(o));
+      return Object.values(sets).every(list => list.some(o => hits(a, o)));
+    }
+
+    // Build one row of toggle buttons per category.
+    $("filters").replaceChildren(...FILTERS.map(f => {
+      const row = document.createElement("fieldset");
+      row.className = "filter-row";
+      row.hidden = !f.options.length;
+      const legend = document.createElement("legend");
+      legend.textContent = f.name;
+      row.appendChild(legend);
+      f.options.forEach(o => {
+        const b = document.createElement("button");
+        b.type = "button"; b.textContent = o.label; b.setAttribute("aria-pressed", "false");
+        b.addEventListener("click", () => {
+          active.has(o) ? active.delete(o) : active.add(o);
+          b.setAttribute("aria-pressed", active.has(o));
+          refresh(false);
+        });
+        o.button = b;
+        row.appendChild(b);
+      });
+      return row;
+    }));
 
     function makeImage(src, alt, cls) {
       if (!src) { const d = document.createElement("div"); d.className = "ph"; return d; }
@@ -142,6 +203,7 @@
       grid.innerHTML = ""; shown = 0;
       $("status").textContent = current.length + (current.length === 1 ? " piece" : " pieces");
       $("activeTag").hidden = !tag; $("tagName").textContent = tag;
+      $("clearFilters").hidden = !active.size;
       showMore();
     }
 
@@ -208,12 +270,11 @@
       touchX = null;
     }, { passive: true });
 
-    document.querySelectorAll("[data-medium]").forEach(b => b.addEventListener("click", () => {
-      medium = b.dataset.medium;
-      document.querySelectorAll("[data-medium]").forEach(x => x.setAttribute("aria-pressed", x === b));
+    $("clearFilters").addEventListener("click", () => {
+      active.forEach(o => o.button.setAttribute("aria-pressed", "false"));
+      active.clear();
       refresh(false);
-    }));
-    $("q").addEventListener("input", e => { query = e.target.value.trim().toLowerCase(); refresh(false); });
+    });
     $("shuffle").addEventListener("click", () => refresh(true));
     $("clearTag").addEventListener("click", () => { tag = ""; refresh(false); });
     $("more").addEventListener("click", showMore);
