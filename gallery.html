@@ -8,18 +8,29 @@
   <link rel="stylesheet" href="style.css">
   <style>
     /* Gallery styles. Colors come from the variables in style.css. */
-    /* Filter toggles: one row per category ("Medium", "Type", "Year") */
-    .controls { display: flex; flex-direction: column; gap: 0.75rem; margin: 1rem 0; }
-    .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.5rem; border: 0; padding: 0; margin: 0; }
-    .filter-row[hidden] { display: none; }
-    .filter-row legend { float: left; width: 4.5rem; padding: 0; margin-right: 0.25rem; color: var(--muted); }
+    /* Filters: the "Medium" and "Type" boxes sit side by side (and stack on narrow phones),
+       the Year menu sits under them, and Shuffle is centered below everything. */
+    .controls { display: flex; flex-direction: column; gap: 1rem; margin: 1rem 0; }
+    #filters { display: flex; flex-wrap: wrap; align-items: stretch; gap: 1rem 2.5rem; }
+    .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;
+                  margin: 0; padding: 0.5rem 0.75rem 0.75rem; border: 1px solid var(--line); border-radius: 0.75rem; }
+    .filter-row legend { padding: 0 0.4rem; color: var(--muted); font-size: 0.9rem; }
+    .year-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; }
+    .year-row label { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); }
+    #year { font: inherit; min-height: 2.75rem; padding: 0 2.5rem 0 0.8rem; cursor: pointer;
+            border: 1px solid var(--text); background-color: var(--bg); color: var(--text);
+            appearance: none; -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 0.9rem center; }
+    #year.on { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+    #shuffle { align-self: center; }
     .controls button, #more, #clearTag, dialog button {
       font: inherit; padding: 0.35rem 0.8rem; border: 1px solid var(--text);
       background: var(--bg); color: var(--text); cursor: pointer;
     }
     .controls button { min-height: 2.75rem; }
     .controls button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); font-weight: 700; }
-    #clearFilters { align-self: flex-start; border-color: transparent; color: var(--accent); text-decoration: underline; padding-left: 0; }
+    #clearFilters { border-color: transparent; color: var(--accent); text-decoration: underline; padding-left: 0; }
     #clearFilters[hidden] { display: none; }
     #status { color: var(--muted); }
     .grid { list-style: none; margin: 1rem 0; padding: 0; display: grid;
@@ -74,10 +85,13 @@
     <!-- The filter buttons are built from the FILTERS list in the script below. -->
     <div class="controls">
       <div id="filters"></div>
-      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center">
-        <button type="button" id="shuffle">Shuffle</button>
+      <div class="year-row">
+        <label for="year">Year
+          <select id="year"><option value="">All</option></select>
+        </label>
         <button type="button" id="clearFilters" hidden>Clear filters</button>
       </div>
+      <button type="button" id="shuffle">Shuffle</button>
     </div>
 
     <p id="activeTag" hidden>Tag: <strong id="tagName"></strong> <button type="button" id="clearTag">Clear tag</button></p>
@@ -117,8 +131,9 @@
        How buttons combine:
          - Buttons in the same "set" mean OR: Digital + Traditional shows both.
          - Different sets/rows mean AND: Traditional + Ink shows only traditional ink pieces.
-       The Year row builds itself from any four-digit tag like "2019", and stays hidden until you
-       add some. */
+       The Year menu (under the buttons) lists this year back to FIRST_YEAR and matches a
+       four-digit tag like "2019". */
+    const FIRST_YEAR = 2010;
     const FILTERS = [
       { name: "Medium", options: [
         { label: "Digital",      medium: "digital",     set: "medium" },
@@ -131,10 +146,9 @@
         { label: "Original",     tag: "original",       set: "type" },
         { label: "Fan art",      tag: "fanart",         set: "type" },
       ]},
-      { name: "Year", years: true },
     ];
 
-    let tag = "", order = [], current = [], shown = 0;
+    let year = "", tag = "", order = [], current = [], shown = 0;
     const active = new Set();               // the filter buttons that are switched on
     const lower = a => a.tags.map(t => t.toLowerCase());
 
@@ -150,11 +164,13 @@
       return arr;
     }
 
-    // Year buttons: every four-digit tag in the art list, newest first.
-    const yearRow = FILTERS.find(f => f.years);
-    yearRow.options = [...new Set(ARTWORKS.flatMap(a => lower(a).filter(t => /^\d{4}$/.test(t))))]
-      .sort((x, y) => y - x)
-      .map(y => ({ label: y, tag: y, set: "year" }));
+    // Year menu: "All", then this year back to FIRST_YEAR.
+    for (let y = new Date().getFullYear(); y >= FIRST_YEAR; y--) $("year").add(new Option(y, y));
+    $("year").addEventListener("change", e => {
+      year = e.target.value;
+      e.target.classList.toggle("on", !!year);
+      refresh(false);
+    });
 
     function hits(a, o) {
       return o.medium ? a.medium === o.medium : lower(a).includes(o.tag);
@@ -162,6 +178,7 @@
 
     function matches(a) {
       if (tag && !a.tags.includes(tag)) return false;
+      if (year && !lower(a).includes(year)) return false;
       // Group the switched-on buttons by set; the piece has to match at least one in every set.
       const sets = {};
       active.forEach(o => (sets[o.set] = sets[o.set] || []).push(o));
@@ -172,7 +189,6 @@
     $("filters").replaceChildren(...FILTERS.map(f => {
       const row = document.createElement("fieldset");
       row.className = "filter-row";
-      row.hidden = !f.options.length;
       const legend = document.createElement("legend");
       legend.textContent = f.name;
       row.appendChild(legend);
@@ -203,7 +219,7 @@
       grid.innerHTML = ""; shown = 0;
       $("status").textContent = current.length + (current.length === 1 ? " piece" : " pieces");
       $("activeTag").hidden = !tag; $("tagName").textContent = tag;
-      $("clearFilters").hidden = !active.size;
+      $("clearFilters").hidden = !active.size && !year;
       showMore();
     }
 
@@ -273,6 +289,7 @@
     $("clearFilters").addEventListener("click", () => {
       active.forEach(o => o.button.setAttribute("aria-pressed", "false"));
       active.clear();
+      year = ""; $("year").value = ""; $("year").classList.remove("on");
       refresh(false);
     });
     $("shuffle").addEventListener("click", () => refresh(true));
