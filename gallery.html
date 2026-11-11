@@ -27,12 +27,13 @@
     #year option { background: var(--bg); color: var(--text); }
     #year.on { background-color: var(--accent); color: var(--dark); font-weight: 700;
                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%232c2c2c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
-    /* Shuffle stays dead center; "Clear filters" appears to its right without pushing it over */
-    .controls-bottom { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem; }
-    .controls-bottom #shuffle { grid-column: 2; }
-    .controls-bottom #clearFilters { grid-column: 3; justify-self: start; }
-    .controls #shuffle { min-height: 2.75rem; padding: 0 1.25rem; border: 1px solid var(--line); border-radius: 0.75rem; }
-    .controls #shuffle:hover { border-color: var(--accent); }
+    /* Shuffle (and "Clear filters" when something is on) sit at the end of the filter line.
+       On phones they get their own line, centered. */
+    .filter-actions { display: flex; align-items: center; gap: 0.5rem 1rem; }
+    @media (max-width: 600px) { .filter-actions { flex-basis: 100%; justify-content: center; } }
+    .controls #shuffle, #more { min-height: calc(3.25rem + 2px); padding: 0 1.25rem;
+                                border: 1px solid var(--line); border-radius: 0.75rem; background: var(--bg); color: var(--text); }
+    .controls #shuffle:hover, #more:hover { border-color: var(--accent); }
     .controls button, #more, #clearTag, dialog button {
       font: inherit; padding: 0.35rem 0.8rem; border: 1px solid var(--text);
       background: var(--bg); color: var(--text); cursor: pointer;
@@ -99,10 +100,10 @@
             <select id="year"><option value="">All</option></select>
           </div>
         </div>
-      </div>
-      <div class="controls-bottom">
-        <button type="button" id="shuffle">Shuffle</button>
-        <button type="button" id="clearFilters" hidden>Clear filters</button>
+        <div class="filter-actions">
+          <button type="button" id="shuffle">Shuffle</button>
+          <button type="button" id="clearFilters" hidden>Clear filters</button>
+        </div>
       </div>
     </div>
 
@@ -140,23 +141,23 @@
        Each row is a category; each button either checks the piece's medium (from make_gallery.py)
        or looks for a tag. To add a button, copy a line and change the label and tag.
        Tags are matched without caring about capitals, so "Ink" and "ink" are the same.
-       How buttons combine:
-         - Buttons in the same "set" mean OR: Digital + Traditional shows both.
-         - Different sets/rows mean AND: Traditional + Ink shows only traditional ink pieces.
+       One button per category can be on at a time; picking another swaps to it, and clicking
+       the one that's on turns it off. Categories combine: Traditional + Original shows only
+       traditional original pieces.
        The Year menu (last on the line) lists this year back to FIRST_YEAR and matches a
        four-digit tag like "2019". */
     const FIRST_YEAR = 2010;
     const FILTERS = [
       { name: "Medium", options: [
-        { label: "Digital",      medium: "digital",     set: "medium" },
-        { label: "Traditional",  medium: "traditional", set: "medium" },
-        { label: "Mixed media",  medium: "mixed media", set: "medium" },
-        { label: "Paint",        tag: "paint",          set: "technique" },
-        { label: "Ink",          tag: "ink",            set: "technique" },
+        { label: "Digital",      medium: "digital" },
+        { label: "Traditional",  medium: "traditional" },
+        { label: "Mixed media",  medium: "mixed media" },
+        { label: "Paint",        tag: "paint" },
+        { label: "Ink",          tag: "ink" },
       ]},
       { name: "Type", options: [
-        { label: "Original",     tag: "original",       set: "type" },
-        { label: "Fan art",      tag: "fanart",         set: "type" },
+        { label: "Original",     tag: "original" },
+        { label: "Fan art",      tag: "fanart" },
       ]},
     ];
 
@@ -192,12 +193,10 @@
       if (tag && !a.tags.includes(tag)) return false;
       if (year && !lower(a).includes(year)) return false;
       // Group the switched-on buttons by set; the piece has to match at least one in every set.
-      const sets = {};
-      active.forEach(o => (sets[o.set] = sets[o.set] || []).push(o));
-      return Object.values(sets).every(list => list.some(o => hits(a, o)));
+      return [...active].every(o => hits(a, o));
     }
 
-    // Build one rounded box of toggle buttons per category, in front of the Year menu.
+    // Build one rounded box of buttons per category, in front of the Year menu.
     $("filters").prepend(...FILTERS.map(f => {
       const group = document.createElement("div"), label = document.createElement("span"), box = document.createElement("div");
       group.className = "filter-group";
@@ -207,8 +206,9 @@
         const b = document.createElement("button");
         b.type = "button"; b.textContent = o.label; b.setAttribute("aria-pressed", "false");
         b.addEventListener("click", () => {
-          active.has(o) ? active.delete(o) : active.add(o);
-          b.setAttribute("aria-pressed", active.has(o));
+          const wasOn = active.has(o);
+          f.options.forEach(x => { active.delete(x); x.button.setAttribute("aria-pressed", "false"); });   // one per category
+          if (!wasOn) { active.add(o); b.setAttribute("aria-pressed", "true"); }
           refresh(false);
         });
         o.button = b;
