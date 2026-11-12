@@ -11,12 +11,12 @@
     /* Filters: Medium, Type and Year sit on one line on desktop (and wrap on phones), each a
        rounded box like the store page's category switch. Shuffle is centered underneath. */
     .controls { display: flex; flex-direction: column; gap: 1.25rem; margin: 1rem 0; }
-    #filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1rem 2rem; }
+    #filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.75rem 1rem; }
     .filter-group { display: flex; flex-direction: column; gap: 0.35rem; }
     .filter-label { color: var(--muted); font-size: 0.9rem; padding-left: 0.25rem; }
     .filter-box { display: flex; flex-wrap: wrap; gap: 0.25rem; padding: 0.25rem;
                   border-radius: 0.75rem; background: var(--bg); border: 1px solid var(--line); width: fit-content; max-width: 100%; }
-    .controls .filter-box button { min-height: 2.75rem; padding: 0 1.1rem; border: 0; border-radius: 0.55rem;
+    .controls .filter-box button { min-height: 2.75rem; padding: 0 0.7rem; border: 0; border-radius: 0.55rem;
                                    background: transparent; color: var(--text); }
     .controls .filter-box button[aria-pressed="true"] { background: var(--accent); color: var(--dark); font-weight: 700; }
     /* The Year menu lives inside the same kind of box, with our own arrow */
@@ -27,19 +27,18 @@
     #year option { background: var(--bg); color: var(--text); }
     #year.on { background-color: var(--accent); color: var(--dark); font-weight: 700;
                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%232c2c2c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
-    /* Shuffle (and "Clear filters" when something is on) sit at the end of the filter line.
+    /* Shuffle (and Reset when something is on) sit at the end of the filter line.
        On phones they get their own line, centered. */
-    .filter-actions { display: flex; align-items: center; gap: 0.5rem 1rem; }
+    .filter-actions { display: flex; align-items: center; gap: 0.5rem; }
     @media (max-width: 600px) { .filter-actions { flex-basis: 100%; justify-content: center; } }
-    .controls #shuffle, #more { min-height: calc(3.25rem + 2px); padding: 0 1.25rem;
+    .controls #shuffle, .controls #reset, #more { min-height: calc(3.25rem + 2px); padding: 0 0.85rem;
                                 border: 1px solid var(--line); border-radius: 0.75rem; background: var(--bg); color: var(--text); }
-    .controls #shuffle:hover, #more:hover { border-color: var(--accent); }
+    .controls #shuffle:hover, .controls #reset:hover, #more:hover { border-color: var(--accent); }
     .controls button, #more, #clearTag, dialog button {
       font: inherit; padding: 0.35rem 0.8rem; border: 1px solid var(--text);
       background: var(--bg); color: var(--text); cursor: pointer;
     }
-    #clearFilters { border-color: transparent; color: var(--accent); text-decoration: underline; padding-left: 0; }
-    #clearFilters[hidden] { display: none; }
+    .controls #reset { text-transform: uppercase; letter-spacing: 0.04em; }
     #status { color: var(--muted); }
     .grid { list-style: none; margin: 1rem 0; padding: 0; display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.75rem; }
@@ -51,17 +50,19 @@
     dialog::backdrop { background: rgba(0, 0, 0, 0.7); }
     dialog img { max-height: 70vh; margin: 0 auto; display: block; }
     dialog .ph { width: 100%; aspect-ratio: 4 / 3; background: var(--line); }
-    /* Pop-up details: centered. The medium is a yellow box like a selected filter button;
-       tags and Close are rounded outline buttons like Shuffle. */
+    /* Pop-up details: centered. The medium and tags share one row of yellow boxes (like a
+       selected filter button); Close is a rounded outline button like Shuffle. */
     .lb-info { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; text-align: center; margin-top: 0.5rem; }
     .lb-info h2 { margin: 0.25rem 0 0; }
-    #lbMeta { margin: 0; display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1.1rem;
-              border-radius: 0.55rem; background: var(--accent); color: var(--dark); font-weight: 700; }
-    #lbTags { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
-    #lbTags:empty { display: none; }
-    dialog #lbTags button, dialog #lbClose { min-height: 2.75rem; padding: 0 1.1rem;
+    #lbDesc { margin: 0; max-width: 60ch; line-height: 1.55; white-space: pre-line; }
+    #lbDesc:empty { display: none; }
+    .lb-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
+    #lbTags { display: contents; }   /* tag buttons sit in the same row as the medium */
+    #lbMeta, #lbTags .chip { margin: 0; display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1.1rem;
+              border: 0; border-radius: 0.55rem; background: var(--accent); color: var(--dark); font-weight: 700; }
+    dialog #lbClose { min-height: 2.75rem; padding: 0 1.1rem;
               border: 1px solid var(--line); border-radius: 0.75rem; background: var(--bg); color: var(--text); }
-    dialog #lbTags button:hover, dialog #lbClose:hover { border-color: var(--accent); }
+    dialog #lbClose:hover { border-color: var(--accent); }
 
     /* Previous / next arrows on either side of the "3 / 257" counter, under the picture */
     .lb-stage { touch-action: pan-y; }   /* lets phones swipe sideways on the picture */
@@ -112,7 +113,7 @@
         </div>
         <div class="filter-actions">
           <button type="button" id="shuffle">Shuffle</button>
-          <button type="button" id="clearFilters" hidden>Clear filters</button>
+          <button type="button" id="reset">Reset</button>
         </div>
       </div>
     </div>
@@ -134,8 +135,11 @@
       </div>
       <div class="lb-info">
         <h2 id="lbTitle"></h2>
-        <p id="lbMeta"></p>
-        <div id="lbTags"></div>
+        <p id="lbDesc"></p>
+        <div class="lb-chips">
+          <span id="lbMeta"></span>
+          <div id="lbTags"></div>
+        </div>
         <button type="button" id="lbClose" autofocus>Close</button>
       </div>
     </dialog>
@@ -243,7 +247,6 @@
       grid.innerHTML = ""; shown = 0;
       $("status").textContent = current.length + (current.length === 1 ? " piece" : " pieces");
       $("activeTag").hidden = !tag; $("tagName").textContent = tag;
-      $("clearFilters").hidden = !active.size && !year;
       showMore();
     }
 
@@ -264,6 +267,10 @@
        so the arrows step through exactly what the grid shows, and wrap around at the ends. */
     let pos = 0;
 
+    // How tags are shown in the pop-up: "fanart" -> "Fan art", "original" -> "Original"
+    const TAG_NAMES = { fanart: "Fan art", "fan art": "Fan art" };
+    const tagLabel = t => TAG_NAMES[t.toLowerCase()] || t.charAt(0).toUpperCase() + t.slice(1);
+
     function openLightbox(p) {
       pos = (p + current.length) % current.length;
       const a = ARTWORKS[current[pos]];
@@ -277,12 +284,12 @@
         if (next.full) new Image().src = next.full;
       });
       $("lbTitle").textContent = a.title;
+      $("lbDesc").textContent = a.description || "";   // from the file's Finder comment
       $("lbMeta").textContent = a.medium.charAt(0).toUpperCase() + a.medium.slice(1);
       $("lbTags").replaceChildren(...a.tags.map(t => {
-        const b = document.createElement("button");
-        b.type = "button"; b.textContent = t;
-        b.addEventListener("click", () => { tag = t; lb.close(); refresh(false); window.scrollTo(0, 0); });
-        return b;
+        const chip = document.createElement("span");
+        chip.className = "chip"; chip.textContent = tagLabel(t);
+        return chip;
       }));
       if (!lb.open) lb.showModal();
     }
@@ -310,9 +317,11 @@
       touchX = null;
     }, { passive: true });
 
-    $("clearFilters").addEventListener("click", () => {
+    // Reset: turns off every filter button, the year and any tag picked from a piece
+    $("reset").addEventListener("click", () => {
       active.forEach(o => o.button.setAttribute("aria-pressed", "false"));
       active.clear();
+      tag = "";
       year = ""; $("year").value = ""; $("year").classList.remove("on");
       refresh(false);
     });
