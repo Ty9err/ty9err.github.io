@@ -151,4 +151,14 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
   nav a { font-size: 0.9rem; }
   nav ul { gap: 0.1rem 1rem; }
   header { padding: 0.7rem 1rem 1rem; }
+
+  /* About Me on phones: less empty space and a smaller headline so it doesn't feel crowded */
+  .about { padding: 1.25rem 1rem; }
+  .about h1 { font-size: 1.6rem; margin-bottom: 0.75rem; }
+  .about-text { min-height: 0; line-height: 1.65; }   /* the box only needs to be as tall as its text */
+  .about-text p:first-child { margin-top: 0; }
+  .about-text p:last-child { margin-bottom: 0; }
+  .about-side { margin-top: 1.5rem; }
+  .pill { margin-bottom: 1.25rem; }
+  .frame { padding: 0.75rem; }
 }

@@ -44,6 +44,10 @@
     .thumb { display: block; width: 100%; padding: 0; border: 0; background: var(--line); cursor: pointer; }
     .thumb img, .thumb .ph { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
     .thumb .ph { background: var(--line); }
+    /* Phones: two thumbnails per row, same sizing as the store page's product boxes */
+    @media (max-width: 600px) {
+      .grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    }
     #more { display: block; margin: 1.5rem auto; }
     dialog { max-width: 900px; width: 92%; border: 1px solid var(--text); background: var(--bg); color: var(--text); padding: 1rem; }
     dialog::backdrop { background: rgba(0, 0, 0, 0.7); }
@@ -98,7 +102,7 @@
 
   <main class="card">
     <h1>Gallery</h1>
-    <p>A random mix of my art throughout the years. I enjoy sketching a lot! :)</p>
+    <p>A random mix of my work. Turn on any filters below to narrow it down, or click a tag on a piece to find related ones.</p>
 
     <!-- The filter buttons are built from the FILTERS list in the script below. -->
     <div class="controls">
