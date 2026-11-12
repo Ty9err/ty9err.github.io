@@ -11,12 +11,12 @@
     /* Filters: Medium, Type and Year sit on one line on desktop (and wrap on phones), each a
        rounded box like the store page's category switch. Shuffle is centered underneath. */
     .controls { display: flex; flex-direction: column; gap: 1.25rem; margin: 1rem 0; }
-    #filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.75rem 1rem; }
+    #filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1rem 1.5rem; }
     .filter-group { display: flex; flex-direction: column; gap: 0.35rem; }
     .filter-label { color: var(--muted); font-size: 0.9rem; padding-left: 0.25rem; }
     .filter-box { display: flex; flex-wrap: wrap; gap: 0.25rem; padding: 0.25rem;
                   border-radius: 0.75rem; background: var(--bg); border: 1px solid var(--line); width: fit-content; max-width: 100%; }
-    .controls .filter-box button { min-height: 2.75rem; padding: 0 0.7rem; border: 0; border-radius: 0.55rem;
+    .controls .filter-box button { min-height: 2.75rem; padding: 0 1.1rem; border: 0; border-radius: 0.55rem;
                                    background: transparent; color: var(--text); }
     .controls .filter-box button[aria-pressed="true"] { background: var(--accent); color: var(--dark); font-weight: 700; }
     /* The Year menu lives inside the same kind of box, with our own arrow */
@@ -31,7 +31,7 @@
        On phones they get their own line, centered. */
     .filter-actions { display: flex; align-items: center; gap: 0.5rem; }
     @media (max-width: 600px) { .filter-actions { flex-basis: 100%; justify-content: center; } }
-    .controls #shuffle, .controls #reset, #more { min-height: calc(3.25rem + 2px); padding: 0 0.85rem;
+    .controls #shuffle, .controls #reset, #more { min-height: calc(3.25rem + 2px); padding: 0 1.25rem;
                                 border: 1px solid var(--line); border-radius: 0.75rem; background: var(--bg); color: var(--text); }
     .controls #shuffle:hover, .controls #reset:hover, #more:hover { border-color: var(--accent); }
     .controls button, #more, #clearTag, dialog button {
@@ -156,7 +156,7 @@
     /* FILTER BUTTONS
        Each row is a category; each button either checks the piece's medium (from make_gallery.py)
        or looks for a tag. To add a button, copy a line and change the label and tag.
-       Tags are matched without caring about capitals, so "Ink" and "ink" are the same.
+       Tags are matched without caring about capitals, so "Fanart" and "fanart" are the same.
        One button per category can be on at a time; picking another swaps to it, and clicking
        the one that's on turns it off. Categories combine: Traditional + Original shows only
        traditional original pieces.
@@ -168,8 +168,6 @@
         { label: "Digital",      medium: "digital" },
         { label: "Traditional",  medium: "traditional" },
         { label: "Mixed media",  medium: "mixed media" },
-        { label: "Paint",        tag: "paint" },
-        { label: "Ink",          tag: "ink" },
       ]},
       { name: "Type", options: [
         { label: "Original",     tag: "original" },
