@@ -16,6 +16,23 @@
                       background: transparent; color: var(--text); font: inherit; cursor: pointer; }
     .filters button[aria-pressed="true"] { background: var(--accent); color: var(--dark); font-weight: 700; }
 
+
+    /* Sliding highlight: one yellow pill sits behind the buttons and glides to the chosen one.
+       Change 0.35s to make the slide faster or slower. */
+    .filters { position: relative; }
+    .filters > .slider { position: absolute; top: 0; left: 0; z-index: 0; pointer-events: none;
+      border-radius: 0.55rem; background: var(--accent); opacity: 0;
+      transition: transform 0.35s cubic-bezier(0.3, 0.7, 0.2, 1), width 0.35s cubic-bezier(0.3, 0.7, 0.2, 1),
+                  height 0.35s cubic-bezier(0.3, 0.7, 0.2, 1), opacity 0.2s ease; }
+    .filters > button { position: relative; z-index: 1; transition: color 0.25s ease;
+      display: inline-flex; flex-direction: column; align-items: center; justify-content: center; }
+    .filters.sliding > button[aria-pressed="true"] { background: transparent; }
+    /* Saves room for the bold version of each label, so buttons don't change width when picked */
+    .filters > button::after { content: attr(data-label); font-weight: 700; height: 0;
+      visibility: hidden; overflow: hidden; }
+    @media (prefers-reduced-motion: reduce) {
+      .filters > .slider, .filters > button { transition: none; } }
+
     /* Product grid */
     .products { list-style: none; margin: 0; padding: 0; display: grid;
                 grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 1.5rem; }
@@ -213,6 +230,38 @@
         send.disabled = false;
       }
     });
+  </script>
+
+  <script>
+    /* Sliding highlight for the button switches on this page. A yellow pill sits behind the
+       buttons and glides to whichever one is pressed. It watches the buttons' "pressed" state,
+       so it follows along however a button gets picked. If none is pressed, the pill fades out. */
+    function moveSlider(bar, instant) {
+      const pill = bar.querySelector(":scope > .slider");
+      const b = bar.querySelector(':scope > button[aria-pressed="true"]');
+      if (!b || !b.offsetWidth) { pill.style.opacity = 0; return; }
+      if (pill.style.opacity !== "1") instant = true;   // appearing: place it, then fade in
+      if (instant) pill.style.transition = "none";
+      pill.style.width = b.offsetWidth + "px";
+      pill.style.height = b.offsetHeight + "px";
+      pill.style.transform = "translate(" + b.offsetLeft + "px, " + b.offsetTop + "px)";
+      if (instant) { pill.offsetWidth; pill.style.transition = ""; }
+      pill.style.opacity = 1;
+    }
+    const sliderBars = document.querySelectorAll(".filters");
+    sliderBars.forEach(bar => {
+      const pill = document.createElement("span");
+      pill.className = "slider"; pill.setAttribute("aria-hidden", "true");
+      bar.prepend(pill); bar.classList.add("sliding");
+      bar.querySelectorAll(":scope > button").forEach(b => b.dataset.label = b.textContent);
+      new MutationObserver(() => moveSlider(bar))
+        .observe(bar, { attributes: true, subtree: true, attributeFilter: ["aria-pressed"] });
+      moveSlider(bar, true);
+    });
+    // Re-place the pills once fonts load and when the window changes size
+    const placeSliders = () => sliderBars.forEach(bar => moveSlider(bar, true));
+    window.addEventListener("load", placeSliders);
+    window.addEventListener("resize", placeSliders);
   </script>
 
 </body>
