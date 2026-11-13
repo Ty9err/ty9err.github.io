@@ -135,6 +135,13 @@
     .stepper input::-webkit-inner-spin-button,
     .stepper input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     .price-note { color: var(--accent); font-weight: bold; }
+
+    /* Estimated total, just above the Send button */
+    .estimate { margin-top: 1.25rem; padding: 0.9rem 1rem; border: 2px solid var(--accent); border-radius: 0.75rem;
+                background: var(--bg); }
+    .estimate .est-total { margin: 0; color: var(--accent); font-weight: 700; font-size: 1.2rem; }
+    .estimate .est-detail { margin: 0.25rem 0 0; color: var(--text); }
+    .estimate .hint { margin-top: 0.4rem; }
   </style>
 <link rel="icon" href="/images/favicon.ico" sizes="any">
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
@@ -467,6 +474,14 @@
         <input type="checkbox" name="agreed" id="agreed" required style="display:inline; width:auto; margin:0; accent-color: var(--accent);">
         I have read the terms above.
       </label>
+      <!-- Estimated total. Worked out from the price tables above, so only edit prices there. -->
+      <div class="estimate" id="estimate" aria-live="polite">
+        <p class="est-total" id="est-total">Estimated total: &ndash;</p>
+        <p class="est-detail" id="est-detail">Choose your options above to see an estimate.</p>
+        <p class="hint">This is an estimate. Your final price is confirmed in your quote.</p>
+      </div>
+      <input type="hidden" name="estimate" id="est-field" value="">
+
       <button type="submit" id="send" disabled>Send inquiry</button>
       <p class="hint" id="form-error" role="alert" hidden>Sorry, something went wrong. Please try again, or email me directly.</p>
     </form>
@@ -632,12 +647,68 @@
       document.getElementById("complete-option").disabled = traditional;
       if (traditional && finish.value === "Complete illustration") finish.value = "";
       document.getElementById("double-note").hidden = !traditional;
+      updateTotal();
     }
 
     function step(by) {
       const min = parseInt(count.min, 10);
       const n = (parseInt(count.value, 10) || 0) + by;
       count.value = Math.min(10, Math.max(min, n));
+      updateTotal();
+    }
+
+    /* ESTIMATED TOTAL
+       Reads prices straight from the Digital and Traditional price tables on this page, so
+       changing a price in a table changes the estimate too. Row names in the tables must match
+       the "Type of piece" choices, and column names must match the "Finish" choices. */
+    const money = n => "$" + n;
+    function tablePrice(medium, row, column) {
+      const table = document.getElementById(medium === "Traditional" ? "prices-traditional" : "prices-digital");
+      const heads = [...table.querySelectorAll("thead th")].map(th => th.textContent.trim().toLowerCase());
+      const col = heads.indexOf(column.toLowerCase());
+      const tr = [...table.querySelectorAll("tbody tr")]
+        .find(r => r.cells[0].textContent.trim().toLowerCase() === row.toLowerCase());
+      if (!tr || col < 0) return null;
+      const n = parseInt(tr.cells[col].textContent.replace(/[^0-9]/g, ""), 10);
+      return isNaN(n) ? null : n;   // "–" means not offered
+    }
+
+    function updateTotal() {
+      const totalEl = document.getElementById("est-total");
+      const detailEl = document.getElementById("est-detail");
+      const field = document.getElementById("est-field");
+      const show = (total, detail) => {
+        totalEl.textContent = "Estimated total: " + (total === null ? "–" : total);
+        detailEl.textContent = detail;
+        field.value = total === null ? "" : total + " (" + detail + ")";
+      };
+
+      const t = type.value;
+      const n = parseInt(count.value, 10) || 0;
+      if (!t) return show(null, "Choose your options above to see an estimate.");
+      if (t.startsWith("Other")) return show(null, "\"Other\" requests are priced in your quote.");
+
+      let med = "Digital", fin = "Complete illustration", extras = 0;
+      if (t === "Logo") {
+        extras = 0;
+      } else if (t === "Poster") {
+        extras = n;                          // posters start at 0 characters
+      } else {
+        if (!medium.value || !finish.value) return show(null, "Pick a medium and finish to see your estimate.");
+        med = medium.value; fin = finish.value;
+        extras = t === "Original character design" ? 0 : Math.max(0, n - 1);   // price includes one character
+      }
+
+      const base = tablePrice(med, t, fin);
+      if (base === null) return show(null, fin + " isn't offered for " + t.toLowerCase() + " (" + med.toLowerCase() + ").");
+      const each = extras ? tablePrice(med, "Each additional character", fin) : 0;
+      const total = base + extras * (each || 0);
+
+      let detail = t + ", " + (t === "Logo" || t === "Poster" ? "digital" : med.toLowerCase() + " " + fin.toLowerCase())
+                 + ": " + money(base);
+      if (extras) detail += " + " + extras + " extra character" + (extras > 1 ? "s" : "") + " × " + money(each);
+      if (med === "Traditional") detail += ". Shipping is added to your quote.";
+      show(money(total), detail);
     }
 
     type.addEventListener("change", update);
