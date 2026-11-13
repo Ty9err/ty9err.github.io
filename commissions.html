@@ -11,7 +11,9 @@
 
     /* Examples grid: each card opens a pop-up with details */
     .examples { list-style: none; margin: 1rem 0; padding: 0; display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.25rem; }
+                grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }   /* 3 per row: 2 rows of 3 */
+    @media (max-width: 800px) { .examples { grid-template-columns: repeat(2, 1fr); } }   /* tablets */
+    @media (max-width: 480px) { .examples { grid-template-columns: 1fr; } }              /* phones */
     .example { display: block; width: 100%; padding: 0; margin: 0; border: 0; background: none;
                color: inherit; font: inherit; text-align: left; cursor: pointer; }
     .example .ph, .example img, .sheet-media .ph, .sheet-media img {
@@ -296,34 +298,6 @@
             <span class="ph" role="img" aria-label="Expression sheet example, traditional ink" data-medium="Traditional" data-stage="Ink"></span>
           </div>
          <p>Expression sheets include 6 expressions of your choice, or my choice if you're feeling indecisive!</p>
-        </div>
-      </li>
-      <li>
-        <button type="button" class="example" aria-haspopup="dialog">
-          <span class="ph" role="img" aria-label="Example placeholder"></span>
-          <span class="ex-title">Line art</span>
-          <span class="ex-more">View details</span>
-        </button>
-        <div class="ex-info" hidden>
-          <div class="ex-stages">
-            <span class="ph" role="img" aria-label="Line art example, digital line art" data-medium="Digital" data-stage="Line art"></span>
-            <span class="ph" role="img" aria-label="Line art example, traditional line art" data-medium="Traditional" data-stage="Line art"></span>
-          </div>
-         <p>Line art is simply clean lines with no color, for all you minimalists out there.</p>
-        </div>
-      </li>
-      <li>
-        <button type="button" class="example" aria-haspopup="dialog">
-          <span class="ph" role="img" aria-label="Example placeholder"></span>
-          <span class="ex-title">Ink</span>
-          <span class="ex-more">View details</span>
-        </button>
-        <div class="ex-info" hidden>
-          <div class="ex-stages">
-            <span class="ph" role="img" aria-label="Ink example, digital ink" data-medium="Digital" data-stage="Ink"></span>
-            <span class="ph" role="img" aria-label="Ink example, traditional ink" data-medium="Traditional" data-stage="Ink"></span>
-          </div>
-          <p>Traditional ink pieces are drawn with real ink on paper. Digital ink illustrations imitate the look of traditional ink on screen for a lower price.</p>
         </div>
       </li>
       <li>
