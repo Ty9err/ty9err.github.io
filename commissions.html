@@ -571,6 +571,9 @@
     // The Digital / Traditional row is shown on every pop-up; Traditional is grayed out
     // on digital-only pieces (original character designs, logos, posters).
     const ALL_MEDIUMS = ["Digital", "Traditional"];
+    // The stage row always shows all four stages; ones a piece doesn't come in are grayed out
+    // (e.g. Complete illustration for traditional, everything but Complete for logos/posters).
+    const ALL_STAGES = ["Sketch", "Line art", "Ink", "Complete illustration"];
 
     document.querySelectorAll(".example").forEach(card => {
       card.addEventListener("click", () => {
@@ -588,13 +591,14 @@
             if (!stages.includes(stage)) stage = stages[stages.length - 1];   // e.g. Complete -> Ink
             media.replaceChildren(here[stages.indexOf(stage)].cloneNode(true));
             buttonRow(mediumBar, ALL_MEDIUMS, medium, m => { medium = m; render(); }, mediums);
-            buttonRow(stageBar, stages, stage, s => { stage = s; render(); });
+            buttonRow(stageBar, ALL_STAGES, stage, s => { stage = s; render(); }, stages);
           }
           render();
         } else {
+          // Logo and Poster: digital, complete illustration only
           media.replaceChildren(card.querySelector("img, .ph").cloneNode(true));
           buttonRow(mediumBar, ALL_MEDIUMS, "Digital", () => {}, ["Digital"]);
-          stageBar.hidden = true;
+          buttonRow(stageBar, ALL_STAGES, "Complete illustration", () => {}, ["Complete illustration"]);
         }
 
         const body = document.getElementById("sheet-body");

@@ -43,9 +43,12 @@
     .notify h2 { margin-top: 0; }
     .notify form { display: flex; flex-wrap: wrap; gap: 0.5rem; }
     .notify input { flex: 1 1 14rem; padding: 0.5rem; font: inherit; color: var(--text);
-                    background: var(--bg); border: 1px solid var(--text); }
+                    background: var(--bg); border: 1px solid var(--text); border-radius: 0.75rem; }   /* rounded, like the other forms */
     .notify button { padding: 0.5rem 1.25rem; font: inherit; cursor: pointer; color: var(--bg);
-                     background: var(--accent); border: 0; }
+                     background: var(--accent); border: 0; border-radius: 0.75rem; font-weight: 700; }
+    .notify button:disabled { opacity: 0.45; cursor: not-allowed; }
+    #notify-msg { margin: 0.5rem 0 0; }
+    #notify-msg:empty { display: none; }
     .notify .hint { color: var(--muted); font-size: 0.9rem; margin: 0.5rem 0 0; }
 
     /* Phones: two smaller cards per row */
@@ -157,6 +160,7 @@
         <input type="email" name="email" placeholder="Your email" aria-label="Your email" required>
         <button type="submit" id="notify-send">Notify me</button>
       </form>
+      <p id="notify-msg" role="status"></p>
     </section>
   </main>
 
