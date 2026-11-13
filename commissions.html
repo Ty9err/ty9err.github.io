@@ -83,6 +83,22 @@
                             background: transparent; color: var(--text); font: inherit; cursor: pointer; }
     .medium-switch button[aria-pressed="true"] { background: var(--accent); color: var(--dark); font-weight: 700; }
 
+    /* Sliding highlight: one yellow pill sits behind the buttons and glides to the chosen one.
+       Change 0.35s to make the slide faster or slower. */
+    .medium-switch { position: relative; }
+    .medium-switch .slider { position: absolute; top: 0; left: 0; z-index: 0; pointer-events: none;
+      border-radius: 0.55rem; background: var(--accent);
+      transition: transform 0.35s cubic-bezier(0.3, 0.7, 0.2, 1), width 0.35s cubic-bezier(0.3, 0.7, 0.2, 1),
+                  height 0.35s cubic-bezier(0.3, 0.7, 0.2, 1); }
+    .medium-switch button { position: relative; z-index: 1; transition: color 0.25s ease;
+      display: inline-flex; flex-direction: column; align-items: center; justify-content: center; }
+    .medium-switch.sliding button[aria-pressed="true"] { background: transparent; }
+    /* Saves room for the bold version of each label, so buttons don't change width when picked */
+    .medium-switch button::after { content: attr(data-label); font-weight: 700; height: 0;
+      visibility: hidden; overflow: hidden; }
+    @media (prefers-reduced-motion: reduce) {
+      .medium-switch .slider, .medium-switch button { transition: none; } }
+
     /* Stage buttons inside the example pop-up (Sketch / Line art / Ink / Complete illustration).
        Same look as the Digital / Traditional switch; wraps onto two lines on small phones. */
     .stage-switch { flex-wrap: wrap; margin: 0 0 1rem; }
@@ -506,18 +522,47 @@
   </footer>
 
   <script>
+    /* Sliding highlight for every Digital / Traditional and stage switch.
+       Moves the yellow pill behind the pressed button; "instant" places it without animating. */
+    function moveSlider(bar, instant) {
+      let pill = bar.querySelector(":scope > .slider");
+      if (!pill) {
+        pill = document.createElement("span");
+        pill.className = "slider"; pill.setAttribute("aria-hidden", "true");
+        bar.prepend(pill); bar.classList.add("sliding");
+        instant = true;
+      }
+      const b = bar.querySelector('button[aria-pressed="true"]');
+      if (!b || !b.offsetWidth) { pill.style.opacity = 0; return; }
+      pill.style.opacity = 1;
+      if (instant) pill.style.transition = "none";
+      pill.style.width = b.offsetWidth + "px";
+      pill.style.height = b.offsetHeight + "px";
+      pill.style.transform = "translate(" + b.offsetLeft + "px, " + b.offsetTop + "px)";
+      if (instant) { pill.offsetWidth; pill.style.transition = ""; }   // re-enable the animation
+    }
+
     /* Price table switch: shows the Digital or Traditional table. */
+    const priceSwitch = document.getElementById("price-switch");
     const switchButtons = document.querySelectorAll("#price-switch button");
     switchButtons.forEach(btn => {
+      btn.dataset.label = btn.textContent;
       btn.addEventListener("click", () => {
         switchButtons.forEach(other => {
           const on = other === btn;
           other.setAttribute("aria-pressed", on);
           document.getElementById(other.dataset.show).hidden = !on;
         });
+        moveSlider(priceSwitch);
         updateScrollCues();
       });
     });
+    moveSlider(priceSwitch, true);
+    // Re-place the pills once fonts load and when the window changes size
+    const placeAll = () => [priceSwitch, document.getElementById("sheet-mediums"),
+                            document.getElementById("sheet-stages")].forEach(bar => moveSlider(bar, true));
+    window.addEventListener("load", placeAll);
+    window.addEventListener("resize", placeAll);
 
     /* Swipe cues: turns on the hint, fade and pinned column only when the table overflows. */
     const scrollHint = document.getElementById("scroll-hint");
@@ -549,10 +594,13 @@
     // Fills a button row with one button per label; the chosen one is highlighted.
     // Labels not in "available" are grayed out and can't be clicked.
     function buttonRow(bar, labels, chosen, onPick, available = labels) {
-      bar.replaceChildren(...labels.map(label => {
+      // Swap the buttons but keep the sliding pill, so it can glide from its old spot
+      bar.querySelectorAll(":scope > button").forEach(b => b.remove());
+      bar.append(...labels.map(label => {
         const b = document.createElement("button");
         b.type = "button";
         b.textContent = label;
+        b.dataset.label = label;
         b.setAttribute("aria-pressed", label === chosen);
         if (!available.includes(label)) {
           b.disabled = true;
@@ -566,6 +614,7 @@
         return b;
       }));
       bar.hidden = labels.length < 2;
+      if (sheet.open) moveSlider(bar);   // slide (including forced moves, like Complete -> Ink)
     }
 
     // The Digital / Traditional row is shown on every pop-up; Traditional is grayed out
@@ -606,6 +655,8 @@
           .filter(el => !el.classList.contains("ex-stages"))
           .map(el => el.cloneNode(true)));
         sheet.showModal();
+        moveSlider(mediumBar, true);   // a freshly opened pop-up starts in place, no slide
+        moveSlider(stageBar, true);
       });
     });
     document.getElementById("sheet-close").addEventListener("click", () => sheet.close());
