@@ -141,7 +141,6 @@
                 background: var(--bg); }
     .estimate .est-total { margin: 0; color: var(--accent); font-weight: 700; font-size: 1.2rem; }
     .estimate .est-detail { margin: 0.25rem 0 0; color: var(--text); }
-    .estimate .hint { margin-top: 0.4rem; }
   </style>
 <link rel="icon" href="/images/favicon.ico" sizes="any">
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
@@ -439,6 +438,13 @@
         <span class="hint" id="character-hint">Price increases for each additional character.</span>
       </div>
 
+      <!-- Estimated total. Worked out from the price tables above, so only edit prices there. -->
+      <div class="estimate" id="estimate" aria-live="polite">
+        <p class="est-total" id="est-total">Estimated total: &ndash;</p>
+        <p class="est-detail" id="est-detail">Choose your options above to see an estimate.</p>
+      </div>
+      <input type="hidden" name="estimate" id="est-field" value="">
+
       <label>Describe what you'd like
         <textarea name="description" required></textarea>
         <span class="hint">Please include any reference links that will help describe your commission.</span>
@@ -474,14 +480,6 @@
         <input type="checkbox" name="agreed" id="agreed" required style="display:inline; width:auto; margin:0; accent-color: var(--accent);">
         I have read the terms above.
       </label>
-      <!-- Estimated total. Worked out from the price tables above, so only edit prices there. -->
-      <div class="estimate" id="estimate" aria-live="polite">
-        <p class="est-total" id="est-total">Estimated total: &ndash;</p>
-        <p class="est-detail" id="est-detail">Choose your options above to see an estimate.</p>
-        <p class="hint">This is an estimate. Your final price is confirmed in your quote.</p>
-      </div>
-      <input type="hidden" name="estimate" id="est-field" value="">
-
       <button type="submit" id="send" disabled>Send inquiry</button>
       <p class="hint" id="form-error" role="alert" hidden>Sorry, something went wrong. Please try again, or email me directly.</p>
     </form>
@@ -598,7 +596,6 @@
     const closed = document.querySelector("main").dataset.commissions !== "open";
     document.getElementById("status").textContent = closed ? "***CLOSED***" : "OPEN";
     document.getElementById("closed-note").hidden = !closed;
-    if (closed) document.getElementById("send").textContent = "Commissions closed";
 
     /* Shows and hides form questions based on the type of piece and medium. */
     const type = document.getElementById("type");
