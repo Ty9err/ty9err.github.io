@@ -24,7 +24,8 @@
     .ex-more { display: block; color: var(--accent); font-size: 0.85rem; }
 
     /* The pop-up sheet */
-    .sheet { width: min(92vw, 620px); max-height: 88vh; padding: 0; border: 0; border-radius: 1.25rem;
+    .sheet { width: min(92vw, 620px); max-height: 88vh; padding: 0; border: 3px solid var(--accent);
+             border-radius: 1.25rem; outline: none;   /* yellow rounded outline, no white focus ring */
              background: var(--dark); color: var(--text); overflow: auto; }
     .sheet::backdrop { background: rgba(0, 0, 0, 0.6); }
     .sheet-inner { padding: 1.5rem; }
@@ -78,23 +79,28 @@
     th.na, td.na { color: var(--muted); font-weight: 400; }
 
     /* Form styles */
-    form label { display: block; margin-top: 1rem; }
+    /* Question headings ("Type of piece", "Medium"...) are yellow; answer choices stay white */
+    form label, .choice legend { display: block; margin-top: 1rem; color: var(--accent); font-weight: 700; }
+    form .hint { font-weight: 400; }
     form input, form select, form textarea {
       display: block; width: 100%; margin-top: 0.25rem; padding: 0.5rem;
-      font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--text);
+      font: inherit; font-weight: 400; color: var(--text); background: var(--bg); border: 1px solid var(--text);
+      border-radius: 0.75rem;   /* rounded boxes, same as the rest of the site */
       box-sizing: border-box;   /* keeps every box exactly as wide as the form */
     }
     form textarea { min-height: 8rem; resize: vertical; }   /* can be dragged taller, never wider */
     form button {
       margin-top: 1.25rem; padding: 0.5rem 1.25rem; font: inherit; cursor: pointer;
-      color: var(--bg); background: var(--accent); border: 0;
+      color: var(--bg); background: var(--accent); border: 0; border-radius: 0.75rem;
     }
     .hint { color: var(--muted); font-size: 0.95rem; margin: 0.25rem 0 0; }
 
     /* Sharing question: two round choices */
     .choice { border: 0; padding: 0; margin: 1rem 0 0; }
     .choice legend { padding: 0; }
-    .choice label { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.4rem; cursor: pointer; }
+    .choice label, form label.check { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.4rem;
+                    cursor: pointer; color: var(--text); font-weight: 400; }
+    form label.check { margin-top: 1rem; }
     .choice input { display: inline-block; width: auto; margin: 0; accent-color: var(--accent); }
 
     /* Dropdowns: our own arrow, moved in from the right edge.
@@ -110,14 +116,13 @@
     .terms { margin-top: 0.5rem; }
     .terms summary { cursor: pointer; color: var(--accent); font-weight: 700; padding: 0.25rem 0; }
     .terms-box {
-      height: 8rem; overflow-y: auto; margin-top: 0.5rem; padding: 0.5rem;
-      border: 1px solid var(--text); background: var(--bg); box-sizing: border-box;
+      height: 8rem; overflow-y: auto; margin-top: 0.5rem; padding: 0.5rem 0.75rem;
+      border: 1px solid var(--text); border-radius: 0.75rem; background: var(--bg); box-sizing: border-box;
     }
     .terms-box p { margin: 0 0 0.75rem; }
 
     /* Send button stays faded until the terms box is ticked */
     form button[type="submit"]:disabled { opacity: 0.45; cursor: not-allowed; }
-    form.closed { opacity: 0.5; }   /* grayed out while commissions are closed */
 
     #closed-note { text-align: center; }   /* "Commissions are currently closed" above the form */
 
@@ -458,8 +463,8 @@
       </div>
     </details>
       
-      <label>
-        <input type="checkbox" name="agreed" id="agreed" required style="display:inline; width:auto; margin-right:0.5rem;">
+      <label class="check">
+        <input type="checkbox" name="agreed" id="agreed" required style="display:inline; width:auto; margin:0; accent-color: var(--accent);">
         I have read the terms above.
       </label>
       <button type="submit" id="send" disabled>Send inquiry</button>
@@ -573,15 +578,12 @@
     document.getElementById("sheet-close").addEventListener("click", () => sheet.close());
     sheet.addEventListener("click", (e) => { if (e.target === sheet) sheet.close(); });   // click outside to close
 
-    /* Open / closed: reads data-commissions on <main>. When closed, the whole form is turned off. */
+    /* Open / closed: reads data-commissions on <main>. When closed, visitors can still fill in
+       the form to explore the options, but the Send button stays grayed out. */
     const closed = document.querySelector("main").dataset.commissions !== "open";
     document.getElementById("status").textContent = closed ? "***CLOSED***" : "OPEN";
     document.getElementById("closed-note").hidden = !closed;
-    if (closed) {
-      document.querySelectorAll("#inquiry select, #inquiry input, #inquiry textarea, #inquiry button")
-        .forEach(el => el.disabled = true);
-      document.getElementById("inquiry").classList.add("closed");
-    }
+    if (closed) document.getElementById("send").textContent = "Commissions closed";
 
     /* Shows and hides form questions based on the type of piece and medium. */
     const type = document.getElementById("type");
@@ -595,7 +597,7 @@
     function toggle(id, show) {
       const box = document.getElementById(id);
       box.hidden = !show;
-      box.querySelectorAll("select, input, button").forEach(el => el.disabled = !show || closed);
+      box.querySelectorAll("select, input, button").forEach(el => el.disabled = !show);
     }
 
     function update() {

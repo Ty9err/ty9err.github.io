@@ -49,10 +49,14 @@
       .grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
     }
     #more { display: block; margin: 1.5rem auto; }
-    dialog { max-width: 900px; width: 92%; border: 1px solid var(--text); background: var(--bg); color: var(--text); padding: 1rem; }
+    /* Pop-up: rounded yellow outline (same as the commissions pop-up), no white focus ring */
+    dialog { max-width: 900px; width: 92%; border: 3px solid var(--accent); border-radius: 1.25rem; outline: none;
+             background: var(--bg); color: var(--text); padding: 1rem; }
     dialog::backdrop { background: rgba(0, 0, 0, 0.7); }
-    dialog img { max-height: 70vh; margin: 0 auto; display: block; }
-    dialog .ph { width: 100%; aspect-ratio: 4 / 3; background: var(--line); }
+    /* The picture keeps a thin white border inside the yellow outline */
+    dialog img { max-width: 100%; max-height: 70vh; margin: 0 auto; display: block;
+                 border: 1px solid var(--text); box-sizing: border-box; }
+    dialog .ph { width: 100%; aspect-ratio: 4 / 3; background: var(--line); border: 1px solid var(--text); box-sizing: border-box; }
     /* Pop-up details: centered. The medium and tags share one row of yellow boxes (like a
        selected filter button); Close is a rounded outline button like Shuffle. */
     .lb-info { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; text-align: center; margin-top: 0.5rem; }
