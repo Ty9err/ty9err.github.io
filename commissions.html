@@ -24,12 +24,15 @@
     .ex-more { display: block; color: var(--accent); font-size: 0.85rem; }
 
     /* The pop-up sheet */
-    .sheet { width: min(92vw, 620px); max-height: 88vh; padding: 0; border: 3px solid var(--accent);
+    /* Pop-up size: change 760px to make it wider or narrower */
+    .sheet { width: min(92vw, 760px); max-height: 92vh; padding: 0; border: 3px solid var(--accent);
              border-radius: 1.25rem; outline: none;   /* yellow rounded outline, no white focus ring */
-             background: var(--dark); color: var(--text); overflow: auto; }
+             background: var(--dark); color: var(--text); overflow: auto; color-scheme: dark; }   /* dark scrollbar */
     .sheet::backdrop { background: rgba(0, 0, 0, 0.6); }
     .sheet-inner { padding: 1.5rem; }
     .sheet-media { margin-bottom: 1rem; }
+    /* The picture fills the pop-up, but never gets taller than the screen allows */
+    .sheet-media .ph, .sheet-media img { width: min(100%, 75vh); margin: 0 auto; }
     .sheet h2 { margin: 0 0 0.5rem; color: var(--accent); }
     .sheet-close { float: right; width: 2.75rem; height: 2.75rem; margin: -0.5rem -0.5rem 0 0.5rem;
                    border: 0; border-radius: 50%; background: var(--line); color: var(--text);
