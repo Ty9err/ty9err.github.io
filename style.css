@@ -144,8 +144,12 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
   h2 { font-size: 1.1rem; }
   .pill { font-size: 1rem; }
   .about-text { padding: 1.1rem; font-size: 1.15em; }   /* keep phone text at the previous size */
-  :root { --footer-h: 4rem; }
-  footer { font-size: 0.75rem; }
+  /* Phones: the copyright bar is no longer pinned to the screen. It sits at the very end of the
+     page, so you see more of the page while scrolling and only meet it at the bottom.
+     It's also slimmer, with the text closer to the bottom edge. */
+  body { padding-bottom: 0; }
+  footer { position: static; height: auto; font-size: 0.75rem;
+           padding: 0.7rem 1rem max(0.6rem, env(safe-area-inset-bottom)); margin-top: auto; }
   .about-side { margin-bottom: 1rem; }
   nav li + li::before { display: none; }
   nav a { font-size: 0.9rem; }
