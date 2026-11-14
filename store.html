@@ -68,8 +68,10 @@
     #notify-msg:empty { display: none; }
     .notify .hint { color: var(--muted); font-size: 0.9rem; margin: 0.5rem 0 0; }
 
-    /* Phones: two smaller cards per row */
+    /* Phones: two smaller cards per row, and the category toggles in a tidy grid of 2 rows of 4 */
     @media (max-width: 600px) {
+      .filters { display: grid; grid-template-columns: repeat(4, 1fr); width: 100%; gap: 0.2rem; padding: 0.2rem; }
+      .filters > button { min-height: 2.4rem; padding: 0 0.2rem; font-size: 0.8rem; }
       .products { grid-template-columns: 1fr 1fr; gap: 1.25rem 0.75rem; }
       .product h3 { font-size: 0.9rem; }
       .buy { width: 100%; justify-content: center; min-height: 2.5rem; }
@@ -146,13 +148,15 @@
       <button type="button" data-filter="all" aria-pressed="true">All</button>
       <button type="button" data-filter="stickers" aria-pressed="false">Stickers</button>
       <button type="button" data-filter="keychains" aria-pressed="false">Keychains</button>
+      <button type="button" data-filter="pins" aria-pressed="false">Pins</button>
+      <button type="button" data-filter="buttons" aria-pressed="false">Buttons</button>
       <button type="button" data-filter="prints" aria-pressed="false">Prints</button>
       <button type="button" data-filter="apparel" aria-pressed="false">Apparel</button>
       <button type="button" data-filter="originals" aria-pressed="false">Originals</button>
     </div>
 
     <!-- HOW TO EDIT A PRODUCT
-         - data-category: stickers, keychains, prints, apparel or originals (decides which filter shows it)
+         - data-category: stickers, keychains, pins, buttons, prints, apparel or originals (decides which filter shows it)
          - Picture: replace the <span class="ph">...</span> line with
              <img src="images/store/your-file.jpg" alt="Describe the item">
          - Price: change the text inside <span class="price">
@@ -175,6 +179,18 @@
       </li>
       <li class="product" data-category="keychains">
         <div class="media"><span class="ph">Keychain photo</span></div>
+        <h3>Product coming soon</h3>
+        <p class="details">Details coming soon</p>
+        <div class="row"><span class="price">$0</span><a class="buy" data-link="">Buy</a></div>
+      </li>
+      <li class="product" data-category="pins">
+        <div class="media"><span class="ph">Pin photo</span></div>
+        <h3>Product coming soon</h3>
+        <p class="details">Details coming soon</p>
+        <div class="row"><span class="price">$0</span><a class="buy" data-link="">Buy</a></div>
+      </li>
+      <li class="product" data-category="buttons">
+        <div class="media"><span class="ph">Button photo</span></div>
         <h3>Product coming soon</h3>
         <p class="details">Details coming soon</p>
         <div class="row"><span class="price">$0</span><a class="buy" data-link="">Buy</a></div>
