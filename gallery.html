@@ -71,13 +71,6 @@
       background: var(--bg); color: var(--text); cursor: pointer;
     }
     #status { color: var(--muted); }
-    /* Shuffle: a white veil fades in over every picture, the new order is swapped in underneath,
-       then the veil fades away. The boxes themselves don't move. Change 0.25s to adjust. */
-    .thumb { position: relative; }
-    .thumb::after { content: ""; position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none;
-                    border-radius: inherit; transition: opacity 0.25s ease; }
-    .grid.whiteout .thumb::after { opacity: 1; }
-    .controls #shuffle:disabled { opacity: 0.6; cursor: progress; }
     .grid { list-style: none; margin: 1rem 0; padding: 0; display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.75rem; }
     .thumb { display: block; width: 100%; padding: 0; border: 0; background: var(--line); cursor: pointer;
@@ -253,7 +246,6 @@
     ];
 
     let year = "", tag = "", order = [], current = [], shown = 0;
-    let noFade = false;   // true for the instant settle at the end of the Shuffle animation
     const active = new Set();               // the filter buttons that are switched on
     const lower = a => a.tags.map(t => t.toLowerCase());
 
@@ -354,7 +346,6 @@
         });
         b.addEventListener("animationend", e => { if (e.animationName === "tap") b.classList.remove("tapped"); });
         li.style.animationDelay = Math.min(k, 16) * 25 + "ms";   // thumbnails fade in one after another
-        if (noFade) li.style.animation = "none";                  // except right after Shuffle: instant
         li.appendChild(b); grid.appendChild(li);
       });
       shown = Math.min(shown + PAGE, current.length);
@@ -426,23 +417,7 @@
       year = ""; $("year").value = ""; $("year").classList.remove("on");
       refresh(false);
     });
-    /* Shuffle animation: pictures fade to white, the new random order is put in while they're
-       white, then they fade back in from white. FADE_MS should match the 0.25s in the styles. */
-    const FADE_MS = 250;
-    const sleep = ms => new Promise(r => setTimeout(r, ms));
-    let shuffling = false;
-    $("shuffle").addEventListener("click", async () => {
-      if (shuffling) return;
-      if (matchMedia("(prefers-reduced-motion: reduce)").matches || !grid.children.length) { refresh(true); return; }
-      shuffling = true; $("shuffle").disabled = true;
-      grid.classList.add("whiteout");                   // fade to white
-      await sleep(FADE_MS);
-      noFade = true; refresh(true); noFade = false;     // swap in the new order while white
-      grid.offsetWidth;
-      grid.classList.remove("whiteout");                // fade back in from white
-      await sleep(FADE_MS);
-      shuffling = false; $("shuffle").disabled = false;
-    });
+    $("shuffle").addEventListener("click", () => refresh(true));
     $("clearTag").addEventListener("click", () => { tag = ""; refresh(false); });
     $("more").addEventListener("click", showMore);
     $("lbClose").addEventListener("click", () => lb.close());
