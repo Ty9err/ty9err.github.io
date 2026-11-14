@@ -37,17 +37,32 @@
       .filter-box > .slider, .filter-box > button { transition: none; } }
 
     /* The Year menu lives inside the same kind of box, with our own arrow */
-    #year { font: inherit; min-height: 2.75rem; padding: 0 2.5rem 0 1.1rem; border: 0; border-radius: 0.55rem; cursor: pointer;
+    #year, .filter-select { font: inherit; min-height: 2.75rem; padding: 0 2.5rem 0 1.1rem; border: 0; border-radius: 0.55rem; cursor: pointer;
             background-color: transparent; color: var(--text); appearance: none; -webkit-appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
             background-repeat: no-repeat; background-position: right 0.9rem center; }
-    #year option { background: var(--bg); color: var(--text); }
-    #year.on { background-color: var(--accent); color: var(--dark); font-weight: 700;
+    #year option, .filter-select option { background: var(--bg); color: var(--text); }
+    #year.on, .filter-select.on { background-color: var(--accent); color: var(--dark); font-weight: 700;
                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%232c2c2c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
     /* Shuffle (and Reset when something is on) sit at the end of the filter line.
        On phones they get their own line, centered. */
     .filter-actions { display: flex; align-items: center; gap: 0.5rem; }
     @media (max-width: 600px) { .filter-actions { flex-basis: 100%; justify-content: center; } }
+    /* Phones: Medium and Type become dropdowns like Year, all three on one line, with Shuffle and
+       Reset centered underneath. Desktop keeps the sliding button toggles. */
+    .select-box { display: none; }
+    @media (max-width: 600px) {
+      .filter-box[role="group"] { display: none; }
+      .select-box { display: flex; }
+      #filters { gap: 0.75rem 0.5rem; }
+      #filters .filter-group { flex: 1 1 0; min-width: 0; }
+      #filters .filter-box { width: 100%; }
+      #year, .filter-select { width: 100%; min-height: 2.4rem; padding: 0 1.4rem 0 0.5rem; font-size: 0.9em;
+                              background-position: right 0.45rem center; background-size: 10px;
+                              text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
+      #filters .filter-box { padding: 0.2rem; }
+      #filters .filter-actions #shuffle, #filters .filter-actions #reset { min-height: 2.6rem; padding: 0 1rem; }   /* smaller on phones */
+    }
     .controls #shuffle, .controls #reset, #more { min-height: calc(3.25rem + 2px); padding: 0 1.25rem;
                                 border: 1px solid var(--line); border-radius: 0.75rem; background: var(--bg); color: var(--text); }
     .controls #shuffle:hover, .controls #reset:hover, #more:hover { border-color: var(--accent); }
@@ -222,7 +237,7 @@
       { name: "Medium", options: [
         { label: "Digital",      medium: "digital" },
         { label: "Traditional",  medium: "traditional" },
-        { label: "Mixed media",  medium: "mixed media" },
+        { label: "Mixed media",  medium: "mixed media", short: "Mixed" },   // "short" = name in the phone dropdown
       ]},
       { name: "Type", options: [
         { label: "Original",     tag: "original" },
@@ -278,12 +293,28 @@
           const wasOn = active.has(o);
           f.options.forEach(x => { active.delete(x); x.button.setAttribute("aria-pressed", "false"); });   // one per category
           if (!wasOn) { active.add(o); b.setAttribute("aria-pressed", "true"); }
+          f.select.value = wasOn ? "" : o.label; f.select.classList.toggle("on", !wasOn);   // keep the phone dropdown in sync
           refresh(false);
         });
         o.button = b;
         box.appendChild(b);
       });
-      group.append(label, box);
+      // The same choices as a dropdown, shown on phones instead of the buttons
+      const selectBox = document.createElement("div"), select = document.createElement("select");
+      selectBox.className = "filter-box select-box";
+      select.className = "filter-select"; select.setAttribute("aria-labelledby", label.id);
+      select.add(new Option("All", ""));
+      f.options.forEach(o => select.add(new Option(o.short || o.label, o.label)));   // shorter name if given
+      select.addEventListener("change", () => {
+        const picked = f.options.find(o => o.label === select.value);
+        f.options.forEach(x => { active.delete(x); x.button.setAttribute("aria-pressed", "false"); });
+        if (picked) { active.add(picked); picked.button.setAttribute("aria-pressed", "true"); }   // keep the buttons in sync
+        select.classList.toggle("on", !!picked);
+        refresh(false);
+      });
+      f.select = select;
+      selectBox.appendChild(select);
+      group.append(label, box, selectBox);
       return group;
     }));
 
@@ -381,6 +412,7 @@
     $("reset").addEventListener("click", () => {
       active.forEach(o => o.button.setAttribute("aria-pressed", "false"));
       active.clear();
+      FILTERS.forEach(f => { f.select.value = ""; f.select.classList.remove("on"); });
       tag = "";
       year = ""; $("year").value = ""; $("year").classList.remove("on");
       refresh(false);
