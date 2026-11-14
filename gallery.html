@@ -71,6 +71,11 @@
       background: var(--bg); color: var(--text); cursor: pointer;
     }
     #status { color: var(--muted); }
+    /* Shuffle blink: each picture dips and flickers as the pictures trade places */
+    @keyframes blink { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.2; transform: scale(0.93); }
+                       100% { opacity: 1; transform: scale(1); } }
+    .thumb > .blink { animation: blink 0.15s ease; }
+    .controls #shuffle:disabled { opacity: 0.6; cursor: progress; }
     .grid { list-style: none; margin: 1rem 0; padding: 0; display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.75rem; }
     .thumb { display: block; width: 100%; padding: 0; border: 0; background: var(--line); cursor: pointer;
@@ -417,7 +422,28 @@
       year = ""; $("year").value = ""; $("year").classList.remove("on");
       refresh(false);
     });
-    $("shuffle").addEventListener("click", () => refresh(true));
+    /* Shuffle animation: the pictures on screen blink and trade places a few times, like a slot
+       machine, then settle into the new random order. Change ROUNDS or ROUND_MS to adjust it. */
+    const ROUNDS = 3, ROUND_MS = 150;
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    let shuffling = false;
+    $("shuffle").addEventListener("click", async () => {
+      if (shuffling) return;
+      const slots = [...grid.querySelectorAll(".thumb > img, .thumb > .ph")];
+      const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!calm && slots.length > 1) {
+        shuffling = true; $("shuffle").disabled = true;
+        const imgs = slots.filter(el => el.tagName === "IMG"), srcs = imgs.map(i => i.src);
+        for (let r = 0; r < ROUNDS; r++) {
+          const mixed = shuffle(srcs);   // only pictures already on screen, so nothing new downloads
+          slots.forEach(el => { el.classList.remove("blink"); el.offsetWidth; el.classList.add("blink"); });
+          imgs.forEach((img, k) => img.src = mixed[k]);
+          await sleep(ROUND_MS);
+        }
+        shuffling = false; $("shuffle").disabled = false;
+      }
+      refresh(true);   // the real new order, which fades in like before
+    });
     $("clearTag").addEventListener("click", () => { tag = ""; refresh(false); });
     $("more").addEventListener("click", showMore);
     $("lbClose").addEventListener("click", () => lb.close());
