@@ -71,10 +71,12 @@
       background: var(--bg); color: var(--text); cursor: pointer;
     }
     #status { color: var(--muted); }
-    /* Shuffle blink: each picture dips and flickers as the pictures trade places */
-    @keyframes blink { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.2; transform: scale(0.93); }
-                       100% { opacity: 1; transform: scale(1); } }
-    .thumb > .blink { animation: blink 0.15s ease; }
+    /* Shuffle: a white veil fades in over every picture, the new order is swapped in underneath,
+       then the veil fades away. The boxes themselves don't move. Change 0.25s to adjust. */
+    .thumb { position: relative; }
+    .thumb::after { content: ""; position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none;
+                    border-radius: inherit; transition: opacity 0.25s ease; }
+    .grid.whiteout .thumb::after { opacity: 1; }
     .controls #shuffle:disabled { opacity: 0.6; cursor: progress; }
     .grid { list-style: none; margin: 1rem 0; padding: 0; display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.75rem; }
@@ -424,27 +426,22 @@
       year = ""; $("year").value = ""; $("year").classList.remove("on");
       refresh(false);
     });
-    /* Shuffle animation: the pictures on screen blink and trade places a few times, like a slot
-       machine, then settle into the new random order. Change ROUNDS or ROUND_MS to adjust it. */
-    const ROUNDS = 3, ROUND_MS = 150;
+    /* Shuffle animation: pictures fade to white, the new random order is put in while they're
+       white, then they fade back in from white. FADE_MS should match the 0.25s in the styles. */
+    const FADE_MS = 250;
     const sleep = ms => new Promise(r => setTimeout(r, ms));
     let shuffling = false;
     $("shuffle").addEventListener("click", async () => {
       if (shuffling) return;
-      const slots = [...grid.querySelectorAll(".thumb > img, .thumb > .ph")];
-      const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (!calm && slots.length > 1) {
-        shuffling = true; $("shuffle").disabled = true;
-        const imgs = slots.filter(el => el.tagName === "IMG"), srcs = imgs.map(i => i.src);
-        for (let r = 0; r < ROUNDS; r++) {
-          const mixed = shuffle(srcs);   // only pictures already on screen, so nothing new downloads
-          slots.forEach(el => { el.classList.remove("blink"); el.offsetWidth; el.classList.add("blink"); });
-          imgs.forEach((img, k) => img.src = mixed[k]);
-          await sleep(ROUND_MS);
-        }
-        shuffling = false; $("shuffle").disabled = false;
-      }
-      noFade = true; refresh(true); noFade = false;   // the real new order appears instantly
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches || !grid.children.length) { refresh(true); return; }
+      shuffling = true; $("shuffle").disabled = true;
+      grid.classList.add("whiteout");                   // fade to white
+      await sleep(FADE_MS);
+      noFade = true; refresh(true); noFade = false;     // swap in the new order while white
+      grid.offsetWidth;
+      grid.classList.remove("whiteout");                // fade back in from white
+      await sleep(FADE_MS);
+      shuffling = false; $("shuffle").disabled = false;
     });
     $("clearTag").addEventListener("click", () => { tag = ""; refresh(false); });
     $("more").addEventListener("click", showMore);
