@@ -13,7 +13,7 @@
     .examples { list-style: none; margin: 1rem 0; padding: 0; display: grid;
                 grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }   /* 3 per row: 2 rows of 3 */
     @media (max-width: 800px) { .examples { grid-template-columns: repeat(2, 1fr); } }   /* tablets */
-    @media (max-width: 480px) { .examples { grid-template-columns: 1fr; } }              /* phones */
+    @media (max-width: 480px) { .examples { gap: 1rem 0.75rem; } }                        /* phones: still 2 per row */
     .example { display: block; width: 100%; padding: 0; margin: 0; border: 0; background: none;
                color: inherit; font: inherit; text-align: left; cursor: pointer; }
     .example .ph, .example img, .sheet-media .ph, .sheet-media img {
@@ -223,9 +223,9 @@
     <p><strong>Status: <span id="status">***CLOSED***</span></strong></p>
 
     <h2>What I draw</h2>
-    <p>Character illustrations, original character designs, stylized portraits, and expression sheets.</p>
+    <p>Character illustrations, character design sheets, stylized portraits, and expression sheets.</p>
     <p>Each can be done as a <strong>sketch</strong>, <strong>line art</strong>, <strong>ink</strong>, or <strong>complete illustration</strong>, in <strong>digital</strong> or <strong>traditional</strong>.</p>
-    <p>Original character designs and complete (colored) illustrations are <strong>digital only</strong>. I do not offer colored traditional pieces.</p>
+    <p>Character design sheets and complete (colored) illustrations are <strong>digital only</strong>. I do not offer colored traditional pieces.</p>
   
     <p>Traditional pieces are drawn on <strong>8x10</strong> sketch paper and <strong>shipped to you</strong>.</p>
     <p>I also design <strong>logos</strong> and <strong>posters</strong>.</p>
@@ -273,17 +273,17 @@
       <li>
         <button type="button" class="example" aria-haspopup="dialog">
           <span class="ph" role="img" aria-label="Example placeholder"></span>
-          <span class="ex-title">Original character design sheet</span>
+          <span class="ex-title">Character design sheet</span>
           <span class="ex-more">View details</span>
         </button>
         <div class="ex-info" hidden>
           <div class="ex-stages">
-            <span class="ph" role="img" aria-label="Original character design sheet example, digital sketch" data-medium="Digital" data-stage="Sketch"></span>
-            <span class="ph" role="img" aria-label="Original character design sheet example, digital line art" data-medium="Digital" data-stage="Line art"></span>
-            <span class="ph" role="img" aria-label="Original character design sheet example, digital ink" data-medium="Digital" data-stage="Ink"></span>
-            <span class="ph" role="img" aria-label="Original character design sheet example, digital complete illustration" data-medium="Digital" data-stage="Complete illustration"></span>
+            <span class="ph" role="img" aria-label="Character design sheet example, digital sketch" data-medium="Digital" data-stage="Sketch"></span>
+            <span class="ph" role="img" aria-label="Character design sheet example, digital line art" data-medium="Digital" data-stage="Line art"></span>
+            <span class="ph" role="img" aria-label="Character design sheet example, digital ink" data-medium="Digital" data-stage="Ink"></span>
+            <span class="ph" role="img" aria-label="Character design sheet example, digital complete illustration" data-medium="Digital" data-stage="Complete illustration"></span>
           </div>
-         <p>An original character design sheet includes 3 pose illustrations, 3 expressions, and a mini turn around view of the character.</p>
+         <p>A character design sheet includes 3 pose illustrations, 3 expressions, and a mini turn around view of the character.</p>
         </div>
       </li>
       <li>
@@ -376,7 +376,7 @@
         </thead>
         <tbody>
           <tr><td>Character illustration</td><td>$50</td><td>$65</td><td>$70</td><td>$100</td></tr>
-          <tr><td>Original character design</td><td>$100</td><td>$150</td><td>$180</td><td>$250</td></tr>
+          <tr><td>Character design sheet</td><td>$100</td><td>$150</td><td>$180</td><td>$250</td></tr>
           <tr><td>Stylized portrait</td><td>$40</td><td>$50</td><td>$60</td><td>$85</td></tr>
           <tr><td>Expression sheet</td><td>$35</td><td>$45</td><td>$50</td><td>$80</td></tr>
           <tr><td>Logo</td><td>&ndash;</td><td>&ndash;</td><td>&ndash;</td><td>$60</td></tr>
@@ -384,7 +384,7 @@
           <tr><td>Each additional character</td><td><span class="plus">+</span>$35</td><td><span class="plus">+</span>$45</td><td><span class="plus">+</span>$50</td><td><span class="plus">+</span>$70</td></tr>
         </tbody>
       </table>
-       <p class="hint">*Additional characters unavailable for original character designs</p>
+       <p class="hint">*Additional characters unavailable for character design sheets</p>
     </div>
 
     <div class="table-wrap" id="prices-traditional" hidden>
@@ -399,7 +399,7 @@
           <tr><td>Each additional character</td><td><span class="plus">+</span>$40</td><td><span class="plus">+</span>$60</td><td><span class="plus">+</span>$80</td><td class="na">&ndash;</td></tr>
         </tbody>
       </table>
-      <p class="hint">*Traditional pieces are drawn on 8x10 sketch paper and shipped to you. Original character designs, logos, and posters are digital only.</p>
+      <p class="hint">*Traditional pieces are drawn on 8x10 sketch paper and shipped to you. Character design sheets, logos, and posters are digital only.</p>
     </div>
 
     <h2>Process</h2>
@@ -428,7 +428,7 @@
         <select name="type" id="type" required>
           <option value="">Choose one</option>
           <option>Character illustration</option>
-          <option>Original character design</option>
+          <option>Character design sheet</option>
           <option>Stylized portrait</option>
           <option>Expression sheet</option>
           <option>Logo</option>
@@ -616,7 +616,7 @@
     }
 
     // The Digital / Traditional row is shown on every pop-up; Traditional is grayed out
-    // on digital-only pieces (original character designs, logos, posters).
+    // on digital-only pieces (character design sheets, logos, posters).
     const ALL_MEDIUMS = ["Digital", "Traditional"];
     // The stage row always shows all four stages; ones a piece doesn't come in are grayed out
     // (e.g. Complete illustration for traditional, everything but Complete for logos/posters).
@@ -687,16 +687,16 @@
       const design = type.value === "Logo" || type.value === "Poster";
       toggle("art-options", !design);
       // Character designs keep the Medium question, but only digital is allowed.
-      const designOnlyDigital = type.value === "Original character design";
+      const designOnlyDigital = type.value === "Character design sheet";
       const tradOption = document.getElementById("traditional-option");
       tradOption.disabled = designOnlyDigital;
       if (designOnlyDigital && medium.value === "Traditional") medium.value = "";
       const note = document.getElementById("digital-note");
       note.hidden = !(design || designOnlyDigital);
       note.textContent = design ? "Logos and posters are made digitally."
-                                : "Original character designs are made digitally.";
-      // Logos have no characters; original character designs are one character only.
-      toggle("character-count", type.value !== "Logo" && type.value !== "Original character design");
+                                : "Character design sheets are made digitally.";
+      // Logos have no characters; character design sheets are one character only.
+      toggle("character-count", type.value !== "Logo" && type.value !== "Character design sheet");
 
       // Posters can have no characters, so they start at 0. Everything else starts at 1.
       const poster = type.value === "Poster";
@@ -764,7 +764,7 @@
       } else {
         if (!medium.value || !finish.value) return show(null, "Pick a medium and finish to see your estimate.");
         med = medium.value; fin = finish.value;
-        extras = t === "Original character design" ? 0 : Math.max(0, n - 1);   // price includes one character
+        extras = t === "Character design sheet" ? 0 : Math.max(0, n - 1);   // price includes one character
       }
 
       const base = tablePrice(med, t, fin);
