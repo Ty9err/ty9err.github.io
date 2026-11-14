@@ -83,6 +83,18 @@
         <p>Project 3</p>
       </article>
     </section>
+
+    <!-- Picture pop-up. It's filled in automatically from the picture you click. -->
+    <dialog class="sheet" id="sheet" aria-labelledby="sheet-title">
+      <div class="sheet-inner">
+        <div class="sheet-head">
+          <h2 id="sheet-title"></h2>
+          <button type="button" class="sheet-close" id="sheet-close" aria-label="Close">&times;</button>
+        </div>
+        <div id="sheet-media"></div>
+        <div id="sheet-body"></div>
+      </div>
+    </dialog>
   </main>
 
   <footer>
@@ -92,7 +104,7 @@
   <style>
     /* Move these into style.css later; kept here so this step works with the file you already uploaded */
     .project { margin: 2rem 0; padding-bottom: 2rem; border-bottom: 1px solid var(--line); }
-    .project-img { width: 100%; aspect-ratio: 16 / 9; background: var(--line); }
+    .project-img { width: 100%; aspect-ratio: 16 / 9; background: var(--line); border-radius: 0.75rem; display: block; }
     .project h2 { margin-bottom: 0; }
     .project-meta { color: var(--muted); margin-top: 0.25rem; }
 
@@ -127,6 +139,39 @@
     #illustration, #design { animation: softIn 0.35s ease both; }
     @media (prefers-reduced-motion: reduce) {
       #illustration, #design { animation: none; } }
+
+    /* ===== Picture pop-up (same look as the commission page's example pop-up) ===== */
+    /* Clickable pictures: lift on hover, shrink while pressed, dip and spring back on click */
+    .project > .project-img { cursor: pointer; border-radius: 0.75rem; transition: transform 0.15s ease; }
+    .project > .project-img:hover { transform: translateY(-3px); }
+    .project > .project-img:active { transform: scale(0.95); }
+    .project > .project-img:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    @keyframes tap { 0% { transform: scale(1); } 40% { transform: scale(0.93); } 100% { transform: scale(1); } }
+    .project > .project-img.tapped { animation: tap 0.35s ease; }
+
+    /* Pop-up width: change 900px to make it wider or narrower */
+    .sheet { width: min(92vw, 900px); max-height: 88vh; padding: 0; border: 3px solid var(--accent);
+             border-radius: 1.25rem; outline: none; background: var(--dark); color: var(--text); overflow: auto; }
+    .sheet::backdrop { background: rgba(0, 0, 0, 0.6); }
+    .sheet-inner { padding: 1.25rem 1.25rem 1rem; text-align: center; }
+    /* Title in the middle, close button on the right, level with each other */
+    .sheet-head { display: grid; grid-template-columns: 2.75rem 1fr 2.75rem; align-items: center; gap: 0.75rem;
+                  margin-bottom: 0.6rem; }
+    .sheet h2 { grid-column: 2; margin: 0; color: var(--accent); line-height: 1.3; text-align: center; }
+    .sheet-close { grid-column: 3; width: 2.75rem; height: 2.75rem; margin: 0; border: 0; border-radius: 50%;
+                   background: var(--line); color: var(--text); font: inherit; font-size: 1.4rem; line-height: 1; cursor: pointer; }
+    .sheet-close:hover { background: var(--accent); color: var(--dark); }
+    #sheet-media { position: relative; margin: 0 auto 0.6rem; }
+    /* Portfolio pop-up picture: wide, like the project images */
+    #sheet-media .project-img { width: 100%; aspect-ratio: 16 / 9; background: var(--line); border-radius: 0.75rem; display: block; }
+    #sheet-media img.project-img { height: auto; max-height: 70vh; object-fit: contain; background: none; }
+    #sheet-body .project-meta { color: var(--muted); margin-top: 0; }
+    #sheet-body p { margin: 0.4rem 0 0; line-height: 1.6; }
+    @keyframes popIn { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: none; } }
+    .sheet[open] { animation: popIn 0.5s ease-out both; }   /* pop-up fade: change 0.5s to adjust */
+    .sheet[open]::backdrop { animation: fadeIn 0.5s ease both; }
+    @media (prefers-reduced-motion: reduce) {
+      .project > .project-img, .sheet[open], .sheet[open]::backdrop { transition: none; animation: none; } }
   </style>
 
   <script>
@@ -173,6 +218,45 @@
     const placeSliders = () => sliderBars.forEach(bar => moveSlider(bar, true));
     window.addEventListener("load", placeSliders);
     window.addEventListener("resize", placeSliders);
+  </script>
+
+  <script>
+    /* Picture pop-up: clicking a picture (or pressing Enter on it) opens it larger with its details.
+       Works with the gray placeholders now, and with real images once you add them. */
+    const sheet = document.getElementById("sheet");
+    function openSheet(pic) {
+      const item = pic.closest(".project");
+      document.getElementById("sheet-title").textContent = item.querySelector("h2").textContent;
+      document.getElementById("sheet-media").replaceChildren(cleanCopy(item.querySelector(".project-img")));
+      // Everything under the title: the year/medium line and the description
+      document.getElementById("sheet-body").replaceChildren(
+        ...[...item.querySelectorAll(":scope > p")].map(el => el.cloneNode(true)));
+      sheet.showModal();
+    }
+    document.querySelectorAll(".project > .project-img").forEach(pic => {
+      const title = pic.closest(".project").querySelector("h2, h3")?.textContent || "picture";
+      pic.tabIndex = 0;
+      pic.setAttribute("role", "button");
+      pic.setAttribute("aria-haspopup", "dialog");
+      pic.setAttribute("aria-label", "View " + title);
+      pic.addEventListener("click", () => {
+        pic.classList.remove("tapped"); pic.offsetWidth; pic.classList.add("tapped");   // click feedback
+        openSheet(pic);
+      });
+      pic.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pic.click(); }
+      });
+      pic.addEventListener("animationend", e => { if (e.animationName === "tap") pic.classList.remove("tapped"); });
+    });
+    // Copies a picture into the pop-up without the clickable bits
+    function cleanCopy(el) {
+      const c = el.cloneNode(true);
+      c.classList.remove("tapped"); c.removeAttribute("tabindex"); c.removeAttribute("role");
+      c.removeAttribute("aria-haspopup"); c.removeAttribute("aria-label");
+      return c;
+    }
+    document.getElementById("sheet-close").addEventListener("click", () => sheet.close());
+    sheet.addEventListener("click", e => { if (e.target === sheet) sheet.close(); });   // click outside to close
   </script>
 
 </body>
