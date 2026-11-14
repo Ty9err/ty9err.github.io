@@ -150,12 +150,14 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
   h2 { font-size: 1.1rem; }
   .pill { font-size: 1rem; }
   .about-text { padding: 1.1rem; font-size: 1.15em; }   /* keep phone text at the previous size */
-  /* Phones: the copyright bar is no longer pinned to the screen. It sits at the very end of the
-     page, so you see more of the page while scrolling and only meet it at the bottom.
-     It's also slimmer, with the text closer to the bottom edge. */
+  /* Phones: no bottom bar. The copyright line sits in small charcoal text on the yellow, just
+     under the last box on the page. The browser background goes back to yellow so the area
+     behind Safari's address bar matches the page. */
+  html { background: var(--page); }
   body { padding-bottom: 0; }
-  footer { position: static; height: auto; font-size: 0.75rem;
-           padding: 0.7rem 1rem max(0.6rem, env(safe-area-inset-bottom)); margin-top: auto; }
+  footer { position: static; height: auto; background: transparent; border-radius: 0; color: var(--dark);
+           font-size: 0.75rem; padding: 0 1.25rem max(1.25rem, env(safe-area-inset-bottom)); margin-top: auto; }
+  main.card { margin-bottom: 1.5rem; }
   .about-side { margin-bottom: 1rem; }
   nav li + li::before { display: none; }
   nav a { font-size: 0.9rem; }
