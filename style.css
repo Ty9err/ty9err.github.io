@@ -22,6 +22,12 @@
 
 html, body { overscroll-behavior-y: none; }
 
+/* The browser's own background behind the page is charcoal like the header and footer bars.
+   On iPhones, Safari's floating address bar shows this past the end of the page, so the
+   footer's gray runs all the way to the bottom of the screen instead of ending in a yellow strip.
+   The page itself stays yellow (set on body below). */
+html { background: var(--bar); }
+
 body {
   margin: 0;
   background: var(--page);
