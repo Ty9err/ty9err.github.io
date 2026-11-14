@@ -21,6 +21,10 @@
     .example .ph, .sheet-media .ph { background: var(--line); }
     .example img, .example .ph { transition: transform 0.15s ease; }
     .example:hover img, .example:hover .ph { transform: translateY(-3px); }
+    /* Click feedback: the picture shrinks while pressed, then dips and springs back on click */
+    .example:active img, .example:active .ph { transform: scale(0.95); }
+    @keyframes tap { 0% { transform: scale(1); } 40% { transform: scale(0.93); } 100% { transform: scale(1); } }
+    .example.tapped img, .example.tapped .ph { animation: tap 0.35s ease; }
     .ex-title { display: block; margin-top: 0.5rem; }
     .ex-sub { display: block; color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
     .ex-more { display: block; color: var(--accent); font-size: 0.85rem; }
@@ -51,7 +55,8 @@
     #sheet-stages { margin-bottom: 0.4rem; }
     #sheet-body p { margin: 0.4rem 0 0; line-height: 1.6; }
     .sheet-close:hover { background: var(--accent); color: var(--dark); }
-    @media (prefers-reduced-motion: reduce) { .example img, .example .ph { transition: none; } }
+    @media (prefers-reduced-motion: reduce) { .example img, .example .ph { transition: none; }
+      .example.tapped img, .example.tapped .ph { animation: none; } }
 
     /* Price table */
     .table-wrap { overflow-x: auto; margin: 1rem 0; color-scheme: dark; }   /* dark sideways scrollbar */
@@ -611,7 +616,9 @@
     const ALL_STAGES = ["Sketch", "Line art", "Ink", "Complete illustration"];
 
     document.querySelectorAll(".example").forEach(card => {
+      card.addEventListener("animationend", () => card.classList.remove("tapped"));
       card.addEventListener("click", () => {
+        card.classList.remove("tapped"); card.offsetWidth; card.classList.add("tapped");   // click feedback
         const info = card.nextElementSibling;
         document.getElementById("sheet-title").textContent = card.querySelector(".ex-title").textContent;
 

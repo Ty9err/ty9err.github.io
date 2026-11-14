@@ -58,7 +58,13 @@
     #status { color: var(--muted); }
     .grid { list-style: none; margin: 1rem 0; padding: 0; display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.75rem; }
-    .thumb { display: block; width: 100%; padding: 0; border: 0; background: var(--line); cursor: pointer; }
+    .thumb { display: block; width: 100%; padding: 0; border: 0; background: var(--line); cursor: pointer;
+             transition: transform 0.15s ease; }
+    /* Click feedback: the picture shrinks while pressed, then dips and springs back on click */
+    .thumb:active { transform: scale(0.95); }
+    @keyframes tap { 0% { transform: scale(1); } 40% { transform: scale(0.93); } 100% { transform: scale(1); } }
+    .thumb.tapped { animation: tap 0.35s ease; }
+    @media (prefers-reduced-motion: reduce) { .thumb { transition: none; } .thumb.tapped { animation: none; } }
     .thumb img, .thumb .ph { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
     .thumb .ph { background: var(--line); }
     /* Phones: two thumbnails per row, same sizing as the store page's product boxes */
@@ -290,7 +296,11 @@
         b.type = "button"; b.className = "thumb"; b.setAttribute("aria-label", "View " + a.title);
         b.appendChild(makeImage(a.thumb, a.title));
         const place = shown + k;   // this piece's place in the filtered list
-        b.addEventListener("click", () => openLightbox(place));
+        b.addEventListener("click", () => {
+          b.classList.remove("tapped"); b.offsetWidth; b.classList.add("tapped");   // click feedback
+          openLightbox(place);
+        });
+        b.addEventListener("animationend", e => { if (e.animationName === "tap") b.classList.remove("tapped"); });
         li.style.animationDelay = Math.min(k, 16) * 25 + "ms";   // thumbnails fade in one after another
         li.appendChild(b); grid.appendChild(li);
       });
