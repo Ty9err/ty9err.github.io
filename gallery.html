@@ -251,6 +251,7 @@
     ];
 
     let year = "", tag = "", order = [], current = [], shown = 0;
+    let noFade = false;   // true for the instant settle at the end of the Shuffle animation
     const active = new Set();               // the filter buttons that are switched on
     const lower = a => a.tags.map(t => t.toLowerCase());
 
@@ -351,6 +352,7 @@
         });
         b.addEventListener("animationend", e => { if (e.animationName === "tap") b.classList.remove("tapped"); });
         li.style.animationDelay = Math.min(k, 16) * 25 + "ms";   // thumbnails fade in one after another
+        if (noFade) li.style.animation = "none";                  // except right after Shuffle: instant
         li.appendChild(b); grid.appendChild(li);
       });
       shown = Math.min(shown + PAGE, current.length);
@@ -442,7 +444,7 @@
         }
         shuffling = false; $("shuffle").disabled = false;
       }
-      refresh(true);   // the real new order, which fades in like before
+      noFade = true; refresh(true); noFade = false;   // the real new order appears instantly
     });
     $("clearTag").addEventListener("click", () => { tag = ""; refresh(false); });
     $("more").addEventListener("click", showMore);
