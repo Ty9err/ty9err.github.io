@@ -91,7 +91,12 @@
     /* Pop-up details: centered. The medium and tags share one row of yellow boxes (like a
        selected filter button); Close is a rounded outline button like Shuffle. */
     .lb-info { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; text-align: center; margin-top: 0.5rem; }
-    .lb-info h2 { margin: 0.25rem 0 0; }
+    /* Title above the picture, centered, kept off the yellow border. Long titles (like links) wrap
+       onto more lines. Two lines of space are always saved, with short titles centered in it, so
+       the picture and arrows stay put; only a title longer than two lines pushes them down. */
+    #lbTitle { margin: 0.25rem 0 0.75rem; padding: 0 2rem; text-align: center; line-height: 1.4;
+               min-height: 2.8em; display: flex; align-items: center; justify-content: center;
+               overflow-wrap: anywhere; }
     #lbDesc { margin: 0; max-width: 60ch; line-height: 1.55; white-space: pre-line; }
     #lbDesc:empty { display: none; }
     .lb-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
@@ -175,6 +180,7 @@
     <button type="button" id="more" hidden>Load more</button>
 
     <dialog id="lightbox" aria-labelledby="lbTitle">
+      <h2 id="lbTitle"></h2>
       <div class="lb-stage">
         <div id="lbImg"></div>
       </div>
@@ -184,7 +190,6 @@
         <button type="button" class="lb-arrow" id="lbNext" aria-label="Next piece"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
       </div>
       <div class="lb-info">
-        <h2 id="lbTitle"></h2>
         <p id="lbDesc"></p>
         <div class="lb-chips">
           <span id="lbMeta"></span>
