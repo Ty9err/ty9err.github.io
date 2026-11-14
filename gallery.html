@@ -73,13 +73,21 @@
     }
     #more { display: block; margin: 1.5rem auto; }
     /* Pop-up: rounded yellow outline (same as the commissions pop-up), no white focus ring */
+    /* The pop-up is pinned near the top of the screen (instead of centered), so a longer title or
+       description only makes it grow downward and never moves the arrows. */
     dialog { max-width: 900px; width: 92%; border: 3px solid var(--accent); border-radius: 1.25rem; outline: none;
-             background: var(--bg); color: var(--text); padding: 1rem; }
+             background: var(--bg); color: var(--text); padding: 1rem;
+             margin: 3vh auto auto; max-height: 94vh; overflow: auto; color-scheme: dark;
+             scrollbar-gutter: stable; }   /* room for a scrollbar is always kept, so nothing shifts sideways */
     dialog::backdrop { background: rgba(0, 0, 0, 0.7); }
+    /* Fixed-size picture frame: every artwork fits inside the same box, tall or wide, so the
+       arrows underneath stay in the same spot. Change 62vh to make the frame taller or shorter. */
+    #lbImg { height: min(62vh, 640px); display: flex; align-items: center; justify-content: center; }
+    @media (max-width: 600px) { #lbImg { height: 50vh; } }
     /* The picture keeps a thin white border inside the yellow outline */
-    dialog img { max-width: 100%; max-height: 70vh; margin: 0 auto; display: block;
+    dialog img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; margin: 0 auto; display: block;
                  border: 1px solid var(--text); box-sizing: border-box; }
-    dialog .ph { width: 100%; aspect-ratio: 4 / 3; background: var(--line); border: 1px solid var(--text); box-sizing: border-box; }
+    dialog .ph { height: 100%; max-width: 100%; aspect-ratio: 4 / 3; background: var(--line); border: 1px solid var(--text); box-sizing: border-box; }
     /* Pop-up details: centered. The medium and tags share one row of yellow boxes (like a
        selected filter button); Close is a rounded outline button like Shuffle. */
     .lb-info { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; text-align: center; margin-top: 0.5rem; }
@@ -338,7 +346,7 @@
         chip.className = "chip"; chip.textContent = tagLabel(t);
         return chip;
       }));
-      if (!lb.open) lb.showModal();
+      if (!lb.open) { lb.showModal(); lb.scrollTop = 0; }   // open at the top, with the arrows in view
     }
 
     const step = by => openLightbox(pos + by);
