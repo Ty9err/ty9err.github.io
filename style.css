@@ -1,7 +1,7 @@
 /* ===== Site styles, based on your layout draft (Orbitron + Exo 2, yellow + charcoal) =====
    Change the values in :root and the whole site updates. */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700;900&display=swap');   /* 900 = extra bold, used by the phone footer */
 
 :root {
   --page:   #ffc310;   /* yellow page background */
@@ -155,7 +155,7 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
      behind Safari's address bar matches the page. */
   html { background: var(--page); }
   body { padding-bottom: 0; }
-  footer { position: static; height: auto; background: transparent; border-radius: 0; color: var(--dark); font-weight: 700;
+  footer { position: static; height: auto; background: transparent; border-radius: 0; color: var(--dark); font-weight: 900;   /* extra bold */
            font-size: 0.75rem; padding: 0 1.25rem max(1.25rem, env(safe-area-inset-bottom)); margin-top: auto; }
   main.card { margin-bottom: 1.5rem; }
   .about-side { margin-bottom: 1rem; }
