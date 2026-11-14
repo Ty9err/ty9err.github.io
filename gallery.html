@@ -109,8 +109,8 @@
     @keyframes popIn { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: none; } }
     .grid > li, #activeTag { animation: softIn 0.35s ease both; }
     #lbImg > * { animation: fadeIn 0.3s ease both; }
-    dialog[open] { animation: popIn 0.25s ease-out both; }
-    dialog[open]::backdrop { animation: fadeIn 0.25s ease both; }
+    dialog[open] { animation: popIn 0.5s ease-out both; }   /* pop-up fade: change 0.5s to adjust */
+    dialog[open]::backdrop { animation: fadeIn 0.5s ease both; }
     @media (prefers-reduced-motion: reduce) {
       .grid > li, #activeTag, #lbImg > *, dialog[open], dialog[open]::backdrop { animation: none; } }
   </style>
