@@ -119,6 +119,14 @@
     @media (prefers-reduced-motion: reduce) {
       .tabs > .slider, .tabs > button { transition: none; } }
 
+
+    /* Soft fade-ins: things that appear after a click fade in (with a tiny upward drift)
+       instead of popping in. Change 0.35s to make them faster or slower. */
+    @keyframes softIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    #illustration, #design { animation: softIn 0.35s ease both; }
+    @media (prefers-reduced-motion: reduce) {
+      #illustration, #design { animation: none; } }
   </style>
 
   <script>

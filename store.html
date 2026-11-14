@@ -74,6 +74,14 @@
       .product h3 { font-size: 0.9rem; }
       .buy { width: 100%; justify-content: center; min-height: 2.5rem; }
     }
+
+    /* Soft fade-ins: things that appear after a click fade in (with a tiny upward drift)
+       instead of popping in. Change 0.35s to make them faster or slower. */
+    @keyframes softIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .product, .empty { animation: softIn 0.35s ease both; }
+    @media (prefers-reduced-motion: reduce) {
+      .product, .empty { animation: none; } }
   </style>
 <link rel="icon" href="/images/favicon.ico" sizes="any">
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
@@ -208,6 +216,8 @@
         products.forEach(p => {
           const show = btn.dataset.filter === "all" || p.dataset.category === btn.dataset.filter;
           p.hidden = !show; if (show) shown++;
+          // Replay the fade-in on every product that's showing, including ones that already were
+          if (show) { p.style.animation = "none"; p.offsetWidth; p.style.animation = ""; p.style.animationDelay = (shown - 1) * 40 + "ms"; }
         });
         document.getElementById("empty").hidden = shown > 0;
       });

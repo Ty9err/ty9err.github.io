@@ -101,6 +101,18 @@
     dialog .lb-arrow:focus:not(:focus-visible) { outline: none; }
     #lbCount { color: var(--muted); font-size: 0.95rem; margin: 0; min-width: 5.5rem; text-align: center;
                font-variant-numeric: tabular-nums; }   /* keeps the arrows still as the numbers change */
+
+    /* Soft fade-ins: things that appear after a click fade in (with a tiny upward drift)
+       instead of popping in. Change 0.35s to make them faster or slower. */
+    @keyframes softIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes popIn { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: none; } }
+    .grid > li, #activeTag { animation: softIn 0.35s ease both; }
+    #lbImg > * { animation: fadeIn 0.3s ease both; }
+    dialog[open] { animation: popIn 0.25s ease-out both; }
+    dialog[open]::backdrop { animation: fadeIn 0.25s ease both; }
+    @media (prefers-reduced-motion: reduce) {
+      .grid > li, #activeTag, #lbImg > *, dialog[open], dialog[open]::backdrop { animation: none; } }
   </style>
 <link rel="icon" href="/images/favicon.ico" sizes="any">
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
@@ -279,6 +291,7 @@
         b.appendChild(makeImage(a.thumb, a.title));
         const place = shown + k;   // this piece's place in the filtered list
         b.addEventListener("click", () => openLightbox(place));
+        li.style.animationDelay = Math.min(k, 16) * 25 + "ms";   // thumbnails fade in one after another
         li.appendChild(b); grid.appendChild(li);
       });
       shown = Math.min(shown + PAGE, current.length);
