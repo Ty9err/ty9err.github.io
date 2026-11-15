@@ -260,13 +260,13 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
   --screw-phone: 16px;     /* top bar screws on phones */
 }
 @media (min-width: 801px) {
-  /* menu dividers as screws: gray face with a small white "+" that doesn't reach the edge,
-     inside the yellow ring */
+  /* menu dividers as screws: drawn from the same screw image as the bars, so the "+" is perfectly
+     centered. The divider keeps its original size in the layout (so the menu doesn't move) and is
+     scaled up just enough to include the yellow ring. */
   nav li + li::before {
-    background: linear-gradient(var(--text), var(--text)) center / 55% 1.5px no-repeat,
-                linear-gradient(var(--text), var(--text)) center / 1.5px 55% no-repeat,
-                var(--line);
-    box-shadow: 0 0 0 2px var(--accent);
+    background: var(--screw) center / contain no-repeat;
+    box-shadow: none;
+    transform: scale(1.3125);
   }
   /* bigger screws at each end of the top bar */
   header {
