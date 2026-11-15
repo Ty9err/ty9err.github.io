@@ -177,10 +177,40 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
   main.card { margin-bottom: 1.5rem; }
   .about-side { margin-bottom: 1rem; }
   nav li + li::before { display: none; }
-  /* Phones: no ring around the current page's link. Instead its letters get a 1px white outline.
-     The stroke is 2px wide but drawn behind the letters, so 1px shows outside them. It takes up
-     no space, so nothing in the menu moves. (For a thicker outline use double: 4px = 2px showing.) */
-  nav a[aria-current="page"] { outline: none; -webkit-text-stroke: 2px var(--text); paint-order: stroke fill; }
+  /* Phones: no ring around the current page's link. Instead its letters get two thin outlines,
+     like the menu dots: 1px gray right against the letters, then 1px white around that. Both are
+     rings of shadows (gray 1px out, white 2px out, gray listed first so it sits on top). Shadows
+     take up no space, so nothing in the menu moves. */
+  nav a[aria-current="page"] { outline: none;
+    text-shadow:
+      1.0px 0px 0 var(--line),
+      0.87px 0.5px 0 var(--line),
+      0.5px 0.87px 0 var(--line),
+      0px 1.0px 0 var(--line),
+      -0.5px 0.87px 0 var(--line),
+      -0.87px 0.5px 0 var(--line),
+      -1.0px 0px 0 var(--line),
+      -0.87px -0.5px 0 var(--line),
+      -0.5px -0.87px 0 var(--line),
+      0px -1.0px 0 var(--line),
+      0.5px -0.87px 0 var(--line),
+      0.87px -0.5px 0 var(--line),
+      2.0px 0px 0 var(--text),
+      1.85px 0.77px 0 var(--text),
+      1.41px 1.41px 0 var(--text),
+      0.77px 1.85px 0 var(--text),
+      0px 2.0px 0 var(--text),
+      -0.77px 1.85px 0 var(--text),
+      -1.41px 1.41px 0 var(--text),
+      -1.85px 0.77px 0 var(--text),
+      -2.0px 0px 0 var(--text),
+      -1.85px -0.77px 0 var(--text),
+      -1.41px -1.41px 0 var(--text),
+      -0.77px -1.85px 0 var(--text),
+      0px -2.0px 0 var(--text),
+      0.77px -1.85px 0 var(--text),
+      1.41px -1.41px 0 var(--text),
+      1.85px -0.77px 0 var(--text); }
   nav a { font-size: 0.9rem; }
   nav ul { gap: 0.1rem 1rem; }
   header { padding: 0.7rem 1rem 1rem; }
