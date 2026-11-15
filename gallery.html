@@ -109,7 +109,11 @@
     /* Title above the picture, centered, kept off the yellow border. Long titles (like links) wrap
        onto more lines. Two lines of space are always saved, with short titles centered in it, so
        the picture and arrows stay put; only a title longer than two lines pushes them down. */
-    #lbTitle { margin: 0.25rem 0 0.75rem; padding: 0 2rem; text-align: center; line-height: 1.4;
+    /* Title row: title in the middle, round close button on the right (same as the commission
+       pop-up), and an empty column on the left to balance it */
+    .lb-head { display: grid; grid-template-columns: 2.75rem 1fr 2.75rem; align-items: center; gap: 0.75rem;
+               margin: 0.25rem 0 0.75rem; }
+    #lbTitle { grid-column: 2; margin: 0; padding: 0 0.5rem; text-align: center; line-height: 1.4;
                min-height: 2.8em; display: flex; align-items: center; justify-content: center;
                overflow-wrap: anywhere; }
     #lbDesc { margin: 0; max-width: 60ch; line-height: 1.55; white-space: pre-line; }
@@ -118,9 +122,11 @@
     #lbTags { display: contents; }   /* tag buttons sit in the same row as the medium */
     #lbMeta, #lbTags .chip { margin: 0; display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1.1rem;
               border: 0; border-radius: 0.55rem; background: var(--accent); color: var(--dark); font-weight: 700; }
-    dialog #lbClose { min-height: 2.75rem; padding: 0 1.1rem;
-              border: 1px solid var(--line); border-radius: 0.75rem; background: var(--bg); color: var(--text); }
-    dialog #lbClose:hover { border-color: var(--accent); }
+    dialog #lbClose { grid-column: 3; width: 2.75rem; height: 2.75rem; margin: 0; padding: 0;
+              border: 0; border-radius: 50%; background: var(--line); color: var(--text);
+              font-size: 1.4rem; line-height: 1; cursor: pointer;
+              position: relative; top: 3px; }   /* nudged down to sit level with the title's letters */
+    dialog #lbClose:hover { background: var(--accent); color: var(--dark); }
 
     /* Previous / next arrows on either side of the "3 / 257" counter, under the picture */
     .lb-stage { touch-action: pan-y; }   /* lets phones swipe sideways on the picture */
@@ -195,7 +201,10 @@
     <button type="button" id="more" hidden>Load more</button>
 
     <dialog id="lightbox" aria-labelledby="lbTitle">
-      <h2 id="lbTitle"></h2>
+      <div class="lb-head">
+        <h2 id="lbTitle"></h2>
+        <button type="button" id="lbClose" aria-label="Close" autofocus>&times;</button>
+      </div>
       <div class="lb-stage">
         <div id="lbImg"></div>
       </div>
@@ -210,7 +219,6 @@
           <span id="lbMeta"></span>
           <div id="lbTags"></div>
         </div>
-        <button type="button" id="lbClose" autofocus>Close</button>
       </div>
     </dialog>
   </main>
