@@ -62,7 +62,11 @@ nav li + li::before {
 }
 nav a { color: var(--text); text-decoration: none; font-size: 1.05rem; }
 nav a:hover { color: var(--accent); }
-nav a[aria-current="page"] { color: var(--accent); }
+nav a[aria-current="page"] { color: var(--accent); font-weight: 700; }   /* the page you're on is bold */
+/* Each link saves room for its bold version (from data-label), so the bold one is exactly as wide
+   as before and nothing in the menu shifts */
+nav a { display: inline-flex; flex-direction: column; align-items: center; }
+nav a::after { content: attr(data-label); font-weight: 700; height: 0; visibility: hidden; overflow: hidden; }
 
 /* ----- Page content ----- */
 main { width: 100%; flex: 1 0 auto; max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem; }
