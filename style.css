@@ -572,3 +572,40 @@ main.card, .about-text {
 }
 @keyframes nameShine { 0% { background-position: 100% 0; } 35%, 100% { background-position: 0% 0; } }
 @media (prefers-reduced-motion: reduce) { .frame .pill::after { animation: none; } }
+
+/* ===== GOLD SHINE ON THE CURRENT PAGE'S MENU LINK (desktop and phones) =====
+   Same shine as the About Me name: a see-through copy of the link text (from data-label) on top
+   of it, with a slanted white streak sliding across. On desktop, the dark-yellow shadow box that
+   used to be drawn by the link itself is now drawn by the menu item around it (so the shine can
+   use the link's spare layer) - it sits in exactly the same spot and still stays put while the
+   link floats, so the shine only crosses the letters, never the shadow. */
+nav a[aria-current="page"] { position: relative; }
+nav a[aria-current="page"]::after {
+  display: flex; align-items: center; justify-content: center;
+  content: attr(data-label); position: absolute; inset: 0; z-index: 1;
+  height: auto; visibility: visible; overflow: visible; font-weight: 700;
+  border-radius: 0; transform: none; text-shadow: none; pointer-events: none;
+  color: transparent;
+  background: linear-gradient(135deg, transparent 46.5%, rgba(255, 255, 255, 0.8) 49%, rgba(255, 255, 255, 0.8) 51%, transparent 53.5%) no-repeat;
+  background-size: 300% 100%; background-position: 100% 0;
+  -webkit-background-clip: text; background-clip: text;
+  animation: nameShine 4.5s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) { nav a[aria-current="page"]::after { animation: none; } }
+@media (min-width: 801px) {
+  /* the shadow box, now on the menu item: same size and spot as before (4px down and right of the
+     link's white-bordered box). 2.3rem = the screw divider plus its space, which sit before the link. */
+  nav li:has(> a[aria-current="page"]) { position: relative; display: flex; align-items: center; }
+  nav li:has(> a[aria-current="page"])::after {
+    content: ""; position: absolute; z-index: -2; pointer-events: none;   /* -2: always behind the link's box (-1) */
+    top: -6px; bottom: -6px; right: -6px; left: calc(0.8rem + 1.5rem - 6px);
+    border-radius: calc(0.5rem + 6px); background: var(--shade);
+    transform: translate(4px, 4px);
+  }
+  nav li:first-child:has(> a[aria-current="page"])::after { left: -6px; }
+}
+
+/* Desktop: a matching flat shadow under the bottom bar too (mostly off the bottom of the screen) */
+@media (min-width: 801px) {
+  footer { overflow: visible; box-shadow: var(--sh) var(--sh) 0 var(--shade); }
+}
