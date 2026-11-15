@@ -27,6 +27,10 @@ html, body { overscroll-behavior-y: none; }
    footer's gray runs all the way to the bottom of the screen instead of ending in a yellow strip.
    The page itself stays yellow (set on body below). */
 html { background: var(--bar); }
+/* Phones: turn off double-tap-to-zoom so quick taps (like flipping through the gallery) register
+   as taps. Pinch-to-zoom still works, so visitors can still zoom in on artwork. */
+html { touch-action: manipulation; }
+button, a, select, .thumb { -webkit-tap-highlight-color: transparent; }   /* no gray flash on tap */
 
 body {
   margin: 0;
@@ -67,9 +71,9 @@ nav a[aria-current="page"] { color: var(--accent); font-weight: 700; }   /* the 
 /* The page you're on gently floats, and can't be clicked again (you're already there).
    Change 2px for a bigger or smaller float, and 3s for the speed. */
 nav a[aria-current="page"] { pointer-events: none; cursor: default; animation: navFloat 3s ease-in-out infinite; }
-/* 2px rounded yellow outline around the page you're on. An outline is drawn outside the link and
+/* 2px rounded white outline around the page you're on. An outline is drawn outside the link and
    takes up no space, so nothing in the menu moves. outline-offset = gap between text and outline. */
-nav a[aria-current="page"] { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 0.5rem; }
+nav a[aria-current="page"] { outline: 2px solid var(--text); outline-offset: 4px; border-radius: 0.5rem; }
 @keyframes navFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
 @media (prefers-reduced-motion: reduce) { nav a[aria-current="page"] { animation: none; } }
 /* Each link saves room for its bold version (from data-label), so the bold one is exactly as wide

@@ -415,8 +415,9 @@
     }
 
     const step = by => openLightbox(pos + by);
-    $("lbPrev").addEventListener("click", () => step(-1));
-    $("lbNext").addEventListener("click", () => step(1));
+    const arrowStep = by => { if (!sliding) step(by); };   // arrows wait for a swipe slide to finish
+    $("lbPrev").addEventListener("click", () => arrowStep(-1));
+    $("lbNext").addEventListener("click", () => arrowStep(1));
 
     // Keyboard: left and right arrow keys (Escape already closes the pop-up)
     lb.addEventListener("keydown", e => {
@@ -429,6 +430,7 @@
     // Let go sooner and it springs back.
     const SWIPE_MIN = 50;
     let touchX = null, touchY = null, swipeDx = 0, swiping = false;
+    let sliding = false;   // true while a picture is sliding out/in; extra taps and swipes wait
     const stage = lb.querySelector(".lb-stage");
     const pic = () => $("lbImg").firstElementChild;
     const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -452,7 +454,7 @@
     stage.addEventListener("touchend", () => {
       if (touchX === null) return;
       touchX = null;
-      if (!swiping) return;
+      if (!swiping || sliding) return;
       swiping = false;
       const p = pic(), dir = swipeDx < 0 ? 1 : -1;   // swipe left = next piece
       if (Math.abs(swipeDx) < SWIPE_MIN) {             // not far enough: spring back
@@ -461,6 +463,7 @@
       }
       if (calm() || !p) { step(dir); return; }
       // slide the old picture out, then bring the new one in from the other side
+      sliding = true;
       p.style.transition = "transform 0.16s ease-in, opacity 0.16s ease-in";
       p.style.transform = "translateX(" + (-dir * 60) + "%)"; p.style.opacity = "0";
       setTimeout(() => {
@@ -468,6 +471,7 @@
         const n = pic();
         if (n) n.animate([{ transform: "translateX(" + (dir * 60) + "%)", opacity: 0 }, { transform: "none", opacity: 1 }],
                          { duration: 220, easing: "ease-out" });
+        setTimeout(() => sliding = false, 220);
       }, 160);
     }, { passive: true });
 
