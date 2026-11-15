@@ -59,6 +59,7 @@ nav ul {
 nav li + li::before {
   content: ""; display: inline-block; width: 0.8rem; height: 0.8rem;
   margin-right: 1.5rem; border-radius: 50%; background: var(--muted); vertical-align: middle;
+  box-shadow: 0 0 0 1px var(--line), 0 0 0 2px var(--accent);   /* 1px gray ring inside a 1px yellow ring; drawn outside the dot, so nothing shifts */
 }
 nav a { color: var(--text); text-decoration: none; font-size: 1.05rem; }
 nav a:hover { color: var(--accent); }
