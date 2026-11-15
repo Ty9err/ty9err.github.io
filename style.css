@@ -232,14 +232,14 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
    To remove the whole experiment, delete everything from this comment to the end of the file. */
 @media (min-width: 801px) {
   :root {
-    --screw: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%23ffc310%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%227.5%22 fill=%22%234a4a4a%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%226.5%22 fill=%22%23ffffff%22/%3E%3Cpath d=%22M3.5 10h13M10 3.5v13%22 stroke=%22%234a4a4a%22 stroke-width=%221.3%22/%3E%3C/svg%3E");
+    --screw: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%23ffc310%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%227.5%22 fill=%22%234a4a4a%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%226.5%22 fill=%22%23ffffff%22/%3E%3Cpath d=%22M3.5 10h13M10 3.5v13%22 stroke=%22%234a4a4a%22 stroke-width=%222.3%22/%3E%3C/svg%3E");
     --screw-size: 19px;      /* same size as the menu dividers */
     --screw-big: 26px;       /* the slightly bigger ones on the top bar */
   }
   /* the "+" inside each menu divider, reaching edge to edge */
   nav li + li::before {
-    background: linear-gradient(var(--line), var(--line)) center / 100% 1.5px no-repeat,
-                linear-gradient(var(--line), var(--line)) center / 1.5px 100% no-repeat,
+    background: linear-gradient(var(--line), var(--line)) center / 100% 2.5px no-repeat,
+                linear-gradient(var(--line), var(--line)) center / 2.5px 100% no-repeat,
                 var(--text);
   }
   /* four corner screws on the dark boxes */
@@ -254,7 +254,7 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
     background-image: var(--screw), var(--screw), var(--screw), var(--screw);
     background-repeat: no-repeat;
     background-size: 14px;
-    background-position: left 8px top 8px, right 8px top 8px, left 8px bottom 8px, right 8px bottom 8px;
+    background-position: left 11px top 11px, right 11px top 11px, left 11px bottom 11px, right 11px bottom 11px;
   }
   /* one screw at each end of the name pill and the bottom bar */
   .pill, footer {
@@ -264,6 +264,9 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
     background-position: left 20px center, right 20px center;
   }
   footer { background-position: left 44px center, right 44px center; }
+  /* page headings sit a little lower, clear of the top corner screws */
+  main.card h1 { margin-top: 0.85rem; }
+  .about-text > :first-child { margin-top: 0.85rem; }
   /* slightly bigger screws at each end of the top bar */
   header {
     background-image: var(--screw), var(--screw);
@@ -271,4 +274,14 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
     background-size: var(--screw-big);
     background-position: left 40px center, right 40px center;
   }
+}
+
+/* White edge on the main boxes (page cards, About Me text, name pill, picture frame), on every
+   screen size. It's an inset shadow, drawn just inside each box's edge, so nothing changes size or
+   moves. The top and bottom bars don't get it. Change 2px to make it thinner or thicker.
+   (Part of the screw test: deleting from "SCREW TEST" to the end of the file removes this too.) */
+main.card, .pill, .frame { box-shadow: inset 0 0 0 2px var(--text), 1.25rem 1.25rem 0 var(--shade); }
+.about-text { box-shadow: inset 0 0 0 2px var(--text); }
+@media (max-width: 800px) {
+  main.card, .pill, .frame { box-shadow: inset 0 0 0 2px var(--text), 0.6rem 0.6rem 0 var(--shade); }
 }
