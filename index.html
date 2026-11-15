@@ -13,16 +13,17 @@
 <body>
 
   <!-- MENU: copy this block unchanged onto every page.
-       Only move aria-current="page" to the link for the page you're on. -->
+       Only move aria-current="page" to the link for the page you're on (that link turns bold).
+       data-label must match each link's text; it keeps the bold link from shifting the menu. -->
   <header>
     <nav aria-label="Main">
       <ul>
-        <li><a href="index.html" aria-current="page">About Me</a></li>
-        <li><a href="portfolio.html">Portfolio</a></li>
-        <li><a href="gallery.html">Art Gallery</a></li>
-        <li><a href="store.html">Store</a></li>
-        <li><a href="commissions.html">Commission Inquiry</a></li>
-        <li><a href="contact.html">Contact</a></li>
+        <li><a href="index.html" data-label="About Me" aria-current="page">About Me</a></li>
+        <li><a href="portfolio.html" data-label="Portfolio">Portfolio</a></li>
+        <li><a href="gallery.html" data-label="Art Gallery">Art Gallery</a></li>
+        <li><a href="commissions.html" data-label="Commission Inquiry">Commission Inquiry</a></li>
+        <li><a href="store.html" data-label="Store">Store</a></li>
+        <li><a href="contact.html" data-label="Contact">Contact</a></li>
       </ul>
     </nav>
   </header>
@@ -32,7 +33,7 @@
 
     <div class="about-text">
       <p>Hello! My name is Jaleesa, also known by my artist name “Tygerr”. I’m a Michigan born, Detroit based self taught artist who’s been drawing since I could pick up a pencil. My visually striking style is deeply influenced by cartoons and video games.
-      
+
       </p><p>(my website is under construction plz be nice 2 me)</p>
     </div>
 
