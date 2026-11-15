@@ -417,6 +417,59 @@ main { position: relative; z-index: 6; }   /* page content above the top bar's s
 }
 @media (max-width: 800px) {
   /* one centered line that scales with the screen; phone-size screws between the words */
-  .about .title-screws { gap: 6px; white-space: nowrap; font-size: min(1.6rem, calc((100vw - 88px) / 17.5)); }
+  .about .title-screws { gap: 6px; flex-wrap: nowrap; white-space: nowrap;
+                         font-size: min(1.6rem, calc((100vw - 96px) / 19)); }   /* lower 19 for bigger text, raise it if it ever overflows */
   .title-screws .screw { width: var(--screw-phone); height: var(--screw-phone); }
+}
+/* Phones: the name's gray outline is one pixel thinner (2px gray, then the same 1px white) */
+@media (max-width: 800px) {
+  .pill { text-shadow:
+        1.0px 0px 0 var(--line),
+        0.87px 0.5px 0 var(--line),
+        0.5px 0.87px 0 var(--line),
+        0px 1.0px 0 var(--line),
+        -0.5px 0.87px 0 var(--line),
+        -0.87px 0.5px 0 var(--line),
+        -1.0px 0px 0 var(--line),
+        -0.87px -0.5px 0 var(--line),
+        -0.5px -0.87px 0 var(--line),
+        0px -1.0px 0 var(--line),
+        0.5px -0.87px 0 var(--line),
+        0.87px -0.5px 0 var(--line),
+        2.0px 0px 0 var(--line),
+        1.85px 0.77px 0 var(--line),
+        1.41px 1.41px 0 var(--line),
+        0.77px 1.85px 0 var(--line),
+        0px 2.0px 0 var(--line),
+        -0.77px 1.85px 0 var(--line),
+        -1.41px 1.41px 0 var(--line),
+        -1.85px 0.77px 0 var(--line),
+        -2.0px 0px 0 var(--line),
+        -1.85px -0.77px 0 var(--line),
+        -1.41px -1.41px 0 var(--line),
+        -0.77px -1.85px 0 var(--line),
+        0px -2.0px 0 var(--line),
+        0.77px -1.85px 0 var(--line),
+        1.41px -1.41px 0 var(--line),
+        1.85px -0.77px 0 var(--line),
+        3.0px 0px 0 var(--text),
+        2.85px 0.93px 0 var(--text),
+        2.43px 1.76px 0 var(--text),
+        1.76px 2.43px 0 var(--text),
+        0.93px 2.85px 0 var(--text),
+        0px 3.0px 0 var(--text),
+        -0.93px 2.85px 0 var(--text),
+        -1.76px 2.43px 0 var(--text),
+        -2.43px 1.76px 0 var(--text),
+        -2.85px 0.93px 0 var(--text),
+        -3.0px 0px 0 var(--text),
+        -2.85px -0.93px 0 var(--text),
+        -2.43px -1.76px 0 var(--text),
+        -1.76px -2.43px 0 var(--text),
+        -0.93px -2.85px 0 var(--text),
+        0px -3.0px 0 var(--text),
+        0.93px -2.85px 0 var(--text),
+        1.76px -2.43px 0 var(--text),
+        2.43px -1.76px 0 var(--text),
+        2.85px -0.93px 0 var(--text); }
 }
