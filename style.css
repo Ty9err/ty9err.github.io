@@ -177,7 +177,10 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
   main.card { margin-bottom: 1.5rem; }
   .about-side { margin-bottom: 1rem; }
   nav li + li::before { display: none; }
-  nav a[aria-current="page"] { outline-offset: 2px; border-radius: 0.4rem; }   /* tighter on phones, where rows are closer */
+  /* Phones: no ring around the current page's link. Instead its letters get a 2px white outline.
+     The stroke is 4px wide but drawn behind the letters, so 2px shows outside them. It takes up
+     no space, so nothing in the menu moves. */
+  nav a[aria-current="page"] { outline: none; -webkit-text-stroke: 4px var(--text); paint-order: stroke fill; }
   nav a { font-size: 0.9rem; }
   nav ul { gap: 0.1rem 1rem; }
   header { padding: 0.7rem 1rem 1rem; }
