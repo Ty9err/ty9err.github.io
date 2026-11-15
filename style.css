@@ -318,9 +318,8 @@ main { position: relative; z-index: 6; }   /* page content above the top bar's s
 .pill { position: relative; background: transparent; box-shadow: none; color: var(--accent); font-weight: 700;
         animation: navFloat 3s ease-in-out infinite; }
 .pill::before, .pill::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; }
-.pill::before { background: var(--dark); z-index: -1;                      /* the pill itself, with a */
-                border: 2px solid var(--text); box-sizing: border-box; }   /* white border drawn inside its edge */
-/* The name's letters get outlines like the selected menu link, with a thicker gray: 2px of gray
+.pill::before { background: var(--dark); z-index: -1; }                    /* the pill itself */
+/* The name's letters get outlines like the selected menu link, with a thicker gray: 3px of gray
    right against the letters, then 1px of white around that */
 .pill { text-shadow:
       1.0px 0px 0 var(--line),
@@ -351,26 +350,50 @@ main { position: relative; z-index: 6; }   /* page content above the top bar's s
       0.77px -1.85px 0 var(--line),
       1.41px -1.41px 0 var(--line),
       1.85px -0.77px 0 var(--line),
-      3.0px 0px 0 var(--text),
-      2.85px 0.93px 0 var(--text),
-      2.43px 1.76px 0 var(--text),
-      1.76px 2.43px 0 var(--text),
-      0.93px 2.85px 0 var(--text),
-      0px 3.0px 0 var(--text),
-      -0.93px 2.85px 0 var(--text),
-      -1.76px 2.43px 0 var(--text),
-      -2.43px 1.76px 0 var(--text),
-      -2.85px 0.93px 0 var(--text),
-      -3.0px 0px 0 var(--text),
-      -2.85px -0.93px 0 var(--text),
-      -2.43px -1.76px 0 var(--text),
-      -1.76px -2.43px 0 var(--text),
-      -0.93px -2.85px 0 var(--text),
-      0px -3.0px 0 var(--text),
-      0.93px -2.85px 0 var(--text),
-      1.76px -2.43px 0 var(--text),
-      2.43px -1.76px 0 var(--text),
-      2.85px -0.93px 0 var(--text); }
+      3.0px 0px 0 var(--line),
+      2.85px 0.93px 0 var(--line),
+      2.43px 1.76px 0 var(--line),
+      1.76px 2.43px 0 var(--line),
+      0.93px 2.85px 0 var(--line),
+      0px 3.0px 0 var(--line),
+      -0.93px 2.85px 0 var(--line),
+      -1.76px 2.43px 0 var(--line),
+      -2.43px 1.76px 0 var(--line),
+      -2.85px 0.93px 0 var(--line),
+      -3.0px 0px 0 var(--line),
+      -2.85px -0.93px 0 var(--line),
+      -2.43px -1.76px 0 var(--line),
+      -1.76px -2.43px 0 var(--line),
+      -0.93px -2.85px 0 var(--line),
+      0px -3.0px 0 var(--line),
+      0.93px -2.85px 0 var(--line),
+      1.76px -2.43px 0 var(--line),
+      2.43px -1.76px 0 var(--line),
+      2.85px -0.93px 0 var(--line),
+      4.0px 0px 0 var(--text),
+      3.86px 1.04px 0 var(--text),
+      3.46px 2.0px 0 var(--text),
+      2.83px 2.83px 0 var(--text),
+      2.0px 3.46px 0 var(--text),
+      1.04px 3.86px 0 var(--text),
+      0px 4.0px 0 var(--text),
+      -1.04px 3.86px 0 var(--text),
+      -2.0px 3.46px 0 var(--text),
+      -2.83px 2.83px 0 var(--text),
+      -3.46px 2.0px 0 var(--text),
+      -3.86px 1.04px 0 var(--text),
+      -4.0px 0px 0 var(--text),
+      -3.86px -1.04px 0 var(--text),
+      -3.46px -2.0px 0 var(--text),
+      -2.83px -2.83px 0 var(--text),
+      -2.0px -3.46px 0 var(--text),
+      -1.04px -3.86px 0 var(--text),
+      0px -4.0px 0 var(--text),
+      1.04px -3.86px 0 var(--text),
+      2.0px -3.46px 0 var(--text),
+      2.83px -2.83px 0 var(--text),
+      3.46px -2.0px 0 var(--text),
+      3.86px -1.04px 0 var(--text); }
 .pill::after { background: var(--shade); z-index: -2;                       /* its shadow */
                transform: translate(var(--sh), var(--sh)); animation: pillShadowStay 3s ease-in-out infinite; }
 @keyframes pillShadowStay { 0%, 100% { transform: translate(var(--sh), var(--sh)); }
