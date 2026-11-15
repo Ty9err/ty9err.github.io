@@ -226,15 +226,16 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
   .frame { padding: 0.75rem; }
 }
 
-/* ===== SCREW TEST (desktop only) =====
-   Screws on the top and bottom bars only: a gray face with a small white "+" and a yellow outer ring. The menu dividers match them. Nothing else on the pages is changed.
+/* ===== SCREW TEST =====
+   Screws on the top and bottom bars (top bar only on phones): a gray face with a small white "+" and a yellow outer ring. The menu dividers match them. Nothing else on the pages is changed.
    To remove the whole experiment, delete everything from this comment to the end of the file. */
+:root {
+  --screw: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%23ffc310%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%227.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22/%3E%3C/svg%3E");
+  --screw-size: 19px;      /* bottom bar screws (same size as the menu dividers) */
+  --screw-big: 26px;       /* the slightly bigger ones on the top bar */
+  --screw-phone: 16px;     /* top bar screws on phones */
+}
 @media (min-width: 801px) {
-  :root {
-    --screw: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%23ffc310%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%227.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22/%3E%3C/svg%3E");
-    --screw-size: 19px;      /* bottom bar screws (same size as the menu dividers) */
-    --screw-big: 26px;       /* the slightly bigger ones on the top bar */
-  }
   /* menu dividers as screws: gray face with a small white "+" that doesn't reach the edge,
      inside the yellow ring */
   nav li + li::before {
@@ -256,5 +257,16 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
     background-repeat: no-repeat;
     background-size: var(--screw-size);
     background-position: left 44px center, right 44px center;
+  }
+}
+/* Phones: a screw at each end of the top bar too (a bit smaller), with a little extra room at the
+   sides of the bar so they don't bump into the menu */
+@media (max-width: 800px) {
+  header {
+    padding-left: 2.4rem; padding-right: 2.4rem;
+    background-image: var(--screw), var(--screw);
+    background-repeat: no-repeat;
+    background-size: var(--screw-phone);
+    background-position: left 12px center, right 12px center;
   }
 }
