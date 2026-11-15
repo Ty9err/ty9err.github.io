@@ -294,3 +294,32 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
     background-position: left 12px top 32px, right 12px top 32px;   /* pinned where they sat before the bar got shorter */
   }
 }
+
+/* ===== SHADOWS AND THE NAME PILL ===== */
+:root { --sh: 0.875rem; --header-h: 70px; }   /* --sh = how far the flat drop shadows reach */
+@media (max-width: 800px) { :root { --sh: 0.6rem; --header-h: 74px; } }
+
+/* The bio box (About Me text) gets the same flat shadow as the other boxes */
+.about-text { box-shadow: var(--sh) var(--sh) 0 var(--shade); }
+
+/* The top bar's shadow, offset like the boxes' shadows. It's a separate layer that sits under the
+   top bar but BEHIND the page content, so when you scroll, the content slides over the shadow and
+   it never covers text or pictures. Its height follows the top bar (kept up to date by site.js). */
+body::before {
+  content: ""; position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
+  background: var(--shade); border-radius: 0 0 clamp(1.5rem, 5vw, 4rem) clamp(1.5rem, 5vw, 4rem);
+  transform: translate(var(--sh), var(--sh)); z-index: 5; pointer-events: none;
+}
+main { position: relative; z-index: 6; }   /* page content above the top bar's shadow (the bar itself is z-index 10) */
+
+/* "JALEESA ZACHERY" pill: bold yellow text, and the pill gently floats like the current menu link
+   while its shadow stays put. Its background and shadow are separate layers so they can move apart. */
+.pill { position: relative; background: transparent; box-shadow: none; color: var(--accent); font-weight: 700;
+        animation: navFloat 3s ease-in-out infinite; }
+.pill::before, .pill::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; }
+.pill::before { background: var(--dark); z-index: -1; }                    /* the pill itself */
+.pill::after { background: var(--shade); z-index: -2;                       /* its shadow */
+               transform: translate(var(--sh), var(--sh)); animation: pillShadowStay 3s ease-in-out infinite; }
+@keyframes pillShadowStay { 0%, 100% { transform: translate(var(--sh), var(--sh)); }
+                            50% { transform: translate(var(--sh), calc(var(--sh) + 2px)); } }
+@media (prefers-reduced-motion: reduce) { .pill, .pill::after { animation: none; } }
