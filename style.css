@@ -241,7 +241,7 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
 
   /* About Me on phones: less empty space and a smaller headline so it doesn't feel crowded */
   .about { padding: 1.25rem 1rem; }
-  .about h1 { font-size: 1.6rem; margin-bottom: 0.75rem; }
+  .about h1 { font-size: min(1.6rem, 4.2vw); margin-bottom: 0.75rem; white-space: nowrap; }   /* one line: scales with the screen width. If it ever runs off the edge, lower 4.2vw a little */
   .about-text { min-height: 0; line-height: 1.65; }   /* the box only needs to be as tall as its text */
   .about-text p:first-child { margin-top: 0; }
   .about-text p:last-child { margin-bottom: 0; }
