@@ -87,6 +87,10 @@
       .grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
     }
     #more { display: block; margin: 1.5rem auto; }
+    /* Nothing left to load: faded yellow and unclickable, same look as the commission form's Send
+       button while commissions are closed */
+    #more:disabled, #more:disabled:hover { background: var(--accent); color: var(--bg); border-color: var(--accent);
+                                           opacity: 0.45; cursor: not-allowed; }
     /* Pop-up: rounded yellow outline (same as the commissions pop-up), no white focus ring */
     /* The pop-up is pinned near the top of the screen (instead of centered), so a longer title or
        description only makes it grow downward and never moves the arrows. */
@@ -253,6 +257,7 @@
     /* How many ROWS of pictures to show: START_ROWS when the gallery opens (or a filter changes),
        then MORE_ROWS each time "Load more" is pressed. Rows are 5 pictures on desktop, 2 on phones. */
     const START_ROWS = 4, MORE_ROWS = 4;
+    let loadedMore = false;   // has "Load More" been pressed since the last filter change?
     const perRow = () => getComputedStyle(grid).gridTemplateColumns.split(" ").length;
 
     /* FILTER BUTTONS
@@ -373,6 +378,7 @@
       grid.innerHTML = ""; shown = 0;
       $("status").textContent = current.length + (current.length === 1 ? " piece" : " pieces");
       $("activeTag").hidden = !tag; $("tagName").textContent = tag;
+      loadedMore = false;
       showMore(START_ROWS);
     }
 
@@ -391,7 +397,11 @@
         li.appendChild(b); grid.appendChild(li);
       });
       shown = Math.min(shown + rows * perRow(), current.length);
-      $("more").hidden = shown >= current.length;   // no more to load: the button goes away
+      // Out of pieces: the button fades to yellow and can't be clicked (like the commission form's
+      // Send button while commissions are closed). If everything fit at the start, there's no button.
+      const done = shown >= current.length;
+      $("more").hidden = current.length === 0 || (done && !loadedMore);
+      $("more").disabled = done;
     }
 
     /* Pop-up viewer. "pos" is the piece's place in the current (filtered, shuffled) list,
@@ -499,7 +509,7 @@
     });
     $("shuffle").addEventListener("click", () => { mixed = true; refresh(true); });   // mix everything up
     $("clearTag").addEventListener("click", () => { tag = ""; refresh(false); });
-    $("more").addEventListener("click", () => showMore());
+    $("more").addEventListener("click", () => { loadedMore = true; showMore(); });
     $("lbClose").addEventListener("click", () => lb.close());
     lb.addEventListener("click", e => { if (e.target === lb) lb.close(); });   // click outside to close
 
