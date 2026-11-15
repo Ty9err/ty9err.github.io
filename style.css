@@ -256,8 +256,12 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
 :root {
   /* Every screw on the site slowly spins (one turn every 8s: change dur=%228s%22 below for speed).
      --screw-still is the same screw without the spin, used for visitors with "reduce motion" on. */
-  --screw-still: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%23ffc310%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%227.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22/%3E%3C/svg%3E");
-  --screw: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%23ffc310%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%227.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22%3E%3CanimateTransform attributeName=%22transform%22 type=%22rotate%22 from=%220 10 10%22 to=%22360 10 10%22 dur=%228s%22 repeatCount=%22indefinite%22/%3E%3C/path%3E%3C/svg%3E");
+  /* Screws on dark boxes and bars have a shaded-yellow ring (the same color as the box shadows).
+     The -bright versions keep the bright yellow ring, for the screws in the About Me heading (on yellow). */
+  --screw-still: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%23cc9c0d%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%227.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22/%3E%3C/svg%3E");
+  --screw-bright-still: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%23ffc310%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%227.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22/%3E%3C/svg%3E");
+  --screw: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%23cc9c0d%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%227.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22%3E%3CanimateTransform attributeName=%22transform%22 type=%22rotate%22 from=%220 10 10%22 to=%22360 10 10%22 dur=%228s%22 repeatCount=%22indefinite%22/%3E%3C/path%3E%3C/svg%3E");
+  --screw-bright: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%23ffc310%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%227.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22%3E%3CanimateTransform attributeName=%22transform%22 type=%22rotate%22 from=%220 10 10%22 to=%22360 10 10%22 dur=%228s%22 repeatCount=%22indefinite%22/%3E%3C/path%3E%3C/svg%3E");
   --screw-size: 19px;      /* bottom bar screws (same size as the menu dividers) */
   --screw-big: 26px;       /* the slightly bigger ones on the top bar */
   --screw-phone: 16px;     /* top bar screws on phones */
@@ -404,7 +408,7 @@ main { position: relative; z-index: 6; }   /* page content above the top bar's s
 @media (prefers-reduced-motion: reduce) { .pill, .pill::after { animation: none; } }
 
 /* ===== ABOUT ME HEADING WITH SCREWS: ARTiST + DESiGNER + iLLUSTRATOR ===== */
-.title-screws .screw { flex: none; display: inline-block; background: var(--screw) center / contain no-repeat; }
+.title-screws .screw { flex: none; display: inline-block; background: var(--screw-bright) center / contain no-repeat; }
 /* Desktop: one big line across the whole page width, from the left edge of the bio box to the right
    edge of the picture frame. Big screws at both ends line up with those edges; regular screws sit
    between the words. The text size follows the window width so it always fits on one line
@@ -539,7 +543,7 @@ main.card, .about-text {
 }
 
 /* Visitors with "reduce motion" turned on get still screws everywhere */
-@media (prefers-reduced-motion: reduce) { :root { --screw: var(--screw-still); } }
+@media (prefers-reduced-motion: reduce) { :root { --screw: var(--screw-still); --screw-bright: var(--screw-bright-still); } }
 
 /* Portfolio: no divider under the last project (the box's own bottom line takes over) */
 .project:last-of-type { border-bottom: none !important; padding-bottom: 0 !important; margin-bottom: 0 !important; }
