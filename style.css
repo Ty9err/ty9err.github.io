@@ -552,3 +552,19 @@ main.card, .about-text {
   #lbClose:hover .icon-x, #lbClose:active .icon-x { transform: rotate(0deg); }
 }
 @media (prefers-reduced-motion: reduce) { .sheet-close .icon-x, #lbClose .icon-x { transition: none; } }
+
+/* About Me name: a soft white shine sweeps across the letters every few seconds, like light on gold.
+   It's a see-through copy of the name (from data-text in index.html) layered on top, with a slanted
+   white streak that slides across it. Change 4.5s for how often it shines. */
+.frame .pill::after {
+  display: flex; align-items: center; justify-content: center;
+  content: attr(data-text); position: absolute; inset: 0; padding: inherit; z-index: 1;
+  border-radius: 0; transform: none; text-shadow: none; pointer-events: none;
+  color: transparent;
+  background: linear-gradient(135deg, transparent 46.5%, rgba(255, 255, 255, 0.8) 49%, rgba(255, 255, 255, 0.8) 51%, transparent 53.5%) no-repeat;
+  background-size: 300% 100%; background-position: 100% 0;
+  -webkit-background-clip: text; background-clip: text;
+  animation: nameShine 4.5s ease-in-out infinite;
+}
+@keyframes nameShine { 0% { background-position: 100% 0; } 35%, 100% { background-position: 0% 0; } }
+@media (prefers-reduced-motion: reduce) { .frame .pill::after { animation: none; } }
