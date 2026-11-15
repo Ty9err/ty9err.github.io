@@ -475,14 +475,13 @@ main { position: relative; z-index: 6; }   /* page content above the top bar's s
 }
 
 /* ===== NAME INSIDE THE PICTURE FRAME ===== */
-/* Desktop: the picture column now sits level with the bio box (same top and bottom), and the
-   floating name pill sits inside the frame, under the picture. */
+/* Desktop: the picture column sits level with the bio box (same top and bottom). The floating name
+   sits inside the frame, above the picture, with no shadow of its own. */
 .about-side { grid-row: 2; align-self: stretch; display: flex; flex-direction: column; }
 .about-side .frame { flex: 1; display: flex; flex-direction: column; }
-.frame .pill { margin: auto 0 0.15rem; padding-top: 0.5rem; padding-bottom: 0.5rem; }   /* sits at the bottom of the frame */
-.frame .frame-inner { margin-bottom: 1.25rem; }
+.frame .pill { margin: 0 0 0.9rem; padding-top: 0.35rem; padding-bottom: 0.35rem; }
+.frame .pill::after { display: none; }   /* no yellow shadow under the name */
 @media (max-width: 800px) {
   .about-side { grid-row: auto; }   /* phones: picture and name stay below the bio text */
-  .frame .pill { margin: auto 0 0.1rem; }
-  .frame .frame-inner { margin-bottom: 0.9rem; }
+  .frame .pill { margin: 0 0 0.6rem; }
 }
