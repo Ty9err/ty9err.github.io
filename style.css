@@ -504,3 +504,31 @@ main { position: relative; z-index: 6; }   /* page content above the top bar's s
                          right var(--screw-x) bottom calc(var(--base-band) / 2 - var(--screw-phone) / 2); }
   .frame .pill { padding: 0 2.25rem; }
 }
+
+/* ===== CORNER SCREWS ON EVERY BOX (not pop-ups) =====
+   The page cards and the About Me bio box get the same small corner screws as the bio picture
+   frame, the same distance from the edges. Cards get a little extra room at the top (and on phones,
+   the bottom) so the screws don't crowd the headings. */
+main.card, .about-text {
+  background-image: var(--screw), var(--screw), var(--screw), var(--screw);
+  background-repeat: no-repeat; background-size: var(--screw-size);
+  background-position:
+    left 24px top calc(3.25rem / 2 - var(--screw-size) / 2),
+    right 24px top calc(3.25rem / 2 - var(--screw-size) / 2),
+    left 24px bottom calc(2.75rem / 2 - var(--screw-size) / 2),
+    right 24px bottom calc(2.75rem / 2 - var(--screw-size) / 2);
+}
+main.card { padding-top: 3.25rem; }   /* room below the top screws (was 2rem before the screws) */
+.about-text { padding-top: 2.75rem; }
+@media (max-width: 800px) {
+  main.card, .about-text {
+    background-size: var(--screw-phone);
+    background-position:
+      left 14px top calc(2.5rem / 2 - var(--screw-phone) / 2),
+      right 14px top calc(2.5rem / 2 - var(--screw-phone) / 2),
+      left 14px bottom calc(2.1rem / 2 - var(--screw-phone) / 2),
+      right 14px bottom calc(2.1rem / 2 - var(--screw-phone) / 2);
+  }
+  main.card { padding-top: 2.6rem; padding-bottom: 2rem; }
+  .about-text { padding-top: 2.6rem; padding-bottom: 2rem; }
+}
