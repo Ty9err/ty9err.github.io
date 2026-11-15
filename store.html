@@ -116,10 +116,22 @@
     #sheet-body .row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1rem; margin-top: 0.75rem; }
     #sheet-body p { margin: 0.4rem 0 0; line-height: 1.6; }
     @keyframes popIn { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: none; } }
-    .sheet[open] { animation: popIn 0.5s ease-out both; }   /* pop-up fade: change 0.5s to adjust */
+    .sheet[open] { animation: popIn 0.5s ease-out backwards; }   /* pop-up fade: change 0.5s to adjust */
     .sheet[open]::backdrop { animation: fadeIn 0.5s ease both; }
     @media (prefers-reduced-motion: reduce) {
       .product > .media, .sheet[open], .sheet[open]::backdrop { transition: none; animation: none; } }
+
+    /* Close button icon: a drawn ×, centered exactly in the circle. On phones it becomes a gently
+       bobbing down arrow, since you can also drag the pop-up down to close it. */
+    .sheet-close { display: flex; align-items: center; justify-content: center; }
+    .sheet-close svg { width: 1.35rem; height: 1.35rem; display: block; }
+    .sheet-close .icon-down { display: none; }
+    @keyframes bobDown { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(3px); } }
+    @media (max-width: 600px) {
+      .sheet-close .icon-x { display: none; }
+      .sheet-close .icon-down { display: block; width: 1.6rem; height: 1.6rem; animation: bobDown 1.4s ease-in-out infinite; }
+    }
+    @media (prefers-reduced-motion: reduce) { .sheet-close .icon-down { animation: none; } }
   </style>
 <link rel="icon" href="/images/favicon.ico" sizes="any">
 <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
@@ -245,7 +257,7 @@
       <div class="sheet-inner">
         <div class="sheet-head">
           <h2 id="sheet-title"></h2>
-          <button type="button" class="sheet-close" id="sheet-close" aria-label="Close">&times;</button>
+          <button type="button" class="sheet-close" id="sheet-close" aria-label="Close"><svg class="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><svg class="icon-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
         </div>
         <div id="sheet-media"></div>
         <div id="sheet-body"></div>
@@ -375,6 +387,49 @@
     }
     document.getElementById("sheet-close").addEventListener("click", () => sheet.close());
     sheet.addEventListener("click", e => { if (e.target === sheet) sheet.close(); });   // click outside to close
+  </script>
+
+  <script>
+    /* Drag down to close (phones and tablets): pull the pop-up down with a finger. Let go past
+       DRAG_CLOSE pixels and it slides away; let go sooner and it springs back. Only starts when
+       the pop-up is scrolled to the top, so scrolling inside it still works normally. */
+    (function () {
+      const DRAG_CLOSE = 110;
+      const dlg = document.getElementById("sheet");
+      let y0 = null, x0 = 0, dy = 0, dragging = false;
+      const reset = () => { dlg.style.transition = ""; dlg.style.transform = ""; dlg.style.opacity = ""; };
+      dlg.addEventListener("touchstart", e => {
+        if (e.touches.length > 1) { y0 = null; return; }
+        y0 = e.touches[0].clientY; x0 = e.touches[0].clientX; dy = 0; dragging = false;
+      }, { passive: true });
+      dlg.addEventListener("touchmove", e => {
+        if (y0 === null) return;
+        const ny = e.touches[0].clientY - y0, nx = e.touches[0].clientX - x0;
+        if (!dragging) {
+          if (ny > 8 && ny > Math.abs(nx) && dlg.scrollTop <= 0) { dragging = true; dlg.style.transition = "none"; }
+          else if (Math.abs(nx) > 8 || ny < -8) { y0 = null; return; }   // sideways swipe or scrolling up: leave it alone
+          else return;
+        }
+        dy = Math.max(0, ny);
+        dlg.style.transform = "translateY(" + dy + "px)";
+        dlg.style.opacity = Math.max(0.4, 1 - dy / 600);
+        if (e.cancelable) e.preventDefault();
+      }, { passive: false });
+      dlg.addEventListener("touchend", () => {
+        y0 = null;
+        if (!dragging) return;
+        dragging = false;
+        dlg.style.transition = "transform 0.25s ease, opacity 0.25s ease";
+        if (dy > DRAG_CLOSE) {
+          dlg.style.transform = "translateY(100vh)"; dlg.style.opacity = "0";
+          setTimeout(() => { dlg.close(); reset(); }, 250);
+        } else {
+          dlg.style.transform = ""; dlg.style.opacity = "";
+          setTimeout(reset, 250);
+        }
+      });
+      dlg.addEventListener("close", reset);
+    })();
   </script>
 
 </body>
