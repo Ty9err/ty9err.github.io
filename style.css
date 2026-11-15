@@ -474,14 +474,36 @@ main { position: relative; z-index: 6; }   /* page content above the top bar's s
         2.85px -0.93px 0 var(--text); }
 }
 
-/* ===== NAME INSIDE THE PICTURE FRAME ===== */
-/* Desktop: the picture column sits level with the bio box (same top and bottom). The floating name
-   sits inside the frame, above the picture, with no shadow of its own. */
+/* ===== NAME INSIDE THE PICTURE FRAME, WITH CORNER SCREWS ===== */
+/* Desktop: the picture column sits level with the bio box (same top and bottom). Inside the frame:
+   a top row with the floating name centered between two screws, the picture, and a bottom band
+   with two more screws. The four screws line up in two straight columns.
+   --name-row / --base-band = heights of the top row and the bottom band; --screw-x = how far the
+   screws sit in from the frame's edges. */
 .about-side { grid-row: 2; align-self: stretch; display: flex; flex-direction: column; }
-.about-side .frame { flex: 1; display: flex; flex-direction: column; }
-.frame .pill { margin: 0 0 0.9rem; padding-top: 0.35rem; padding-bottom: 0.35rem; }
-.frame .pill::after { display: none; }   /* no yellow shadow under the name */
+.about-side .frame {
+  --name-row: 3.25rem; --base-band: 2.75rem; --screw-x: 24px;
+  flex: 1; display: flex; flex-direction: column;
+  padding: 0 1.25rem var(--base-band);
+  background-image: var(--screw), var(--screw), var(--screw), var(--screw);
+  background-repeat: no-repeat; background-size: var(--screw-size);
+  background-position:
+    left var(--screw-x) top calc(var(--name-row) / 2 - var(--screw-size) / 2),
+    right var(--screw-x) top calc(var(--name-row) / 2 - var(--screw-size) / 2),
+    left var(--screw-x) bottom calc(var(--base-band) / 2 - var(--screw-size) / 2),
+    right var(--screw-x) bottom calc(var(--base-band) / 2 - var(--screw-size) / 2);
+}
+.frame .pill { height: var(--name-row); margin: 0; padding: 0 3rem; display: flex; align-items: center; justify-content: center; }
+.frame .pill::before, .frame .pill::after { display: none; }   /* no separate box or shadow: the name sits right on the frame */
+.frame .frame-inner { flex: 1 0 auto; }
 @media (max-width: 800px) {
   .about-side { grid-row: auto; }   /* phones: picture and name stay below the bio text */
-  .frame .pill { margin: 0 0 0.6rem; }
+  .about-side .frame { --name-row: 2.5rem; --base-band: 2.1rem; --screw-x: 14px; padding: 0 0.75rem var(--base-band);
+                       background-size: var(--screw-phone);
+                       background-position:
+                         left var(--screw-x) top calc(var(--name-row) / 2 - var(--screw-phone) / 2),
+                         right var(--screw-x) top calc(var(--name-row) / 2 - var(--screw-phone) / 2),
+                         left var(--screw-x) bottom calc(var(--base-band) / 2 - var(--screw-phone) / 2),
+                         right var(--screw-x) bottom calc(var(--base-band) / 2 - var(--screw-phone) / 2); }
+  .frame .pill { padding: 0 2.25rem; }
 }
