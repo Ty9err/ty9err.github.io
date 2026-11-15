@@ -376,3 +376,24 @@ main { position: relative; z-index: 6; }   /* page content above the top bar's s
 @keyframes pillShadowStay { 0%, 100% { transform: translate(var(--sh), var(--sh)); }
                             50% { transform: translate(var(--sh), calc(var(--sh) + 2px)); } }
 @media (prefers-reduced-motion: reduce) { .pill, .pill::after { animation: none; } }
+
+/* ===== ABOUT ME HEADING WITH SCREWS: ARTiST + DESiGNER + iLLUSTRATOR ===== */
+.title-screws .screw { flex: none; display: inline-block; background: var(--screw) center / contain no-repeat; }
+/* Desktop: one line spread across the width of the bio box below, big screws at both ends lining up
+   with its edges, regular screws between the words. The text size follows the window width so it
+   always fits on one line (the numbers assume the left column's width). */
+.about .title-screws { display: flex; align-items: center; justify-content: space-between; white-space: nowrap;
+                font-size: clamp(1rem, calc((min(100vw, 1300px) - 702px) / 17.5), 2rem); }
+.title-screws .screw { width: var(--screw-size); height: var(--screw-size); }
+.title-screws .screw.end { width: var(--screw-big); height: var(--screw-big); }
+/* Medium windows (the left column gets narrow) and phones: centered, no end screws */
+@media (max-width: 1099px) {
+  .about .title-screws { justify-content: center; flex-wrap: wrap; gap: 0.2em 0.5em;
+                         font-size: clamp(1rem, calc((100vw - 590px) / 19.5), 1.6rem); }
+  .title-screws .screw.end { display: none; }
+}
+@media (max-width: 800px) {
+  /* one centered line that scales with the screen; phone-size screws between the words */
+  .about .title-screws { gap: 6px; white-space: nowrap; font-size: min(1.6rem, calc((100vw - 88px) / 17.5)); }
+  .title-screws .screw { width: var(--screw-phone); height: var(--screw-phone); }
+}
