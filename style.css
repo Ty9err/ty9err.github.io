@@ -540,3 +540,6 @@ main.card, .about-text {
 
 /* Visitors with "reduce motion" turned on get still screws everywhere */
 @media (prefers-reduced-motion: reduce) { :root { --screw: var(--screw-still); } }
+
+/* Portfolio: no divider under the last project (the box's own bottom line takes over) */
+.project:last-of-type { border-bottom: none !important; padding-bottom: 0 !important; margin-bottom: 0 !important; }
