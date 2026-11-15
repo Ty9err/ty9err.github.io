@@ -223,7 +223,7 @@
     <p id="status" aria-live="polite"></p>
 
     <ul id="grid" class="grid"></ul>
-    <button type="button" id="more" hidden>Load more</button>
+    <button type="button" id="more" hidden>Load More</button>
 
     <dialog id="lightbox" aria-labelledby="lbTitle">
       <div class="lb-head">
@@ -274,11 +274,11 @@
       { name: "Medium", options: [
         { label: "Digital",      medium: "digital" },
         { label: "Traditional",  medium: "traditional" },
-        { label: "Mixed media",  medium: "mixed media", short: "Mixed" },   // "short" = name in the phone dropdown
+        { label: "Mixed Media",  medium: "mixed media", short: "Mixed" },   // "short" = name in the phone dropdown
       ]},
       { name: "Type", options: [
         { label: "Original",     tag: "original" },
-        { label: "Fan art",      tag: "fanart" },
+        { label: "Fan Art",      tag: "fanart" },
       ]},
     ];
 
@@ -403,7 +403,7 @@
       $("more").hidden = current.length === 0 || (done && !loadedMore);
       $("more").disabled = done;
       $("more").classList.toggle("end", done);
-      $("more").textContent = done ? "End of the line buddy!" : "Load more";
+      $("more").textContent = done ? "End of the line buddy!" : "Load More";
     }
 
     /* Pop-up viewer. "pos" is the piece's place in the current (filtered, shuffled) list,
