@@ -408,12 +408,21 @@ main { position: relative; z-index: 6; }   /* page content above the top bar's s
    (up to 3.2rem). The screws keep their usual sizes. */
 .about .title-screws { grid-column: 1 / -1; margin-right: 1.5rem;   /* 1.5rem = the space to the right of the frame */
                        display: flex; align-items: center; justify-content: space-between; white-space: nowrap;
-                       font-size: clamp(1rem, calc((min(100vw, 1300px) - 218px) / 18.3), 3.2rem); }
+                       font-size: clamp(1rem, calc((min(100vw, 1300px) - 266px) / 18.3), 3.2rem); }
 .title-screws .screw { width: var(--screw-size); height: var(--screw-size); }
 .title-screws .screw.end { width: var(--screw-big); height: var(--screw-big); }
+/* End screws sit 24px in from the sides (lined up with the boxes' corner screws below) and slowly spin.
+   Change 8s for the speed (bigger = slower). */
+.about .title-screws { padding-left: 24px; padding-right: 24px; }
+.title-screws .screw.end { animation: screwSpin 8s linear infinite; }
+@keyframes screwSpin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .title-screws .screw.end { animation: none; } }
+/* PREVIEW: the screws between the words are turned 45° so their "+" reads as an "x".
+   To go back to "+", delete the next line. */
+.title-screws .screw:not(.end) { transform: rotate(45deg); }
 @media (max-width: 800px) {
   /* Phones: one centered line that scales with the screen; phone-size screws between the words */
-  .about .title-screws { margin-right: 0; justify-content: center; gap: 6px; flex-wrap: nowrap; white-space: nowrap;
+  .about .title-screws { margin-right: 0; padding-left: 0; padding-right: 0; justify-content: center; gap: 6px; flex-wrap: nowrap; white-space: nowrap;
                          font-size: min(1.6rem, calc((100vw - 96px) / 19)); }   /* lower 19 for bigger text, raise it if it ever overflows */
   .title-screws .screw { width: var(--screw-phone); height: var(--screw-phone); }
   .title-screws .screw.end { display: none; }
