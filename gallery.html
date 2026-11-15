@@ -72,7 +72,7 @@
     }
     #status { color: var(--muted); }
     .grid { list-style: none; margin: 1rem 0; padding: 0; display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.75rem; }
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.75rem; }   /* 5 per row on a full desktop window */
     .thumb { display: block; width: 100%; padding: 0; border: 0; background: var(--line); cursor: pointer;
              transition: transform 0.15s ease; }
     /* Click feedback: the picture shrinks while pressed, then dips and springs back on click */
@@ -254,7 +254,11 @@
 
   <script src="artworks.js"></script>
   <script>
-    const PAGE = 48;                       // how many pieces to show at a time
+    /* How many ROWS of pictures to show: START_ROWS when the gallery opens (or a filter changes),
+       then MORE_ROWS each time "Load more" is pressed. Rows are 5 pictures on desktop, 2 on phones. */
+    const START_ROWS = 4, MORE_ROWS = 2;
+    const perRow = () => getComputedStyle(grid).gridTemplateColumns.split(" ").length;
+    let loadedMore = false;   // has "Load more" been pressed since the last filter change?
 
     /* FILTER BUTTONS
        Each row is a category; each button either checks the piece's medium (from make_gallery.py)
@@ -374,11 +378,12 @@
       grid.innerHTML = ""; shown = 0;
       $("status").textContent = current.length + (current.length === 1 ? " piece" : " pieces");
       $("activeTag").hidden = !tag; $("tagName").textContent = tag;
-      showMore();
+      loadedMore = false;
+      showMore(START_ROWS);
     }
 
-    function showMore() {
-      current.slice(shown, shown + PAGE).forEach((i, k) => {
+    function showMore(rows = MORE_ROWS) {
+      current.slice(shown, shown + rows * perRow()).forEach((i, k) => {
         const a = ARTWORKS[i], li = document.createElement("li"), b = document.createElement("button");
         b.type = "button"; b.className = "thumb"; b.setAttribute("aria-label", "View " + a.title);
         b.appendChild(makeImage(a.thumb, a.title));
@@ -391,10 +396,11 @@
         li.style.animationDelay = Math.min(k, 16) * 25 + "ms";   // thumbnails fade in one after another
         li.appendChild(b); grid.appendChild(li);
       });
-      shown = Math.min(shown + PAGE, current.length);
+      shown = Math.min(shown + rows * perRow(), current.length);
       // When everything is showing, the button turns into a faded, unclickable "end" button
       const done = shown >= current.length;
-      $("more").hidden = current.length === 0;
+      // ...but only if there was ever a "Load more" to press; if everything fit at the start, no button
+      $("more").hidden = current.length === 0 || (done && !loadedMore);
       $("more").disabled = done;
       $("more").classList.toggle("end", done);
       $("more").textContent = done ? "End of the line buddy!" : "Load more";
@@ -505,7 +511,7 @@
     });
     $("shuffle").addEventListener("click", () => { mixed = true; refresh(true); });   // mix everything up
     $("clearTag").addEventListener("click", () => { tag = ""; refresh(false); });
-    $("more").addEventListener("click", showMore);
+    $("more").addEventListener("click", () => { loadedMore = true; showMore(); });
     $("lbClose").addEventListener("click", () => lb.close());
     lb.addEventListener("click", e => { if (e.target === lb) lb.close(); });   // click outside to close
 
