@@ -296,7 +296,7 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
 }
 
 /* ===== SHADOWS AND THE NAME PILL ===== */
-:root { --sh: 0.875rem; --header-h: 70px; }   /* --sh = how far the flat drop shadows reach */
+:root { --sh: 0.875rem; --header-h: 70px; }   /* --sh = how far the flat drop shadows reach; --header-h = top bar height */
 @media (max-width: 800px) { :root { --sh: 0.6rem; --header-h: 74px; } }
 
 /* The bio box (About Me text) gets the same flat shadow as the other boxes */
@@ -304,7 +304,8 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
 
 /* The top bar's shadow, offset like the boxes' shadows. It's a separate layer that sits under the
    top bar but BEHIND the page content, so when you scroll, the content slides over the shadow and
-   it never covers text or pictures. Its height follows the top bar (kept up to date by site.js). */
+   it never covers text or pictures. Its height is the top bar's usual height (--header-h above:
+   70px on desktop, 74px on phones). If you ever change the bar's height, change those to match. */
 body::before {
   content: ""; position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
   background: var(--shade); border-radius: 0 0 clamp(1.5rem, 5vw, 4rem) clamp(1.5rem, 5vw, 4rem);
@@ -317,7 +318,39 @@ main { position: relative; z-index: 6; }   /* page content above the top bar's s
 .pill { position: relative; background: transparent; box-shadow: none; color: var(--accent); font-weight: 700;
         animation: navFloat 3s ease-in-out infinite; }
 .pill::before, .pill::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; }
-.pill::before { background: var(--dark); z-index: -1; }                    /* the pill itself */
+.pill::before { background: var(--dark); z-index: -1;                      /* the pill itself, with a */
+                border: 2px solid var(--text); box-sizing: border-box; }   /* white border drawn inside its edge */
+/* The name's letters get the same outlines as the selected menu link on phones: 1px gray right
+   against the letters, then 1px white around that */
+.pill { text-shadow:
+      1.0px 0px 0 var(--line),
+      0.87px 0.5px 0 var(--line),
+      0.5px 0.87px 0 var(--line),
+      0px 1.0px 0 var(--line),
+      -0.5px 0.87px 0 var(--line),
+      -0.87px 0.5px 0 var(--line),
+      -1.0px 0px 0 var(--line),
+      -0.87px -0.5px 0 var(--line),
+      -0.5px -0.87px 0 var(--line),
+      0px -1.0px 0 var(--line),
+      0.5px -0.87px 0 var(--line),
+      0.87px -0.5px 0 var(--line),
+      2.0px 0px 0 var(--text),
+      1.85px 0.77px 0 var(--text),
+      1.41px 1.41px 0 var(--text),
+      0.77px 1.85px 0 var(--text),
+      0px 2.0px 0 var(--text),
+      -0.77px 1.85px 0 var(--text),
+      -1.41px 1.41px 0 var(--text),
+      -1.85px 0.77px 0 var(--text),
+      -2.0px 0px 0 var(--text),
+      -1.85px -0.77px 0 var(--text),
+      -1.41px -1.41px 0 var(--text),
+      -0.77px -1.85px 0 var(--text),
+      0px -2.0px 0 var(--text),
+      0.77px -1.85px 0 var(--text),
+      1.41px -1.41px 0 var(--text),
+      1.85px -0.77px 0 var(--text); }
 .pill::after { background: var(--shade); z-index: -2;                       /* its shadow */
                transform: translate(var(--sh), var(--sh)); animation: pillShadowStay 3s ease-in-out infinite; }
 @keyframes pillShadowStay { 0%, 100% { transform: translate(var(--sh), var(--sh)); }
