@@ -137,6 +137,15 @@
                 display: flex; align-items: center; justify-content: center;   /* centers the < in the circle */
                 background: var(--line); color: var(--text); }   /* same look as the commissions pop-up's close button */
     dialog .lb-arrow svg { width: 1.4rem; height: 1.4rem; display: block; }
+    /* Phones: the ‹ › arrows gently nudge sideways (like the pull-down arrow) to hint at swiping */
+    @keyframes nudgeLeft { 0%, 100% { transform: translateX(1px); } 50% { transform: translateX(-3px); } }
+    @keyframes nudgeRight { 0%, 100% { transform: translateX(-1px); } 50% { transform: translateX(3px); } }
+    @media (max-width: 600px) {
+      #lbPrev svg { animation: nudgeLeft 1.4s ease-in-out infinite; }
+      #lbNext svg { animation: nudgeRight 1.4s ease-in-out infinite; }
+    }
+    @media (prefers-reduced-motion: reduce) { #lbPrev svg, #lbNext svg { animation: none; } }
+    #lbImg > * { will-change: transform; }
     dialog .lb-arrow:hover, dialog .lb-arrow:focus-visible { background: var(--accent); color: var(--bg); }
     dialog .lb-arrow:focus:not(:focus-visible) { outline: none; }
     #lbCount { color: var(--muted); font-size: 0.95rem; margin: 0; min-width: 5.5rem; text-align: center;
@@ -415,17 +424,51 @@
       if (e.key === "ArrowRight") { e.preventDefault(); step(1); }
     });
 
-    // Phones: swipe left or right on the picture
-    let touchX = null, touchY = null;
+    // Phones: swipe left or right on the picture. The picture follows your finger; let go past
+    // SWIPE_MIN pixels and it slides away while the next one slides in from the other side.
+    // Let go sooner and it springs back.
+    const SWIPE_MIN = 50;
+    let touchX = null, touchY = null, swipeDx = 0, swiping = false;
     const stage = lb.querySelector(".lb-stage");
+    const pic = () => $("lbImg").firstElementChild;
+    const calm = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
     stage.addEventListener("touchstart", e => {
-      touchX = e.touches[0].clientX; touchY = e.touches[0].clientY;
+      if (e.touches.length > 1) { touchX = null; return; }
+      touchX = e.touches[0].clientX; touchY = e.touches[0].clientY; swipeDx = 0; swiping = false;
     }, { passive: true });
-    stage.addEventListener("touchend", e => {
+    stage.addEventListener("touchmove", e => {
       if (touchX === null) return;
-      const dx = e.changedTouches[0].clientX - touchX, dy = e.changedTouches[0].clientY - touchY;
-      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) step(dx < 0 ? 1 : -1);
+      const dx = e.touches[0].clientX - touchX, dy = e.touches[0].clientY - touchY;
+      if (!swiping) {
+        if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) swiping = true;
+        else if (Math.abs(dy) > 8) { touchX = null; return; }   // up/down: leave it to drag-to-close
+        else return;
+      }
+      swipeDx = dx;
+      const p = pic();
+      if (p && !calm()) { p.style.transition = "none"; p.style.transform = "translateX(" + dx + "px) rotate(" + dx / 40 + "deg)";
+                          p.style.opacity = Math.max(0.35, 1 - Math.abs(dx) / 400); }
+    }, { passive: true });
+    stage.addEventListener("touchend", () => {
+      if (touchX === null) return;
       touchX = null;
+      if (!swiping) return;
+      swiping = false;
+      const p = pic(), dir = swipeDx < 0 ? 1 : -1;   // swipe left = next piece
+      if (Math.abs(swipeDx) < SWIPE_MIN) {             // not far enough: spring back
+        if (p) { p.style.transition = "transform 0.25s ease, opacity 0.25s ease"; p.style.transform = ""; p.style.opacity = ""; }
+        return;
+      }
+      if (calm() || !p) { step(dir); return; }
+      // slide the old picture out, then bring the new one in from the other side
+      p.style.transition = "transform 0.16s ease-in, opacity 0.16s ease-in";
+      p.style.transform = "translateX(" + (-dir * 60) + "%)"; p.style.opacity = "0";
+      setTimeout(() => {
+        step(dir);
+        const n = pic();
+        if (n) n.animate([{ transform: "translateX(" + (dir * 60) + "%)", opacity: 0 }, { transform: "none", opacity: 1 }],
+                         { duration: 220, easing: "ease-out" });
+      }, 160);
     }, { passive: true });
 
     // Reset: turns off every filter button, the year and any tag picked from a piece
