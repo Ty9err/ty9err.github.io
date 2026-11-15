@@ -505,30 +505,29 @@ main { position: relative; z-index: 6; }   /* page content above the top bar's s
   .frame .pill { padding: 0 2.25rem; }
 }
 
-/* ===== CORNER SCREWS ON EVERY BOX (not pop-ups) =====
+/* ===== CORNER SCREWS AND DIVIDER LINES ON EVERY BOX (not pop-ups) =====
    The page cards and the About Me bio box get the same small corner screws as the bio picture
-   frame, the same distance from the edges. Cards get a little extra room at the top (and on phones,
-   the bottom) so the screws don't crowd the headings. */
+   frame, the same distance from the edges, plus a thin gray line just inside the top screws and
+   another just inside the bottom ones (like the frame's top and bottom bands).
+   --band-top / --band-bottom = height of the screw bands (where the lines sit);
+   --band-gap = space between a line and the text. */
 main.card, .about-text {
-  background-image: var(--screw), var(--screw), var(--screw), var(--screw);
-  background-repeat: no-repeat; background-size: var(--screw-size);
+  --band-top: 3.25rem; --band-bottom: 2.75rem; --band-gap: 1.25rem; --screw-in: 24px; --s: var(--screw-size);
+  background-image: var(--screw), var(--screw), var(--screw), var(--screw),
+                    linear-gradient(var(--line), var(--line)), linear-gradient(var(--line), var(--line));
+  background-repeat: no-repeat;
+  background-size: var(--s), var(--s), var(--s), var(--s), calc(100% - 2 * var(--screw-in)) 1px, calc(100% - 2 * var(--screw-in)) 1px;
   background-position:
-    left 24px top calc(3.25rem / 2 - var(--screw-size) / 2),
-    right 24px top calc(3.25rem / 2 - var(--screw-size) / 2),
-    left 24px bottom calc(2.75rem / 2 - var(--screw-size) / 2),
-    right 24px bottom calc(2.75rem / 2 - var(--screw-size) / 2);
+    left var(--screw-in) top calc(var(--band-top) / 2 - var(--s) / 2),
+    right var(--screw-in) top calc(var(--band-top) / 2 - var(--s) / 2),
+    left var(--screw-in) bottom calc(var(--band-bottom) / 2 - var(--s) / 2),
+    right var(--screw-in) bottom calc(var(--band-bottom) / 2 - var(--s) / 2),
+    center top var(--band-top), center bottom var(--band-bottom);
+  padding-top: calc(var(--band-top) + var(--band-gap));
+  padding-bottom: calc(var(--band-bottom) + var(--band-gap));
 }
-main.card { padding-top: 3.25rem; }   /* room below the top screws (was 2rem before the screws) */
-.about-text { padding-top: 2.75rem; }
+.about-text > :first-child { margin-top: 0; }   /* the line-to-text spacing comes from --band-gap */
+.about-text > :last-child { margin-bottom: 0; }
 @media (max-width: 800px) {
-  main.card, .about-text {
-    background-size: var(--screw-phone);
-    background-position:
-      left 14px top calc(2.5rem / 2 - var(--screw-phone) / 2),
-      right 14px top calc(2.5rem / 2 - var(--screw-phone) / 2),
-      left 14px bottom calc(2.1rem / 2 - var(--screw-phone) / 2),
-      right 14px bottom calc(2.1rem / 2 - var(--screw-phone) / 2);
-  }
-  main.card { padding-top: 2.6rem; padding-bottom: 2rem; }
-  .about-text { padding-top: 2.6rem; padding-bottom: 2rem; }
+  main.card, .about-text { --band-top: 2.5rem; --band-bottom: 2.1rem; --band-gap: 1rem; --screw-in: 14px; --s: var(--screw-phone); }
 }
