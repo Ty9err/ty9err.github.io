@@ -87,6 +87,10 @@
       .grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
     }
     #more { display: block; margin: 1.5rem auto; }
+    /* "End of the line buddy!": a faded yellow button that can't be clicked, like the commission
+       form's Send button while commissions are closed */
+    #more.end, #more.end:hover { background: var(--accent); color: var(--dark); border-color: var(--accent);
+                                 font-weight: 700; opacity: 0.45; cursor: not-allowed; }
     /* Pop-up: rounded yellow outline (same as the commissions pop-up), no white focus ring */
     /* The pop-up is pinned near the top of the screen (instead of centered), so a longer title or
        description only makes it grow downward and never moves the arrows. */
@@ -354,8 +358,18 @@
       return img;
     }
 
+    /* ORDER: the gallery quietly opens newest year first (no year labels), going back in time as
+       visitors press "Load more". The year comes from a piece's four-digit tag (like "2019");
+       pieces without a year tag go at the end, and within each year the order is a random mix.
+       Shuffle mixes everything regardless of year (or just that year, if a Year is picked).
+       Reset goes back to newest first. */
+    const yearOf = a => Math.max(0, ...a.tags.filter(t => /^\d{4}$/.test(t)).map(Number));
+    let mixed = false;   // true after Shuffle: fully random instead of newest first
     function refresh(reshuffle) {
-      if (reshuffle || !order.length) order = shuffle(ARTWORKS.map((_, i) => i));
+      if (reshuffle || !order.length) {
+        order = shuffle(ARTWORKS.map((_, i) => i));
+        if (!mixed) order.sort((x, y) => yearOf(ARTWORKS[y]) - yearOf(ARTWORKS[x]));   // stable sort keeps the mix within each year
+      }
       current = order.filter(i => matches(ARTWORKS[i]));
       grid.innerHTML = ""; shown = 0;
       $("status").textContent = current.length + (current.length === 1 ? " piece" : " pieces");
@@ -378,7 +392,12 @@
         li.appendChild(b); grid.appendChild(li);
       });
       shown = Math.min(shown + PAGE, current.length);
-      $("more").hidden = shown >= current.length;
+      // When everything is showing, the button turns into a faded, unclickable "end" button
+      const done = shown >= current.length;
+      $("more").hidden = current.length === 0;
+      $("more").disabled = done;
+      $("more").classList.toggle("end", done);
+      $("more").textContent = done ? "End of the line buddy!" : "Load more";
     }
 
     /* Pop-up viewer. "pos" is the piece's place in the current (filtered, shuffled) list,
@@ -482,9 +501,9 @@
       FILTERS.forEach(f => { f.select.value = ""; f.select.classList.remove("on"); });
       tag = "";
       year = ""; $("year").value = ""; $("year").classList.remove("on");
-      refresh(false);
+      mixed = false; refresh(true);   // back to newest first
     });
-    $("shuffle").addEventListener("click", () => refresh(true));
+    $("shuffle").addEventListener("click", () => { mixed = true; refresh(true); });   // mix everything up
     $("clearTag").addEventListener("click", () => { tag = ""; refresh(false); });
     $("more").addEventListener("click", showMore);
     $("lbClose").addEventListener("click", () => lb.close());
