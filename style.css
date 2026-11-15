@@ -225,3 +225,50 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
   .pill { margin-bottom: 1.25rem; }
   .frame { padding: 0.75rem; }
 }
+
+/* ===== SCREW TEST (desktop only) =====
+   Menu dividers get a gray "+" so they look like screw heads, and matching screws sit on the
+   corners of the dark boxes, the ends of the top and bottom bars, and the name pill.
+   To remove the whole experiment, delete everything from this comment to the end of the file. */
+@media (min-width: 801px) {
+  :root {
+    --screw: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%23ffc310%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%227.5%22 fill=%22%234a4a4a%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%226.5%22 fill=%22%23ffffff%22/%3E%3Cpath d=%22M3.5 10h13M10 3.5v13%22 stroke=%22%234a4a4a%22 stroke-width=%221.3%22/%3E%3C/svg%3E");
+    --screw-size: 19px;      /* same size as the menu dividers */
+    --screw-big: 26px;       /* the slightly bigger ones on the top bar */
+  }
+  /* the "+" inside each menu divider, reaching edge to edge */
+  nav li + li::before {
+    background: linear-gradient(var(--line), var(--line)) center / 100% 1.5px no-repeat,
+                linear-gradient(var(--line), var(--line)) center / 1.5px 100% no-repeat,
+                var(--text);
+  }
+  /* four corner screws on the dark boxes */
+  main.card, .about-text {
+    background-image: var(--screw), var(--screw), var(--screw), var(--screw);
+    background-repeat: no-repeat;
+    background-size: var(--screw-size);
+    background-position: left 15px top 15px, right 15px top 15px, left 15px bottom 15px, right 15px bottom 15px;
+  }
+  .frame {   /* a slightly wider border around the picture makes room for its corner screws */
+    padding: 1.75rem;
+    background-image: var(--screw), var(--screw), var(--screw), var(--screw);
+    background-repeat: no-repeat;
+    background-size: 14px;
+    background-position: left 8px top 8px, right 8px top 8px, left 8px bottom 8px, right 8px bottom 8px;
+  }
+  /* one screw at each end of the name pill and the bottom bar */
+  .pill, footer {
+    background-image: var(--screw), var(--screw);
+    background-repeat: no-repeat;
+    background-size: var(--screw-size);
+    background-position: left 20px center, right 20px center;
+  }
+  footer { background-position: left 44px center, right 44px center; }
+  /* slightly bigger screws at each end of the top bar */
+  header {
+    background-image: var(--screw), var(--screw);
+    background-repeat: no-repeat;
+    background-size: var(--screw-big);
+    background-position: left 40px center, right 40px center;
+  }
+}
