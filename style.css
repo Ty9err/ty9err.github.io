@@ -254,7 +254,10 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
    Screws on the top and bottom bars (top bar only on phones): a gray face with a small white "+" and a yellow outer ring. The menu dividers match them. Nothing else on the pages is changed.
    To remove the whole experiment, delete everything from this comment to the end of the file. */
 :root {
-  --screw: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%23ffc310%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%227.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22/%3E%3C/svg%3E");
+  /* Every screw on the site slowly spins (one turn every 8s: change dur=%228s%22 below for speed).
+     --screw-still is the same screw without the spin, used for visitors with "reduce motion" on. */
+  --screw-still: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%23ffc310%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%227.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22/%3E%3C/svg%3E");
+  --screw: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%23ffc310%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%227.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22%3E%3CanimateTransform attributeName=%22transform%22 type=%22rotate%22 from=%220 10 10%22 to=%22360 10 10%22 dur=%228s%22 repeatCount=%22indefinite%22/%3E%3C/path%3E%3C/svg%3E");
   --screw-size: 19px;      /* bottom bar screws (same size as the menu dividers) */
   --screw-big: 26px;       /* the slightly bigger ones on the top bar */
   --screw-phone: 16px;     /* top bar screws on phones */
@@ -411,15 +414,9 @@ main { position: relative; z-index: 6; }   /* page content above the top bar's s
                        font-size: clamp(1rem, calc((min(100vw, 1300px) - 266px) / 18.3), 3.2rem); }
 .title-screws .screw { width: var(--screw-size); height: var(--screw-size); }
 .title-screws .screw.end { width: var(--screw-big); height: var(--screw-big); }
-/* End screws sit 24px in from the sides (lined up with the boxes' corner screws below) and slowly spin.
-   Change 8s for the speed (bigger = slower). */
+/* End screws sit 24px in from the sides (lined up with the boxes' corner screws below).
+   (The spin now comes from the screw image itself, so every screw on the site turns.) */
 .about .title-screws { padding-left: 24px; padding-right: 24px; }
-.title-screws .screw.end { animation: screwSpin 8s linear infinite; }
-@keyframes screwSpin { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .title-screws .screw.end { animation: none; } }
-/* PREVIEW: the screws between the words are turned 45° so their "+" reads as an "x".
-   To go back to "+", delete the next line. */
-.title-screws .screw:not(.end) { transform: rotate(45deg); }
 @media (max-width: 800px) {
   /* Phones: one centered line that scales with the screen; phone-size screws between the words */
   .about .title-screws { margin-right: 0; padding-left: 0; padding-right: 0; justify-content: center; gap: 6px; flex-wrap: nowrap; white-space: nowrap;
@@ -540,3 +537,6 @@ main.card, .about-text {
 @media (max-width: 800px) {
   main.card, .about-text { --band-top: 2.5rem; --band-bottom: 2.1rem; --band-gap: 1rem; --screw-in: 14px; --s: var(--screw-phone); }
 }
+
+/* Visitors with "reduce motion" turned on get still screws everywhere */
+@media (prefers-reduced-motion: reduce) { :root { --screw: var(--screw-still); } }
