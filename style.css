@@ -82,13 +82,21 @@ nav a[aria-current="page"] { outline: 2px solid var(--text); outline-offset: 4px
   nav a[aria-current="page"]::before {
     content: ""; position: absolute; inset: -6px; z-index: -1; pointer-events: none;
     border: 2px solid var(--text); border-radius: calc(0.5rem + 6px);
-    background: var(--bar); box-shadow: 4px 4px 0 var(--shade);
-    animation: shadowStay 3s ease-in-out infinite;   /* keeps the shadow still while the link floats */
+    background: var(--bar);
   }
-  /* The link floats up 2px, so the shadow reaches 2px further down at the same moment: the box
-     lifts off its shadow while the shadow itself stays put. Keep the timing the same as navFloat. */
-  @keyframes shadowStay { 0%, 100% { box-shadow: 4px 4px 0 var(--shade); } 50% { box-shadow: 4px 6px 0 var(--shade); } }
-  @media (prefers-reduced-motion: reduce) { nav a[aria-current="page"]::before { animation: none; } }
+  /* The shadow: a dark-yellow rounded box behind the white one, 4px down and right. As the link
+     floats up 2px, the shadow moves 2px down at exactly the same moment (same smooth motion), so
+     it stays perfectly still on screen while the box lifts off it. Keep the timing the same as
+     navFloat. (The current link is already bold, so it doesn't need the bold-width spacer.) */
+  nav a[aria-current="page"]::after {
+    content: ""; position: absolute; inset: -6px; z-index: -2; pointer-events: none;
+    height: auto; visibility: visible; overflow: visible;
+    border-radius: calc(0.5rem + 6px); background: var(--shade);
+    transform: translate(4px, 4px);
+    animation: shadowStay 3s ease-in-out infinite;
+  }
+  @keyframes shadowStay { 0%, 100% { transform: translate(4px, 4px); } 50% { transform: translate(4px, 6px); } }
+  @media (prefers-reduced-motion: reduce) { nav a[aria-current="page"]::after { animation: none; } }
 }
 @keyframes navFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
 @media (prefers-reduced-motion: reduce) { nav a[aria-current="page"] { animation: none; } }
