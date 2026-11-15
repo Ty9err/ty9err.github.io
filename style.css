@@ -83,7 +83,12 @@ nav a[aria-current="page"] { outline: 2px solid var(--text); outline-offset: 4px
     content: ""; position: absolute; inset: -6px; z-index: -1; pointer-events: none;
     border: 2px solid var(--text); border-radius: calc(0.5rem + 6px);
     background: var(--bar); box-shadow: 4px 4px 0 var(--shade);
+    animation: shadowStay 3s ease-in-out infinite;   /* keeps the shadow still while the link floats */
   }
+  /* The link floats up 2px, so the shadow reaches 2px further down at the same moment: the box
+     lifts off its shadow while the shadow itself stays put. Keep the timing the same as navFloat. */
+  @keyframes shadowStay { 0%, 100% { box-shadow: 4px 4px 0 var(--shade); } 50% { box-shadow: 4px 6px 0 var(--shade); } }
+  @media (prefers-reduced-motion: reduce) { nav a[aria-current="page"]::before { animation: none; } }
 }
 @keyframes navFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
 @media (prefers-reduced-motion: reduce) { nav a[aria-current="page"] { animation: none; } }
