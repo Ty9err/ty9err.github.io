@@ -237,7 +237,7 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
       1.85px -0.77px 0 var(--text); }
   nav a { font-size: 0.9rem; }
   nav ul { gap: 0.1rem 1rem; }
-  header { padding: 0.7rem 1rem 1rem; }
+  header { padding: 0.7rem 1rem 0.6rem; }   /* bottom trimmed a few pixels (was 1rem); the links stay put */
 
   /* About Me on phones: less empty space and a smaller headline so it doesn't feel crowded */
   .about { padding: 1.25rem 1rem; }
@@ -291,6 +291,6 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
     background-image: var(--screw), var(--screw);
     background-repeat: no-repeat;
     background-size: var(--screw-phone);
-    background-position: left 12px center, right 12px center;
+    background-position: left 12px top 32px, right 12px top 32px;   /* pinned where they sat before the bar got shorter */
   }
 }
