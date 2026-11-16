@@ -868,3 +868,9 @@ nav a[aria-current="page"]::after { display: none; }
       center bottom var(--band-bottom); }
   .about .frame .frame-inner img { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1.3; object-fit: cover; border-radius: 0.4rem; }
 }
+
+/* Desktop: the ARTiST / DESiGNER / iLLUSTRATOR heading sits a little higher (the boxes below don't move).
+   Change 12px to lift it more or less. */
+@media (min-width: 801px) {
+  .about .title-screws { position: relative; top: -12px; }
+}
