@@ -809,3 +809,11 @@ nav a[aria-current="page"]::after {
     animation: nameShine 4.5s ease-in-out infinite;
   }
 }
+
+/* ===== WHERE THE SHINE SHOWS =====
+   Desktop: only the About Me name. Phones: the About Me name and the current page's link in the top bar.
+   (The heading words keep their outlines and shadow, just no shine.) */
+.title-screws .word::after { display: none; }
+@media (min-width: 801px) {
+  nav a[aria-current="page"]::after { display: none; }
+}
