@@ -257,12 +257,12 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
   /* Every screw on the site slowly spins (one turn every 8s: change dur=%228s%22 below for speed).
      --screw-still is the same screw without the spin, used for visitors with "reduce motion" on. */
   /* Screws on dark boxes and bars have a shaded-yellow ring (the same color as the box shadows).
-     The -bright versions (the About Me heading's screws, on yellow) have no yellow ring at all:
-     just the gray, filling the whole screw. */
+     The -bright versions (the About Me heading's screws, on yellow): a charcoal outer ring (the box
+     color), then the yellow ring, then the gray middle. */
   --screw-still: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%23cc9c0d%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%227.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22/%3E%3C/svg%3E");
-  --screw-bright-still: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22/%3E%3C/svg%3E");
+  --screw-bright-still: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.6%22 fill=%22%232c2c2c%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%228.2%22 fill=%22%23ffc310%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%226.6%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6.5 10h7M10 6.5v7%22 stroke=%22%23ffffff%22 stroke-width=%221.2%22 stroke-linecap=%22round%22/%3E%3C/svg%3E");
   --screw: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%23cc9c0d%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%227.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22%3E%3CanimateTransform attributeName=%22transform%22 type=%22rotate%22 from=%220 10 10%22 to=%22360 10 10%22 dur=%228s%22 repeatCount=%22indefinite%22/%3E%3C/path%3E%3C/svg%3E");
-  --screw-bright: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22%3E%3CanimateTransform attributeName=%22transform%22 type=%22rotate%22 from=%220 10 10%22 to=%22360 10 10%22 dur=%228s%22 repeatCount=%22indefinite%22/%3E%3C/path%3E%3C/svg%3E");
+  --screw-bright: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.6%22 fill=%22%232c2c2c%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%228.2%22 fill=%22%23ffc310%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%226.6%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6.5 10h7M10 6.5v7%22 stroke=%22%23ffffff%22 stroke-width=%221.2%22 stroke-linecap=%22round%22%3E%3CanimateTransform attributeName=%22transform%22 type=%22rotate%22 from=%220 10 10%22 to=%22360 10 10%22 dur=%228s%22 repeatCount=%22indefinite%22/%3E%3C/path%3E%3C/svg%3E");
   --screw-size: 19px;      /* bottom bar screws (same size as the menu dividers) */
   --screw-big: 26px;       /* the slightly bigger ones on the top bar */
   --screw-phone: 16px;     /* top bar screws on phones */
@@ -795,4 +795,17 @@ nav a[aria-current="page"]::after {
       4.60px 0.23px 0 var(--shade),
       5.77px 1.40px 0 var(--shade),
       3px 3px 0 var(--shade); }
+}
+
+/* Desktop: the shine sweeps across the whole popped-out box of the current page's link (box, white
+   border and text), not just the letters. The dark-yellow shadow behind it doesn't shine.
+   Phones keep the shine on the letters only (there's no box there). */
+@media (min-width: 801px) {
+  nav a[aria-current="page"]::after {
+    content: ""; inset: -6px; border-radius: calc(0.5rem + 6px);
+    background: linear-gradient(135deg, transparent 46.5%, rgba(255, 255, 255, 0.35) 49%, rgba(255, 255, 255, 0.35) 51%, transparent 53.5%) no-repeat;
+    background-size: 300% 100%; background-position: 100% 0;
+    -webkit-background-clip: border-box; background-clip: border-box;
+    animation: nameShine 4.5s ease-in-out infinite;
+  }
 }
