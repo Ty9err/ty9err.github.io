@@ -827,3 +827,6 @@ nav a[aria-current="page"]::after { display: none; }
   .title-screws .word:nth-child(4)::before { left: calc(-1 * var(--screw-big) - 16px); }
   .title-screws .word:nth-child(4)::after { left: auto; right: calc(-1 * var(--screw-big) - 16px); bottom: auto; }
 }
+
+/* The About Me name stays still now (the shine is enough); it no longer floats up and down */
+.frame .pill { animation: none; transform: none; }
