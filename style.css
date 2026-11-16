@@ -811,9 +811,19 @@ nav a[aria-current="page"]::after {
 }
 
 /* ===== WHERE THE SHINE SHOWS =====
-   Desktop: only the About Me name. Phones: the About Me name and the current page's link in the top bar.
+   Only the About Me name, on desktop and phones.
    (The heading words keep their outlines and shadow, just no shine.) */
 .title-screws .word::after { display: none; }
-@media (min-width: 801px) {
-  nav a[aria-current="page"]::after { display: none; }
+nav a[aria-current="page"]::after { display: none; }
+
+/* Phones: big screws on both sides of DESiGNER (the middle row), like the end screws on desktop */
+@media (max-width: 800px) {
+  .title-screws .word:nth-child(4)::before,
+  .title-screws .word:nth-child(4)::after {
+    content: ""; display: block; position: absolute; top: 50%; z-index: 0;
+    width: var(--screw-big); height: var(--screw-big); margin-top: calc(var(--screw-big) / -2);
+    background: var(--screw-bright) center / contain no-repeat; animation: none;
+  }
+  .title-screws .word:nth-child(4)::before { left: calc(-1 * var(--screw-big) - 16px); }
+  .title-screws .word:nth-child(4)::after { left: auto; right: calc(-1 * var(--screw-big) - 16px); bottom: auto; }
 }
