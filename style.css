@@ -596,7 +596,7 @@ nav a[aria-current="page"]::after {
 @media (min-width: 801px) {
   /* the shadow box, now on the menu item: same size and spot as before (4px down and right of the
      link's white-bordered box). 2.3rem = the screw divider plus its space, which sit before the link. */
-  nav li:has(> a[aria-current="page"]) { position: relative; display: flex; align-items: center; }
+  nav li:has(> a[aria-current="page"]) { position: relative; }
   nav li:has(> a[aria-current="page"])::after {
     content: ""; position: absolute; z-index: -2; pointer-events: none;   /* -2: always behind the link's box (-1) */
     top: -6px; bottom: -6px; right: -6px; left: calc(0.8rem + 1.5rem - 6px);
@@ -948,4 +948,11 @@ nav a[aria-current="page"]::after { display: none; }
 /* Desktop: the name plate in the About Me frame sits a few pixels lower in its band */
 @media (min-width: 801px) {
   .about-side .frame .pill { position: relative; top: 3px; }
+}
+
+/* Desktop: always keep room for the scroll bar, on both sides, so the top and bottom bars and the
+   screws sit in exactly the same place on every page, whether or not the page scrolls.
+   (On Macs set to hide scroll bars this changes nothing.) */
+@media (min-width: 801px) {
+  html { scrollbar-gutter: stable both-edges; }
 }
