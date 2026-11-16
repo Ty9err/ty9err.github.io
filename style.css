@@ -870,9 +870,9 @@ nav a[aria-current="page"]::after { display: none; }
 }
 
 /* Desktop: the ARTiST / DESiGNER / iLLUSTRATOR heading sits a little higher (the boxes below don't move).
-   Change 12px to lift it more or less. */
+   Change 20px to lift it more or less. */
 @media (min-width: 801px) {
-  .about .title-screws { position: relative; top: -12px; }
+  .about .title-screws { position: relative; top: -20px; }
 }
 
 /* Desktop, smoother shrinking: as the window narrows, the picture column and the gap beside it
@@ -943,4 +943,9 @@ nav a[aria-current="page"]::after { display: none; }
    and below it; the frame itself stays the same size. Change 0.75rem for more or less. */
 @media (min-width: 801px) {
   .about-side .frame .frame-inner { box-sizing: border-box; padding: 0.75rem 0; }   /* the space comes out of the picture, not added to the frame */
+}
+
+/* Desktop: the name plate in the About Me frame sits a few pixels lower in its band */
+@media (min-width: 801px) {
+  .about-side .frame .pill { position: relative; top: 3px; }
 }
