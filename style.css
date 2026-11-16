@@ -257,11 +257,12 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
   /* Every screw on the site slowly spins (one turn every 8s: change dur=%228s%22 below for speed).
      --screw-still is the same screw without the spin, used for visitors with "reduce motion" on. */
   /* Screws on dark boxes and bars have a shaded-yellow ring (the same color as the box shadows).
-     The -bright versions keep the bright yellow ring, for the screws in the About Me heading (on yellow). */
+     The -bright versions (the About Me heading's screws, on yellow) have no yellow ring at all:
+     just the gray, filling the whole screw. */
   --screw-still: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%23cc9c0d%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%227.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22/%3E%3C/svg%3E");
-  --screw-bright-still: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%23ffc310%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%227.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22/%3E%3C/svg%3E");
+  --screw-bright-still: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22/%3E%3C/svg%3E");
   --screw: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%23cc9c0d%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%227.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22%3E%3CanimateTransform attributeName=%22transform%22 type=%22rotate%22 from=%220 10 10%22 to=%22360 10 10%22 dur=%228s%22 repeatCount=%22indefinite%22/%3E%3C/path%3E%3C/svg%3E");
-  --screw-bright: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%23ffc310%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%227.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22%3E%3CanimateTransform attributeName=%22transform%22 type=%22rotate%22 from=%220 10 10%22 to=%22360 10 10%22 dur=%228s%22 repeatCount=%22indefinite%22/%3E%3C/path%3E%3C/svg%3E");
+  --screw-bright: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%229.5%22 fill=%22%234a4a4a%22/%3E%3Cpath d=%22M6 10h8M10 6v8%22 stroke=%22%23ffffff%22 stroke-width=%221.3%22 stroke-linecap=%22round%22%3E%3CanimateTransform attributeName=%22transform%22 type=%22rotate%22 from=%220 10 10%22 to=%22360 10 10%22 dur=%228s%22 repeatCount=%22indefinite%22/%3E%3C/path%3E%3C/svg%3E");
   --screw-size: 19px;      /* bottom bar screws (same size as the menu dividers) */
   --screw-big: 26px;       /* the slightly bigger ones on the top bar */
   --screw-phone: 16px;     /* top bar screws on phones */
@@ -614,3 +615,184 @@ nav a[aria-current="page"]::after {
    double-click by highlighting the nearest word (like the "Digital" label). These parts can't be
    highlighted anymore; the buttons and labels still work the same. */
 .lb-nav, #lbMeta, #lbTags { -webkit-user-select: none; user-select: none; }
+
+/* ===== ABOUT ME HEADING WORDS: outlined, with a flat shadow and the gold shine =====
+   Each word (ARTiST, DESiGNER, iLLUSTRATOR) is charcoal with a thin white outline, then a charcoal
+   outline around that, sitting on a flat dark-yellow shadow down and to the right (like the boxes).
+   The shine streak crosses the three words one after another. data-text on each word in index.html
+   must match the word. */
+.title-screws .word { position: relative; display: inline-block; white-space: nowrap;
+  text-shadow:
+    1.20px 0.00px 0 var(--text),
+    1.11px 0.46px 0 var(--text),
+    0.85px 0.85px 0 var(--text),
+    0.46px 1.11px 0 var(--text),
+    0.00px 1.20px 0 var(--text),
+    -0.46px 1.11px 0 var(--text),
+    -0.85px 0.85px 0 var(--text),
+    -1.11px 0.46px 0 var(--text),
+    -1.20px 0.00px 0 var(--text),
+    -1.11px -0.46px 0 var(--text),
+    -0.85px -0.85px 0 var(--text),
+    -0.46px -1.11px 0 var(--text),
+    -0.00px -1.20px 0 var(--text),
+    0.46px -1.11px 0 var(--text),
+    0.85px -0.85px 0 var(--text),
+    1.11px -0.46px 0 var(--text),
+    2.00px 0.00px 0 var(--text),
+    1.85px 0.77px 0 var(--text),
+    1.41px 1.41px 0 var(--text),
+    0.77px 1.85px 0 var(--text),
+    0.00px 2.00px 0 var(--text),
+    -0.77px 1.85px 0 var(--text),
+    -1.41px 1.41px 0 var(--text),
+    -1.85px 0.77px 0 var(--text),
+    -2.00px 0.00px 0 var(--text),
+    -1.85px -0.77px 0 var(--text),
+    -1.41px -1.41px 0 var(--text),
+    -0.77px -1.85px 0 var(--text),
+    -0.00px -2.00px 0 var(--text),
+    0.77px -1.85px 0 var(--text),
+    1.41px -1.41px 0 var(--text),
+    1.85px -0.77px 0 var(--text),
+    3.00px 0.00px 0 var(--dark),
+    2.77px 1.15px 0 var(--dark),
+    2.12px 2.12px 0 var(--dark),
+    1.15px 2.77px 0 var(--dark),
+    0.00px 3.00px 0 var(--dark),
+    -1.15px 2.77px 0 var(--dark),
+    -2.12px 2.12px 0 var(--dark),
+    -2.77px 1.15px 0 var(--dark),
+    -3.00px 0.00px 0 var(--dark),
+    -2.77px -1.15px 0 var(--dark),
+    -2.12px -2.12px 0 var(--dark),
+    -1.15px -2.77px 0 var(--dark),
+    -0.00px -3.00px 0 var(--dark),
+    1.15px -2.77px 0 var(--dark),
+    2.12px -2.12px 0 var(--dark),
+    2.77px -1.15px 0 var(--dark),
+    4.00px 0.00px 0 var(--dark),
+    3.70px 1.53px 0 var(--dark),
+    2.83px 2.83px 0 var(--dark),
+    1.53px 3.70px 0 var(--dark),
+    0.00px 4.00px 0 var(--dark),
+    -1.53px 3.70px 0 var(--dark),
+    -2.83px 2.83px 0 var(--dark),
+    -3.70px 1.53px 0 var(--dark),
+    -4.00px 0.00px 0 var(--dark),
+    -3.70px -1.53px 0 var(--dark),
+    -2.83px -2.83px 0 var(--dark),
+    -1.53px -3.70px 0 var(--dark),
+    -0.00px -4.00px 0 var(--dark),
+    1.53px -3.70px 0 var(--dark),
+    2.83px -2.83px 0 var(--dark),
+    3.70px -1.53px 0 var(--dark),
+    8.00px 4.00px 0 var(--shade),
+    7.70px 5.53px 0 var(--shade),
+    6.83px 6.83px 0 var(--shade),
+    5.53px 7.70px 0 var(--shade),
+    4.00px 8.00px 0 var(--shade),
+    2.47px 7.70px 0 var(--shade),
+    1.17px 6.83px 0 var(--shade),
+    0.30px 5.53px 0 var(--shade),
+    0.00px 4.00px 0 var(--shade),
+    0.30px 2.47px 0 var(--shade),
+    1.17px 1.17px 0 var(--shade),
+    2.47px 0.30px 0 var(--shade),
+    4.00px 0.00px 0 var(--shade),
+    5.53px 0.30px 0 var(--shade),
+    6.83px 1.17px 0 var(--shade),
+    7.70px 2.47px 0 var(--shade),
+    6.00px 4.00px 0 var(--shade),
+    5.62px 5.18px 0 var(--shade),
+    4.62px 5.90px 0 var(--shade),
+    3.38px 5.90px 0 var(--shade),
+    2.38px 5.18px 0 var(--shade),
+    2.00px 4.00px 0 var(--shade),
+    2.38px 2.82px 0 var(--shade),
+    3.38px 2.10px 0 var(--shade),
+    4.62px 2.10px 0 var(--shade),
+    5.62px 2.82px 0 var(--shade),
+    4px 4px 0 var(--shade); }
+.title-screws .word::after {
+  content: attr(data-text); position: absolute; inset: 0; z-index: 1; pointer-events: none; white-space: nowrap;
+  color: transparent; text-shadow: none;
+  background: linear-gradient(135deg, transparent 46.5%, rgba(255, 255, 255, 0.75) 49%, rgba(255, 255, 255, 0.75) 51%, transparent 53.5%) no-repeat;
+  background-size: 300% 100%; background-position: 100% 0;
+  -webkit-background-clip: text; background-clip: text;
+  animation: nameShine 4.5s ease-in-out infinite;
+}
+.title-screws .word:nth-child(4)::after { animation-delay: .35s; }   /* DESiGNER */
+.title-screws .word:nth-child(6)::after { animation-delay: .7s; }    /* iLLUSTRATOR */
+@media (prefers-reduced-motion: reduce) { .title-screws .word::after { animation: none; } }
+/* desktop: a little less text size, to leave room for the outlines */
+.about .title-screws { font-size: clamp(1rem, calc((min(100vw, 1300px) - 300px) / 18.3), 3.1rem); }
+
+/* Phones (TEST): the three words on three rows, much bigger, with a screw between each row */
+@media (max-width: 800px) {
+  .about .title-screws { flex-direction: column; gap: 10px; font-size: min(2.5rem, calc((100vw - 64px) / 7.2)); line-height: 1.1; margin-bottom: 1.25rem; }
+  .title-screws .screw { width: var(--screw-phone); height: var(--screw-phone); }
+  .title-screws .word {
+    text-shadow:
+      1.00px 0.00px 0 var(--text),
+      0.87px 0.50px 0 var(--text),
+      0.50px 0.87px 0 var(--text),
+      0.00px 1.00px 0 var(--text),
+      -0.50px 0.87px 0 var(--text),
+      -0.87px 0.50px 0 var(--text),
+      -1.00px 0.00px 0 var(--text),
+      -0.87px -0.50px 0 var(--text),
+      -0.50px -0.87px 0 var(--text),
+      -0.00px -1.00px 0 var(--text),
+      0.50px -0.87px 0 var(--text),
+      0.87px -0.50px 0 var(--text),
+      1.80px 0.00px 0 var(--text),
+      1.56px 0.90px 0 var(--text),
+      0.90px 1.56px 0 var(--text),
+      0.00px 1.80px 0 var(--text),
+      -0.90px 1.56px 0 var(--text),
+      -1.56px 0.90px 0 var(--text),
+      -1.80px 0.00px 0 var(--text),
+      -1.56px -0.90px 0 var(--text),
+      -0.90px -1.56px 0 var(--text),
+      -0.00px -1.80px 0 var(--text),
+      0.90px -1.56px 0 var(--text),
+      1.56px -0.90px 0 var(--text),
+      2.60px 0.00px 0 var(--dark),
+      2.25px 1.30px 0 var(--dark),
+      1.30px 2.25px 0 var(--dark),
+      0.00px 2.60px 0 var(--dark),
+      -1.30px 2.25px 0 var(--dark),
+      -2.25px 1.30px 0 var(--dark),
+      -2.60px 0.00px 0 var(--dark),
+      -2.25px -1.30px 0 var(--dark),
+      -1.30px -2.25px 0 var(--dark),
+      -0.00px -2.60px 0 var(--dark),
+      1.30px -2.25px 0 var(--dark),
+      2.25px -1.30px 0 var(--dark),
+      3.20px 0.00px 0 var(--dark),
+      2.77px 1.60px 0 var(--dark),
+      1.60px 2.77px 0 var(--dark),
+      0.00px 3.20px 0 var(--dark),
+      -1.60px 2.77px 0 var(--dark),
+      -2.77px 1.60px 0 var(--dark),
+      -3.20px 0.00px 0 var(--dark),
+      -2.77px -1.60px 0 var(--dark),
+      -1.60px -2.77px 0 var(--dark),
+      -0.00px -3.20px 0 var(--dark),
+      1.60px -2.77px 0 var(--dark),
+      2.77px -1.60px 0 var(--dark),
+      6.20px 3.00px 0 var(--shade),
+      5.77px 4.60px 0 var(--shade),
+      4.60px 5.77px 0 var(--shade),
+      3.00px 6.20px 0 var(--shade),
+      1.40px 5.77px 0 var(--shade),
+      0.23px 4.60px 0 var(--shade),
+      -0.20px 3.00px 0 var(--shade),
+      0.23px 1.40px 0 var(--shade),
+      1.40px 0.23px 0 var(--shade),
+      3.00px -0.20px 0 var(--shade),
+      4.60px 0.23px 0 var(--shade),
+      5.77px 1.40px 0 var(--shade),
+      3px 3px 0 var(--shade); }
+}
