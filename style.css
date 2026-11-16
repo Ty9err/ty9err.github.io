@@ -874,3 +874,53 @@ nav a[aria-current="page"]::after { display: none; }
 @media (min-width: 801px) {
   .about .title-screws { position: relative; top: -12px; }
 }
+
+/* Desktop, smoother shrinking: as the window narrows, the picture column and the gap beside it
+   shrink a little too (instead of only the bio box getting squeezed), so the bio box doesn't turn
+   into a tall thin strip and the picture doesn't stretch before the phone layout kicks in at 800px. */
+@media (min-width: 801px) {
+  .about { grid-template-columns: minmax(0, 1fr) clamp(300px, 34vw, 440px); column-gap: clamp(2rem, 4vw, 4rem); }
+}
+
+/* Desktop: the current page's tab looks like it does on phones: bold yellow letters with a thin
+   gray-then-white outline, still floating, with no box or shadow box behind it. */
+@media (min-width: 801px) {
+  nav a[aria-current="page"] { outline: none;
+    text-shadow:
+      1.0px 0px 0 var(--line),
+      0.87px 0.5px 0 var(--line),
+      0.5px 0.87px 0 var(--line),
+      0px 1.0px 0 var(--line),
+      -0.5px 0.87px 0 var(--line),
+      -0.87px 0.5px 0 var(--line),
+      -1.0px 0px 0 var(--line),
+      -0.87px -0.5px 0 var(--line),
+      -0.5px -0.87px 0 var(--line),
+      0px -1.0px 0 var(--line),
+      0.5px -0.87px 0 var(--line),
+      0.87px -0.5px 0 var(--line),
+      2.0px 0px 0 var(--text),
+      1.85px 0.77px 0 var(--text),
+      1.41px 1.41px 0 var(--text),
+      0.77px 1.85px 0 var(--text),
+      0px 2.0px 0 var(--text),
+      -0.77px 1.85px 0 var(--text),
+      -1.41px 1.41px 0 var(--text),
+      -1.85px 0.77px 0 var(--text),
+      -2.0px 0px 0 var(--text),
+      -1.85px -0.77px 0 var(--text),
+      -1.41px -1.41px 0 var(--text),
+      -0.77px -1.85px 0 var(--text),
+      0px -2.0px 0 var(--text),
+      0.77px -1.85px 0 var(--text),
+      1.41px -1.41px 0 var(--text),
+      1.85px -0.77px 0 var(--text); }
+  nav a[aria-current="page"]::before,
+  nav li:has(> a[aria-current="page"])::after { display: none; }
+}
+
+/* Desktop: the picture inside the About Me frame is a little shorter, with equal extra room above
+   and below it; the frame itself stays the same size. Change 0.75rem for more or less. */
+@media (min-width: 801px) {
+  .about-side .frame .frame-inner { box-sizing: border-box; padding: 0.75rem 0; }   /* the space comes out of the picture, not added to the frame */
+}
