@@ -830,3 +830,11 @@ nav a[aria-current="page"]::after { display: none; }
 
 /* The About Me name stays still now (the shine is enough); it no longer floats up and down */
 .frame .pill { animation: none; transform: none; }
+
+/* The heading's screws (on yellow) cast the same flat dark-yellow shadow as the heading words */
+.title-screws .screw { filter: drop-shadow(4px 4px 0 var(--shade)); }
+@media (max-width: 800px) {
+  .title-screws .screw,
+  .title-screws .word:nth-child(4)::before,
+  .title-screws .word:nth-child(4)::after { filter: drop-shadow(3px 3px 0 var(--shade)); }
+}
