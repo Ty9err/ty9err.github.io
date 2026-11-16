@@ -71,33 +71,6 @@ nav a[aria-current="page"] { color: var(--accent); font-weight: 700; }   /* the 
 /* The page you're on gently floats, and can't be clicked again (you're already there).
    Change 2px for a bigger or smaller float, and 3s for the speed. */
 nav a[aria-current="page"] { pointer-events: none; cursor: default; animation: navFloat 3s ease-in-out infinite; }
-/* 2px rounded white outline around the page you're on. An outline is drawn outside the link and
-   takes up no space, so nothing in the menu moves. outline-offset = gap between text and outline. */
-nav a[aria-current="page"] { outline: 2px solid var(--text); outline-offset: 4px; border-radius: 0.5rem; }
-/* Desktop: the outline becomes a solid rounded box with a flat drop shadow (like the content boxes).
-   It's drawn behind the link in the exact spot the outline was, so nothing in the menu moves,
-   and it floats along with the link. Change 4px 4px to move the shadow. */
-@media (min-width: 801px) {
-  nav a[aria-current="page"] { outline: none; position: relative; }
-  nav a[aria-current="page"]::before {
-    content: ""; position: absolute; inset: -6px; z-index: -1; pointer-events: none;
-    border: 2px solid var(--text); border-radius: calc(0.5rem + 6px);
-    background: var(--bar);
-  }
-  /* The shadow: a dark-yellow rounded box behind the white one, 4px down and right. As the link
-     floats up 2px, the shadow moves 2px down at exactly the same moment (same smooth motion), so
-     it stays perfectly still on screen while the box lifts off it. Keep the timing the same as
-     navFloat. (The current link is already bold, so it doesn't need the bold-width spacer.) */
-  nav a[aria-current="page"]::after {
-    content: ""; position: absolute; inset: -6px; z-index: -2; pointer-events: none;
-    height: auto; visibility: visible; overflow: visible;
-    border-radius: calc(0.5rem + 6px); background: var(--shade);
-    transform: translate(4px, 4px);
-    animation: shadowStay 3s ease-in-out infinite;
-  }
-  @keyframes shadowStay { 0%, 100% { transform: translate(4px, 4px); } 50% { transform: translate(4px, 6px); } }
-  @media (prefers-reduced-motion: reduce) { nav a[aria-current="page"]::after { animation: none; } }
-}
 @keyframes navFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
 @media (prefers-reduced-motion: reduce) { nav a[aria-current="page"] { animation: none; } }
 /* Each link saves room for its bold version (from data-label), so the bold one is exactly as wide
@@ -321,12 +294,8 @@ body::before {
 }
 main { position: relative; z-index: 6; }   /* page content above the top bar's shadow (the bar itself is z-index 10) */
 
-/* "JALEESA ZACHERY" pill: bold yellow text, and the pill gently floats like the current menu link
-   while its shadow stays put. Its background and shadow are separate layers so they can move apart. */
-.pill { position: relative; background: transparent; box-shadow: none; color: var(--accent); font-weight: 700;
-        animation: navFloat 3s ease-in-out infinite; }
-.pill::before, .pill::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; }
-.pill::before { background: var(--dark); z-index: -1; }                    /* the pill itself */
+/* "JALEESA ZACHERY" name: bold yellow text sitting right on the frame */
+.pill { position: relative; background: transparent; box-shadow: none; color: var(--accent); font-weight: 700; }
 /* The name's letters get outlines like the selected menu link, with a thicker gray: 3px of gray
    right against the letters, then 1px of white around that */
 .pill { text-shadow:
@@ -402,12 +371,6 @@ main { position: relative; z-index: 6; }   /* page content above the top bar's s
       2.83px -2.83px 0 var(--text),
       3.46px -2.0px 0 var(--text),
       3.86px -1.04px 0 var(--text); }
-.pill::after { background: var(--shade); z-index: -2;                       /* its shadow */
-               transform: translate(var(--sh), var(--sh)); animation: pillShadowStay 3s ease-in-out infinite; }
-@keyframes pillShadowStay { 0%, 100% { transform: translate(var(--sh), var(--sh)); }
-                            50% { transform: translate(var(--sh), calc(var(--sh) + 2px)); } }
-@media (prefers-reduced-motion: reduce) { .pill, .pill::after { animation: none; } }
-
 /* ===== ABOUT ME HEADING WITH SCREWS: ARTiST + DESiGNER + iLLUSTRATOR ===== */
 .title-screws .screw { flex: none; display: inline-block; background: var(--screw-bright) center / contain no-repeat; }
 /* Desktop: one big line across the whole page width, from the left edge of the bio box to the right
@@ -416,16 +379,16 @@ main { position: relative; z-index: 6; }   /* page content above the top bar's s
    (up to 3.2rem). The screws keep their usual sizes. */
 .about .title-screws { grid-column: 1 / -1; margin-right: 1.5rem;   /* 1.5rem = the space to the right of the frame */
                        display: flex; align-items: center; justify-content: space-between; white-space: nowrap;
-                       font-size: clamp(1rem, calc((min(100vw, 1300px) - 266px) / 18.3), 3.2rem); }
+                       font-size: clamp(1rem, calc((min(100vw, 1300px) - 300px) / 18.3), 3.1rem); }   /* room left for the outlines */
 .title-screws .screw { width: var(--screw-size); height: var(--screw-size); }
 .title-screws .screw.end { width: var(--screw-big); height: var(--screw-big); }
 /* End screws sit 24px in from the sides (lined up with the boxes' corner screws below).
    (The spin now comes from the screw image itself, so every screw on the site turns.) */
 .about .title-screws { padding-left: 24px; padding-right: 24px; }
 @media (max-width: 800px) {
-  /* Phones: one centered line that scales with the screen; phone-size screws between the words */
-  .about .title-screws { margin-right: 0; padding-left: 0; padding-right: 0; justify-content: center; gap: 6px; flex-wrap: nowrap; white-space: nowrap;
-                         font-size: min(1.6rem, calc((100vw - 96px) / 19)); }   /* lower 19 for bigger text, raise it if it ever overflows */
+  /* Phones: the three words on three rows, with phone-size screws between the rows */
+  .about .title-screws { margin-right: 0; padding-left: 0; padding-right: 0; justify-content: center; flex-wrap: nowrap; white-space: nowrap;
+                         flex-direction: column; gap: 10px; font-size: min(2.5rem, calc((100vw - 64px) / 7.2)); line-height: 1.1; margin-bottom: 1.25rem; }
   .title-screws .screw { width: var(--screw-phone); height: var(--screw-phone); }
   .title-screws .screw.end { display: none; }
 }
@@ -502,7 +465,6 @@ main { position: relative; z-index: 6; }   /* page content above the top bar's s
     right var(--screw-x) bottom calc(var(--base-band) / 2 - var(--screw-size) / 2);
 }
 .frame .pill { height: var(--name-row); margin: 0; padding: 0 3rem; display: flex; align-items: center; justify-content: center; }
-.frame .pill::before, .frame .pill::after { display: none; }   /* no separate box or shadow: the name sits right on the frame */
 .frame .frame-inner { flex: 1 0 auto; }
 @media (max-width: 800px) {
   .about-side { grid-row: auto; padding-right: 0; }   /* phones: below the bio text, and exactly as wide as it */
@@ -574,38 +536,6 @@ main.card, .about-text {
 @keyframes nameShine { 0% { background-position: 100% 0; } 35%, 100% { background-position: 0% 0; } }
 @media (prefers-reduced-motion: reduce) { .frame .pill::after { animation: none; } }
 
-/* ===== GOLD SHINE ON THE CURRENT PAGE'S MENU LINK (desktop and phones) =====
-   Same shine as the About Me name: a see-through copy of the link text (from data-label) on top
-   of it, with a slanted white streak sliding across. On desktop, the dark-yellow shadow box that
-   used to be drawn by the link itself is now drawn by the menu item around it (so the shine can
-   use the link's spare layer) - it sits in exactly the same spot and still stays put while the
-   link floats, so the shine only crosses the letters, never the shadow. */
-nav a[aria-current="page"] { position: relative; }
-nav a[aria-current="page"]::after {
-  display: flex; align-items: center; justify-content: center;
-  content: attr(data-label); position: absolute; inset: 0; z-index: 1;
-  height: auto; visibility: visible; overflow: visible; font-weight: 700;
-  border-radius: 0; transform: none; text-shadow: none; pointer-events: none;
-  color: transparent;
-  background: linear-gradient(135deg, transparent 46.5%, rgba(255, 255, 255, 0.8) 49%, rgba(255, 255, 255, 0.8) 51%, transparent 53.5%) no-repeat;
-  background-size: 300% 100%; background-position: 100% 0;
-  -webkit-background-clip: text; background-clip: text;
-  animation: nameShine 4.5s ease-in-out infinite;
-}
-@media (prefers-reduced-motion: reduce) { nav a[aria-current="page"]::after { animation: none; } }
-@media (min-width: 801px) {
-  /* the shadow box, now on the menu item: same size and spot as before (4px down and right of the
-     link's white-bordered box). 2.3rem = the screw divider plus its space, which sit before the link. */
-  nav li:has(> a[aria-current="page"]) { position: relative; }
-  nav li:has(> a[aria-current="page"])::after {
-    content: ""; position: absolute; z-index: -2; pointer-events: none;   /* -2: always behind the link's box (-1) */
-    top: -6px; bottom: -6px; right: -6px; left: calc(0.8rem + 1.5rem - 6px);
-    border-radius: calc(0.5rem + 6px); background: var(--shade);
-    transform: translate(4px, 4px);
-  }
-  nav li:first-child:has(> a[aria-current="page"])::after { left: -6px; }
-}
-
 /* Desktop: a matching flat shadow under the bottom bar too (mostly off the bottom of the screen) */
 @media (min-width: 801px) {
   footer { overflow: visible; box-shadow: var(--sh) var(--sh) 0 var(--shade); }
@@ -616,11 +546,10 @@ nav a[aria-current="page"]::after {
    highlighted anymore; the buttons and labels still work the same. */
 .lb-nav, #lbMeta, #lbTags { -webkit-user-select: none; user-select: none; }
 
-/* ===== ABOUT ME HEADING WORDS: outlined, with a flat shadow and the gold shine =====
+/* ===== ABOUT ME HEADING WORDS: outlined, with a flat shadow =====
    Each word (ARTiST, DESiGNER, iLLUSTRATOR) is charcoal with a thin white outline, then a charcoal
    outline around that, sitting on a flat dark-yellow shadow down and to the right (like the boxes).
-   The shine streak crosses the three words one after another. data-text on each word in index.html
-   must match the word. */
+   (data-text on each word in index.html is left over from an earlier shine; it does no harm.) */
 .title-screws .word { position: relative; display: inline-block; white-space: nowrap;
   text-shadow:
     1.20px 0.00px 0 var(--text),
@@ -714,24 +643,8 @@ nav a[aria-current="page"]::after {
     4.62px 2.10px 0 var(--shade),
     5.62px 2.82px 0 var(--shade),
     4px 4px 0 var(--shade); }
-.title-screws .word::after {
-  content: attr(data-text); position: absolute; inset: 0; z-index: 1; pointer-events: none; white-space: nowrap;
-  color: transparent; text-shadow: none;
-  background: linear-gradient(135deg, transparent 46.5%, rgba(255, 255, 255, 0.75) 49%, rgba(255, 255, 255, 0.75) 51%, transparent 53.5%) no-repeat;
-  background-size: 300% 100%; background-position: 100% 0;
-  -webkit-background-clip: text; background-clip: text;
-  animation: nameShine 4.5s ease-in-out infinite;
-}
-.title-screws .word:nth-child(4)::after { animation-delay: .35s; }   /* DESiGNER */
-.title-screws .word:nth-child(6)::after { animation-delay: .7s; }    /* iLLUSTRATOR */
-@media (prefers-reduced-motion: reduce) { .title-screws .word::after { animation: none; } }
-/* desktop: a little less text size, to leave room for the outlines */
-.about .title-screws { font-size: clamp(1rem, calc((min(100vw, 1300px) - 300px) / 18.3), 3.1rem); }
-
-/* Phones (TEST): the three words on three rows, much bigger, with a screw between each row */
+/* Phones: the heading words' outlines are a little thinner */
 @media (max-width: 800px) {
-  .about .title-screws { flex-direction: column; gap: 10px; font-size: min(2.5rem, calc((100vw - 64px) / 7.2)); line-height: 1.1; margin-bottom: 1.25rem; }
-  .title-screws .screw { width: var(--screw-phone); height: var(--screw-phone); }
   .title-screws .word {
     text-shadow:
       1.00px 0.00px 0 var(--text),
@@ -797,39 +710,17 @@ nav a[aria-current="page"]::after {
       3px 3px 0 var(--shade); }
 }
 
-/* Desktop: the shine sweeps across the whole popped-out box of the current page's link (box, white
-   border and text), not just the letters. The dark-yellow shadow behind it doesn't shine.
-   Phones keep the shine on the letters only (there's no box there). */
-@media (min-width: 801px) {
-  nav a[aria-current="page"]::after {
-    content: ""; inset: -6px; border-radius: calc(0.5rem + 6px);
-    background: linear-gradient(135deg, transparent 46.5%, rgba(255, 255, 255, 0.35) 49%, rgba(255, 255, 255, 0.35) 51%, transparent 53.5%) no-repeat;
-    background-size: 300% 100%; background-position: 100% 0;
-    -webkit-background-clip: border-box; background-clip: border-box;
-    animation: nameShine 4.5s ease-in-out infinite;
-  }
-}
-
-/* ===== WHERE THE SHINE SHOWS =====
-   Only the About Me name, on desktop and phones.
-   (The heading words keep their outlines and shadow, just no shine.) */
-.title-screws .word::after { display: none; }
-nav a[aria-current="page"]::after { display: none; }
-
 /* Phones: big screws on both sides of DESiGNER (the middle row), like the end screws on desktop */
 @media (max-width: 800px) {
   .title-screws .word:nth-child(4)::before,
   .title-screws .word:nth-child(4)::after {
     content: ""; display: block; position: absolute; top: 50%; z-index: 0;
     width: var(--screw-big); height: var(--screw-big); margin-top: calc(var(--screw-big) / -2);
-    background: var(--screw-bright) center / contain no-repeat; animation: none;
+    background: var(--screw-bright) center / contain no-repeat; pointer-events: none;
   }
   .title-screws .word:nth-child(4)::before { left: calc(-1 * var(--screw-big) - 16px); }
   .title-screws .word:nth-child(4)::after { left: auto; right: calc(-1 * var(--screw-big) - 16px); bottom: auto; }
 }
-
-/* The About Me name stays still now (the shine is enough); it no longer floats up and down */
-.frame .pill { animation: none; transform: none; }
 
 /* The heading's screws (on yellow) cast the same flat dark-yellow shadow as the heading words */
 .title-screws .screw { filter: drop-shadow(4px 4px 0 var(--shade)); }
@@ -954,5 +845,11 @@ nav a[aria-current="page"]::after { display: none; }
    screws sit in exactly the same place on every page, whether or not the page scrolls.
    (On Macs set to hide scroll bars this changes nothing.) */
 @media (min-width: 801px) {
-  html { scrollbar-gutter: stable both-edges; }
+  html { scrollbar-gutter: stable both-edges; background: var(--page); }   /* the reserved strips are yellow like the page */
+  /* The top and bottom bars (and the top bar's shadow) are brought in from both sides by the size of
+     the shadow, so the shadow on the right always has room and never gets cut off at the edge. */
+  header { margin-left: var(--sh); margin-right: var(--sh); }
+  body::before, footer { left: var(--sh); right: var(--sh); }
+  /* the top bar's shadow also reaches up to the top of the window, so its right side has no gap */
+  body::before { top: calc(-1 * var(--sh)); height: calc(var(--header-h) + var(--sh)); }
 }
