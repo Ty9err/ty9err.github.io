@@ -609,3 +609,8 @@ nav a[aria-current="page"]::after {
 @media (min-width: 801px) {
   footer { overflow: visible; box-shadow: var(--sh) var(--sh) 0 var(--shade); }
 }
+
+/* Gallery pop-up: clicking the arrows quickly counts as a double-click, and browsers answer a
+   double-click by highlighting the nearest word (like the "Digital" label). These parts can't be
+   highlighted anymore; the buttons and labels still work the same. */
+.lb-nav, #lbMeta, #lbTags { -webkit-user-select: none; user-select: none; }
