@@ -1142,7 +1142,8 @@ main.card, .about-text {
 }
 
 /* Store: each product picture sits in a glass display case: a thin white border (like the art in
-   the gallery) and a couple of slanted glass reflections across the front, one wide and one thin. */
+   the gallery) and slanted glass reflections: a wide one with a bright white line through it and a thin
+   one at the top left, and a small one at the bottom right. */
 ul.products .product > .media { border: 1px solid var(--text); border-radius: 0.75rem; overflow: hidden; }
 ul.products .product > .media .ph,
 ul.products .product > .media img { border-radius: calc(0.75rem - 1px); }
@@ -1152,8 +1153,11 @@ ul.products .product > .media::after {
     linear-gradient(135deg,
       rgba(255, 255, 255, 0.05) 0%,
       transparent 20%,
-      transparent 24%, rgba(255, 255, 255, 0.16) 24%, rgba(255, 255, 255, 0.16) 33%, transparent 33%,
+      transparent 24%, rgba(255, 255, 255, 0.16) 24%, rgba(255, 255, 255, 0.16) 28.2%,
+      #ffffff 28.2%, #ffffff 28.75%,                                   /* thin bright line through the wide reflection */
+      rgba(255, 255, 255, 0.16) 28.75%, rgba(255, 255, 255, 0.16) 33%, transparent 33%,
       transparent 37%, rgba(255, 255, 255, 0.12) 37%, rgba(255, 255, 255, 0.12) 39%, transparent 39%,
+      transparent 79%, rgba(255, 255, 255, 0.12) 79%, rgba(255, 255, 255, 0.12) 82.5%, transparent 82.5%,   /* small one, bottom right */
       transparent 100%);
 }
 ul.products .product > .media .tag { z-index: 2; }   /* labels stay on top of the glass */
