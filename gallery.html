@@ -138,7 +138,7 @@
               border: 0; border-radius: 0.55rem; background: var(--accent); color: var(--dark); font-weight: 700; }
     dialog #lbClose { grid-column: 3; width: 2.75rem; height: 2.75rem; margin: 0; padding: 0;
               border: 0; border-radius: 50%; background: var(--line); color: var(--text);
-              font-size: 1.4rem; line-height: 1; cursor: pointer;
+              cursor: pointer;
               position: relative; top: 3px; }   /* nudged down to sit level with the title's letters */
     dialog #lbClose:hover { background: var(--accent); color: var(--dark); }
 
@@ -365,7 +365,7 @@
       return group;
     }));
 
-    function makeImage(src, alt, cls) {
+    function makeImage(src, alt) {
       if (!src) { const d = document.createElement("div"); d.className = "ph"; return d; }
       const img = document.createElement("img");
       img.src = src; img.alt = alt; img.loading = "lazy";

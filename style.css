@@ -125,8 +125,6 @@ img { max-width: 100%; height: auto; border: 2px solid #fff; border-radius: 0.75
 .float { width: 80%; max-width: 380px; height: auto; border: 0; border-radius: 0;   /* no border on cut-out PNGs */
   animation: float 4.5s ease-in-out infinite; }
 .float.two { animation-duration: 5.5s; animation-delay: -2s; }
-.float-ph { aspect-ratio: 3 / 4; border: 2px dashed var(--dark); border-radius: 0.75rem;
-  display: flex; align-items: center; justify-content: center; text-align: center; color: var(--dark); font-size: 0.9rem; }
 @keyframes float {
   0%, 100% { transform: translateY(0) rotate(-1.5deg); }
   50%      { transform: translateY(-18px) rotate(1.5deg); }
@@ -216,8 +214,6 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
   .about { padding: 1.25rem 1rem; }
   .about h1 { font-size: min(1.6rem, 4.2vw); margin-bottom: 0.75rem; white-space: nowrap; }   /* one line: scales with the screen width. If it ever runs off the edge, lower 4.2vw a little */
   .about-text { min-height: 0; line-height: 1.65; }   /* the box only needs to be as tall as its text */
-  .about-text p:first-child { margin-top: 0; }
-  .about-text p:last-child { margin-bottom: 0; }
   .about-side { margin-top: 1.5rem; }
   .pill { margin-bottom: 1.25rem; }
   .frame { padding: 0.75rem; }
@@ -1169,3 +1165,18 @@ ul.products .product > .media .tag { z-index: 2; }   /* labels stay on top of th
 /* "About Me" title at the top of the bio box, styled like the page titles on the other pages */
 .about-text .bio-title { color: var(--accent); font-family: var(--font); font-size: 1.9rem; line-height: 1.3; margin: 0 0 0.6em; }
 @media (max-width: 800px) { .about-text .bio-title { font-size: 1.5rem; } }
+
+/* Store glass cases: a soft shine sweeps across each case every few seconds, at the same 45° angle
+   as the reflections (like the shine on the About Me name). The cases shine one after another in
+   a little wave. Change 4.5s for how often it happens. */
+ul.products .product > .media::before {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; border-radius: inherit;
+  background: linear-gradient(135deg, transparent 44%, rgba(255, 255, 255, 0.22) 50%, transparent 56%) no-repeat;
+  background-size: 300% 300%; background-position: 100% 100%;
+  animation: glassShine 4.5s ease-in-out infinite;
+}
+ul.products .product:nth-child(4n+2) > .media::before { animation-delay: 0.15s; }
+ul.products .product:nth-child(4n+3) > .media::before { animation-delay: 0.3s; }
+ul.products .product:nth-child(4n+4) > .media::before { animation-delay: 0.45s; }
+@keyframes glassShine { 0% { background-position: 100% 100%; } 35%, 100% { background-position: 0% 0%; } }
+@media (prefers-reduced-motion: reduce) { ul.products .product > .media::before { animation: none; } }
