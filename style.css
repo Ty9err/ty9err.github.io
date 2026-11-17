@@ -1140,3 +1140,20 @@ main.card, .about-text {
   /* the top bar's shadow also reaches up to the top of the window, so its right side has no gap */
   body::before { top: calc(-1 * var(--sh)); height: calc(var(--header-h) + var(--sh)); }
 }
+
+/* Store: each product picture sits in a glass display case: a thin white border (like the art in
+   the gallery) and a couple of slanted glass reflections across the front, one wide and one thin. */
+ul.products .product > .media { border: 1px solid var(--text); border-radius: 0.75rem; overflow: hidden; }
+ul.products .product > .media .ph,
+ul.products .product > .media img { border-radius: calc(0.75rem - 1px); }
+ul.products .product > .media::after {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; border-radius: inherit;
+  background:
+    linear-gradient(135deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      transparent 20%,
+      transparent 24%, rgba(255, 255, 255, 0.16) 24%, rgba(255, 255, 255, 0.16) 33%, transparent 33%,
+      transparent 37%, rgba(255, 255, 255, 0.12) 37%, rgba(255, 255, 255, 0.12) 39%, transparent 39%,
+      transparent 100%);
+}
+ul.products .product > .media .tag { z-index: 2; }   /* labels stay on top of the glass */
