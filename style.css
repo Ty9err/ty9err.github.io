@@ -1157,3 +1157,9 @@ ul.products .product > .media::after {
       transparent 100%);
 }
 ul.products .product > .media .tag { z-index: 2; }   /* labels stay on top of the glass */
+
+/* iPad / Safari fix: Safari can let a large picture push its box wider than the frame (it sizes
+   flex items by the picture's full original width). These lines keep the picture inside the frame,
+   centered, on every browser. */
+.frame .frame-inner { min-width: 0; width: 100%; max-width: 100%; }
+.frame-inner img, .frame-inner svg { display: block; min-width: 0; min-height: 0; max-width: 100%; }
