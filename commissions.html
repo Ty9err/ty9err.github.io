@@ -47,8 +47,8 @@
     .sheet h2 { grid-column: 2; margin: 0; color: var(--accent); line-height: 1.3; text-align: center; }
     #sheet-mediums:not([hidden]), #sheet-stages:not([hidden]) {
       display: flex; width: fit-content; max-width: 100%; margin-left: auto; margin-right: auto; justify-content: center; }
-    /* Small screens: Sketch, Line art and Ink share the top row, evenly sized, and line up exactly
-       with Complete illustration underneath */
+    /* Small screens: Sketch, Line Art and Ink share the top row, evenly sized, and line up exactly
+       with Complete Illustration underneath */
     @media (max-width: 560px) {
       #sheet-stages:not([hidden]) { display: grid; grid-template-columns: repeat(3, 1fr); }
       #sheet-stages > button { padding: 0 0.6rem; }
@@ -114,13 +114,13 @@
     @media (prefers-reduced-motion: reduce) {
       .medium-switch .slider, .medium-switch button { transition: none; } }
 
-    /* Stage buttons inside the example pop-up (Sketch / Line art / Ink / Complete illustration).
+    /* Stage buttons inside the example pop-up (Sketch / Line Art / Ink / Complete Illustration).
        Same look as the Digital / Traditional switch; wraps onto two lines on small phones. */
     .stage-switch { flex-wrap: wrap; margin: 0 0 1rem; }
     .stage-switch[hidden] { display: none; }
     .medium-switch button:disabled { opacity: 0.35; cursor: not-allowed; }
 
-    /* Grayed-out price cells (things I don't offer, like traditional Complete illustration) */
+    /* Grayed-out price cells (things I don't offer, like traditional Complete Illustration) */
     th.na, td.na { color: var(--muted); font-weight: 400; }
 
     /* Form styles */
@@ -153,8 +153,8 @@
     form select {
       appearance: none; -webkit-appearance: none; cursor: pointer;
       padding-right: 2.5rem;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right 0.9rem center;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23ffc310' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 0.9rem center;   /* yellow arrow */
     }
 
     /* Terms: click to open, then scroll inside a box the same height as the description box */
@@ -169,7 +169,8 @@
     /* Send button stays faded until the terms box is ticked */
     form button[type="submit"]:disabled { opacity: 0.45; cursor: not-allowed; }
 
-    #closed-note { text-align: center; }   /* "Commissions are currently closed" above the form */
+    #closed-note { text-align: center; }
+    #digital-note { white-space: pre-line; }   /* one "unavailable" note per line */   /* "Commissions are currently closed" above the form */
 
     /* Number of characters stepper */
     .stepper { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem; }
@@ -256,10 +257,10 @@
            <img src="images/commissions/portrait-trad-ink.jpg" alt="Describe the artwork" data-medium="Traditional" data-stage="Ink">
          - Digital / Traditional buttons appear above the picture on every card. Traditional is
            grayed out when a card has no traditional pictures (character designs, logos, posters).
-         - Stage buttons (Sketch / Line art / Ink / Complete illustration) appear under the picture
+         - Stage buttons (Sketch / Line Art / Ink / Complete Illustration) appear under the picture
            when that medium has more than one stage. Their labels come from data-stage.
          - The pop-up opens on Digital, last stage. Switching medium keeps the same stage when it
-           exists (Complete illustration falls back to Ink for traditional).
+           exists (Complete Illustration falls back to Ink for traditional).
          - Delete a line to drop that picture. The card's own thumbnail (the first picture in the
            <button>) is separate, so it can show digital and traditional side by side. Logo and
            Poster have no ex-stages box and just show their thumbnail. -->
@@ -273,11 +274,11 @@
         <div class="ex-info" hidden>
           <div class="ex-stages">
             <span class="ph" role="img" aria-label="Character illustration example, digital sketch" data-medium="Digital" data-stage="Sketch"></span>
-            <span class="ph" role="img" aria-label="Character illustration example, digital line art" data-medium="Digital" data-stage="Line art"></span>
+            <span class="ph" role="img" aria-label="Character illustration example, digital line art" data-medium="Digital" data-stage="Line Art"></span>
             <span class="ph" role="img" aria-label="Character illustration example, digital ink" data-medium="Digital" data-stage="Ink"></span>
-            <span class="ph" role="img" aria-label="Character illustration example, digital complete illustration" data-medium="Digital" data-stage="Complete illustration"></span>
+            <span class="ph" role="img" aria-label="Character illustration example, digital complete illustration" data-medium="Digital" data-stage="Complete Illustration"></span>
             <span class="ph" role="img" aria-label="Character illustration example, traditional sketch" data-medium="Traditional" data-stage="Sketch"></span>
-            <span class="ph" role="img" aria-label="Character illustration example, traditional line art" data-medium="Traditional" data-stage="Line art"></span>
+            <span class="ph" role="img" aria-label="Character illustration example, traditional line art" data-medium="Traditional" data-stage="Line Art"></span>
             <span class="ph" role="img" aria-label="Character illustration example, traditional ink" data-medium="Traditional" data-stage="Ink"></span>
           </div>
          <p>A character illustration is a full body drawing of your character (or an idea you have) in the pose of your choice, with a plain or simple background.</p>
@@ -292,9 +293,9 @@
         <div class="ex-info" hidden>
           <div class="ex-stages">
             <span class="ph" role="img" aria-label="Character design sheet example, digital sketch" data-medium="Digital" data-stage="Sketch"></span>
-            <span class="ph" role="img" aria-label="Character design sheet example, digital line art" data-medium="Digital" data-stage="Line art"></span>
+            <span class="ph" role="img" aria-label="Character design sheet example, digital line art" data-medium="Digital" data-stage="Line Art"></span>
             <span class="ph" role="img" aria-label="Character design sheet example, digital ink" data-medium="Digital" data-stage="Ink"></span>
-            <span class="ph" role="img" aria-label="Character design sheet example, digital complete illustration" data-medium="Digital" data-stage="Complete illustration"></span>
+            <span class="ph" role="img" aria-label="Character design sheet example, digital complete illustration" data-medium="Digital" data-stage="Complete Illustration"></span>
           </div>
          <p>A character design sheet includes 3 pose illustrations, 3 expressions, and a mini turn around view of the character.</p>
         </div>
@@ -308,11 +309,11 @@
         <div class="ex-info" hidden>
           <div class="ex-stages">
             <span class="ph" role="img" aria-label="Stylized portrait example, digital sketch" data-medium="Digital" data-stage="Sketch"></span>
-            <span class="ph" role="img" aria-label="Stylized portrait example, digital line art" data-medium="Digital" data-stage="Line art"></span>
+            <span class="ph" role="img" aria-label="Stylized portrait example, digital line art" data-medium="Digital" data-stage="Line Art"></span>
             <span class="ph" role="img" aria-label="Stylized portrait example, digital ink" data-medium="Digital" data-stage="Ink"></span>
-            <span class="ph" role="img" aria-label="Stylized portrait example, digital complete illustration" data-medium="Digital" data-stage="Complete illustration"></span>
+            <span class="ph" role="img" aria-label="Stylized portrait example, digital complete illustration" data-medium="Digital" data-stage="Complete Illustration"></span>
             <span class="ph" role="img" aria-label="Stylized portrait example, traditional sketch" data-medium="Traditional" data-stage="Sketch"></span>
-            <span class="ph" role="img" aria-label="Stylized portrait example, traditional line art" data-medium="Traditional" data-stage="Line art"></span>
+            <span class="ph" role="img" aria-label="Stylized portrait example, traditional line art" data-medium="Traditional" data-stage="Line Art"></span>
             <span class="ph" role="img" aria-label="Stylized portrait example, traditional ink" data-medium="Traditional" data-stage="Ink"></span>
           </div>
          <p>A stylized portrait is a full body illustration of a real person (including yourself!) drawn in my style. Send photos for reference.</p>
@@ -327,11 +328,11 @@
         <div class="ex-info" hidden>
           <div class="ex-stages">
             <span class="ph" role="img" aria-label="Expression sheet example, digital sketch" data-medium="Digital" data-stage="Sketch"></span>
-            <span class="ph" role="img" aria-label="Expression sheet example, digital line art" data-medium="Digital" data-stage="Line art"></span>
+            <span class="ph" role="img" aria-label="Expression sheet example, digital line art" data-medium="Digital" data-stage="Line Art"></span>
             <span class="ph" role="img" aria-label="Expression sheet example, digital ink" data-medium="Digital" data-stage="Ink"></span>
-            <span class="ph" role="img" aria-label="Expression sheet example, digital complete illustration" data-medium="Digital" data-stage="Complete illustration"></span>
+            <span class="ph" role="img" aria-label="Expression sheet example, digital complete illustration" data-medium="Digital" data-stage="Complete Illustration"></span>
             <span class="ph" role="img" aria-label="Expression sheet example, traditional sketch" data-medium="Traditional" data-stage="Sketch"></span>
-            <span class="ph" role="img" aria-label="Expression sheet example, traditional line art" data-medium="Traditional" data-stage="Line art"></span>
+            <span class="ph" role="img" aria-label="Expression sheet example, traditional line art" data-medium="Traditional" data-stage="Line Art"></span>
             <span class="ph" role="img" aria-label="Expression sheet example, traditional ink" data-medium="Traditional" data-stage="Ink"></span>
           </div>
          <p>Expression sheets include 6 expressions of your choice, or my choice if you're feeling indecisive!</p>
@@ -374,7 +375,7 @@
     </dialog>
 
     <h2>Prices</h2>
-    <p>Prices are in US dollars and include one character. Each additional character adds to the total. Logos and posters are flat prices.</p>
+    <p>Prices are in US dollars. Character illustrations, stylized portraits, expression sheets and character design sheets include one character, and each additional character (where available) adds to the total. Logos are a flat price. Posters start at the price below, plus the additional character price for each character you add.</p>
     <!-- The buttons switch between the two price tables below. -->
     <div class="medium-switch" id="price-switch" role="group" aria-label="Show prices for">
       <button type="button" data-show="prices-digital" aria-pressed="true">Digital</button>
@@ -385,7 +386,7 @@
     <div class="table-wrap" id="prices-digital">
       <table>
         <thead>
-          <tr><th>Type</th><th>Sketch</th><th>Line art</th><th>Ink</th><th>Complete Illustration</th></tr>
+          <tr><th>Type</th><th>Sketch</th><th>Line Art</th><th>Ink</th><th>Complete Illustration</th></tr>
         </thead>
         <tbody>
           <tr><td>Character Illustration</td><td>$50</td><td>$65</td><td>$70</td><td>$100</td></tr>
@@ -397,22 +398,22 @@
           <tr><td>Each Additional Character</td><td><span class="plus">+</span>$35</td><td><span class="plus">+</span>$45</td><td><span class="plus">+</span>$50</td><td><span class="plus">+</span>$70</td></tr>
         </tbody>
       </table>
-       <p class="hint">*Additional characters unavailable for character design sheets</p>
+       <p class="hint">*Additional characters are unavailable for character design sheets and expression sheets</p>
     </div>
 
     <div class="table-wrap" id="prices-traditional" hidden>
       <table>
         <thead>
-          <tr><th>Type</th><th>Sketch</th><th>Line art</th><th>Ink</th><th class="na">Complete Illustration</th></tr>
+          <tr><th>Type</th><th>Sketch</th><th>Line Art</th><th>Ink</th><th class="na">Complete Illustration</th></tr>
         </thead>
         <tbody>
-          <tr><td>Character illustration</td><td>$60</td><td>$75</td><td>$120</td><td class="na">&ndash;</td></tr>
-          <tr><td>Stylized portrait</td><td>$50</td><td>$65</td><td>$100</td><td class="na">&ndash;</td></tr>
-          <tr><td>Expression sheet</td><td>$45</td><td>$60</td><td>$100</td><td class="na">&ndash;</td></tr>
-          <tr><td>Each additional character</td><td><span class="plus">+</span>$40</td><td><span class="plus">+</span>$60</td><td><span class="plus">+</span>$80</td><td class="na">&ndash;</td></tr>
+          <tr><td>Character Illustration</td><td>$60</td><td>$75</td><td>$120</td><td class="na">&ndash;</td></tr>
+          <tr><td>Stylized Portrait</td><td>$50</td><td>$65</td><td>$100</td><td class="na">&ndash;</td></tr>
+          <tr><td>Expression Sheet</td><td>$45</td><td>$60</td><td>$100</td><td class="na">&ndash;</td></tr>
+          <tr><td>Each Additional Character</td><td><span class="plus">+</span>$40</td><td><span class="plus">+</span>$60</td><td><span class="plus">+</span>$80</td><td class="na">&ndash;</td></tr>
         </tbody>
       </table>
-      <p class="hint">*Traditional pieces are drawn on 8x10 sketch paper and shipped to you. Character design sheets, logos, and posters are digital only.</p>
+      <p class="hint">*Traditional pieces are drawn on 8x10 sketch paper and shipped to you.<br>*Character design sheets, logos and posters are unavailable in traditional<br>*Complete illustrations are unavailable in traditional</p>
     </div>
 
     <h2>Process</h2>
@@ -441,9 +442,9 @@
         <select name="type" id="type" required>
           <option value="">Choose one</option>
           <option>Character Illustration</option>
-          <option data-digital-only>Character Design Sheet</option>
+          <option data-digital-only data-one-character>Character Design Sheet</option>
           <option>Stylized Portrait</option>
-          <option>Expression Sheet</option>
+          <option data-one-character>Expression Sheet</option>
           <option>Logo</option>
           <option>Poster</option>
           <option>Other (explain below)</option>
@@ -451,18 +452,18 @@
       </label>
 
       <div id="art-options">
-        <label>Medium
+        <label>Medium <span class="hint optional" hidden>(optional)</span>
           <select name="medium" id="medium" required>
             <option value="">Choose one</option>
             <option>Digital</option>
             <option id="traditional-option">Traditional</option>
           </select>
         </label>
-        <label>Finish
+        <label>Finish <span class="hint optional" hidden>(optional)</span>
           <select name="finish" id="finish" required>
             <option value="">Choose one</option>
             <option>Sketch</option>
-            <option>Line art</option>
+            <option>Line Art</option>
             <option>Ink</option>
             <option id="complete-option">Complete Illustration</option>
           </select>
@@ -632,8 +633,8 @@
     // on digital-only pieces (character design sheets, logos, posters).
     const ALL_MEDIUMS = ["Digital", "Traditional"];
     // The stage row always shows all four stages; ones a piece doesn't come in are grayed out
-    // (e.g. Complete illustration for traditional, everything but Complete for logos/posters).
-    const ALL_STAGES = ["Sketch", "Line art", "Ink", "Complete illustration"];
+    // (e.g. Complete Illustration for traditional, everything but Complete for logos/posters).
+    const ALL_STAGES = ["Sketch", "Line Art", "Ink", "Complete Illustration"];
 
     document.querySelectorAll(".example").forEach(card => {
       card.addEventListener("animationend", () => card.classList.remove("tapped"));
@@ -660,7 +661,7 @@
           // Logo and Poster: digital, complete illustration only
           media.replaceChildren(card.querySelector("img, .ph").cloneNode(true));
           buttonRow(mediumBar, ALL_MEDIUMS, "Digital", () => {}, ["Digital"]);
-          buttonRow(stageBar, ALL_STAGES, "Complete illustration", () => {}, ["Complete illustration"]);
+          buttonRow(stageBar, ALL_STAGES, "Complete Illustration", () => {}, ["Complete Illustration"]);
         }
 
         const body = document.getElementById("sheet-body");
@@ -709,12 +710,10 @@
       const tradOption = document.getElementById("traditional-option");
       tradOption.disabled = designOnlyDigital;
       if (designOnlyDigital && is(medium.value, "Traditional")) medium.value = "";
-      const note = document.getElementById("digital-note");
-      note.hidden = !(design || designOnlyDigital);
-      note.textContent = design ? "Logos and posters are made digitally."
-                                : "Character design sheets are made digitally.";
-      // Logos have no characters; character design sheets are one character only.
-      toggle("character-count", !is(type.value, "Logo") && !designOnlyDigital);
+      // Logos have no characters; types marked data-one-character (character design sheets,
+      // expression sheets) are one character only.
+      const oneCharacter = !!chosen && chosen.hasAttribute("data-one-character");
+      toggle("character-count", !is(type.value, "Logo") && !oneCharacter);
 
       // Posters can have no characters, so they start at 0. Everything else starts at 1.
       const poster = is(type.value, "Poster");
@@ -728,11 +727,27 @@
         ? "Optional: add characters if you'd like them on your poster. Price increases for each one."
         : "Price increases for each additional character.";
 
-      // I don't color traditionally: Complete illustration is grayed out for traditional pieces.
+      // I don't color traditionally: Complete Illustration is grayed out for traditional pieces.
       const traditional = is(medium.value, "Traditional");
       document.getElementById("complete-option").disabled = traditional;
-      if (traditional && is(finish.value, "Complete illustration")) finish.value = "";
+      if (traditional && is(finish.value, "Complete Illustration")) finish.value = "";
       document.getElementById("double-note").hidden = !traditional;
+
+      // "Other" requests are priced in the quote, so Medium and Finish are optional for them
+      const other = (type.value || "").trim().toLowerCase().startsWith("other");
+      medium.required = finish.required = !other;
+      document.querySelectorAll("#art-options .optional").forEach(s => s.hidden = !other);
+
+      // "Unavailable" notes under the medium and finish, one per line, each starting with *
+      const name = (type.value || "").trim().toLowerCase();
+      const plural = name.endsWith("s") ? name : name + "s";
+      const notes = [];
+      if (design || designOnlyDigital) notes.push(plural + " are unavailable in traditional");
+      if (is(type.value, "Logo") || oneCharacter) notes.push("additional characters are unavailable for " + plural);
+      if (traditional) notes.push("complete illustrations are unavailable in traditional");
+      const note = document.getElementById("digital-note");
+      note.hidden = !notes.length;
+      note.textContent = notes.map(n => "*" + n.charAt(0).toUpperCase() + n.slice(1)).join("\n");
       updateTotal();
     }
 
@@ -774,7 +789,7 @@
       if (!t) return show(null, "Choose your options above to see an estimate.");
       if (t.startsWith("Other")) return show(null, "\"Other\" requests are priced in your quote.");
 
-      let med = "Digital", fin = "Complete illustration", extras = 0;
+      let med = "Digital", fin = "Complete Illustration", extras = 0;
       if (is(t, "Logo")) {
         extras = 0;
       } else if (is(t, "Poster")) {
@@ -782,17 +797,17 @@
       } else {
         if (!medium.value || !finish.value) return show(null, "Pick a medium and finish to see your estimate.");
         med = medium.value; fin = finish.value;
-        extras = type.selectedOptions[0]?.hasAttribute("data-digital-only") ? 0 : Math.max(0, n - 1);   // price includes one character; design sheets are one character only
+        extras = type.selectedOptions[0]?.hasAttribute("data-one-character") ? 0 : Math.max(0, n - 1);   // price includes one character; some types are one character only
       }
 
       const base = tablePrice(med, t, fin);
-      if (base === null) return show(null, fin + " isn't offered for " + t.toLowerCase() + " (" + med.toLowerCase() + ").");
+      if (base === null) return show(null, "*" + fin + " is unavailable for " + t.toLowerCase() + " in " + med.toLowerCase());
       const each = extras ? tablePrice(med, "Each additional character", fin) : 0;
       const total = base + extras * (each || 0);
 
       let detail = t + ", " + (is(t, "Logo") || is(t, "Poster") ? "digital" : med.toLowerCase() + " " + fin.toLowerCase())
                  + ": " + money(base);
-      if (extras) detail += " + " + extras + " extra character" + (extras > 1 ? "s" : "") + " × " + money(each);
+      if (extras) detail += " + " + extras + (is(t, "Poster") ? " character" : " extra character") + (extras > 1 ? "s" : "") + " × " + money(each);   // posters start with none
       if (is(med, "Traditional")) detail += ". Shipping is added to your quote.";
       show(money(total), detail);
     }
