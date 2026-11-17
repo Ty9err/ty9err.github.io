@@ -1048,9 +1048,9 @@ main.card, .about-text {
 }
 
 /* Desktop: the ARTiST / DESiGNER / iLLUSTRATOR heading sits a little higher (the boxes below don't move).
-   Change 20px to lift it more or less. */
+   Change 28px to lift it more or less. */
 @media (min-width: 801px) {
-  .about .title-screws { position: relative; top: -20px; }
+  .about .title-screws { position: relative; top: -28px; }
 }
 
 /* Desktop, smoother shrinking: as the window narrows, the picture column and the gap beside it
@@ -1142,8 +1142,8 @@ main.card, .about-text {
 }
 
 /* Store: each product picture sits in a glass display case: a thin white border (like the art in
-   the gallery) and slanted glass reflections: a wide one with a bright white line through it and a thin
-   one at the top left, and a small one at the bottom right. */
+   the gallery) and slanted glass reflections: a wide one and a thin one at the top left, and a small one
+   at the bottom right. */
 ul.products .product > .media { border: 1px solid var(--text); border-radius: 0.75rem; overflow: hidden; }
 ul.products .product > .media .ph,
 ul.products .product > .media img { border-radius: calc(0.75rem - 1px); }
@@ -1153,9 +1153,7 @@ ul.products .product > .media::after {
     linear-gradient(135deg,
       rgba(255, 255, 255, 0.05) 0%,
       transparent 20%,
-      transparent 24%, rgba(255, 255, 255, 0.16) 24%, rgba(255, 255, 255, 0.16) 28.2%,
-      #ffffff 28.2%, #ffffff 28.75%,                                   /* thin bright line through the wide reflection */
-      rgba(255, 255, 255, 0.16) 28.75%, rgba(255, 255, 255, 0.16) 33%, transparent 33%,
+      transparent 24%, rgba(255, 255, 255, 0.16) 24%, rgba(255, 255, 255, 0.16) 33%, transparent 33%,
       transparent 37%, rgba(255, 255, 255, 0.12) 37%, rgba(255, 255, 255, 0.12) 39%, transparent 39%,
       transparent 79%, rgba(255, 255, 255, 0.12) 79%, rgba(255, 255, 255, 0.12) 82.5%, transparent 82.5%,   /* small one, bottom right */
       transparent 100%);
@@ -1167,3 +1165,7 @@ ul.products .product > .media .tag { z-index: 2; }   /* labels stay on top of th
    centered, on every browser. */
 .frame .frame-inner { min-width: 0; width: 100%; max-width: 100%; }
 .frame-inner img, .frame-inner svg { display: block; min-width: 0; min-height: 0; max-width: 100%; }
+
+/* "About Me" title at the top of the bio box, styled like the page titles on the other pages */
+.about-text .bio-title { color: var(--accent); font-family: var(--font); font-size: 1.9rem; line-height: 1.3; margin: 0 0 0.6em; }
+@media (max-width: 800px) { .about-text .bio-title { font-size: 1.5rem; } }
