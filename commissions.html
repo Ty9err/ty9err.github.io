@@ -441,7 +441,7 @@
         <select name="type" id="type" required>
           <option value="">Choose one</option>
           <option>Character Illustration</option>
-          <option>Character Design Sheet</option>
+          <option data-digital-only>Character Design Sheet</option>
           <option>Stylized Portrait</option>
           <option>Expression Sheet</option>
           <option>Logo</option>
@@ -529,7 +529,7 @@
   </main>
 
   <footer>
-    <p>&copy; 2026 Jaleesa Zachery. All artwork is copyrighted and may not be used without permission.</p>
+    <p>&copy; 2026 Tygerr. All artwork is copyrighted and may not be used without permission.</p>
   </footer>
 
   <script>
@@ -681,7 +681,10 @@
     document.getElementById("status").textContent = closed ? "***CLOSED***" : "OPEN";
     document.getElementById("closed-note").hidden = !closed;
 
-    /* Shows and hides form questions based on the type of piece and medium. */
+    /* Shows and hides form questions based on the type of piece and medium.
+       Names are compared without caring about capitals, so "Character Design Sheet" and
+       "Character design sheet" both work. */
+    const is = (value, name) => (value || "").trim().toLowerCase() === name.toLowerCase();
     const type = document.getElementById("type");
     const medium = document.getElementById("medium");
     const finish = document.getElementById("finish");
@@ -697,22 +700,24 @@
     }
 
     function update() {
-      const design = type.value === "Logo" || type.value === "Poster";
+      const design = is(type.value, "Logo") || is(type.value, "Poster");
       toggle("art-options", !design);
-      // Character designs keep the Medium question, but only digital is allowed.
-      const designOnlyDigital = type.value === "Character design sheet";
+      // Character design sheets keep the Medium question, but only digital is allowed.
+      // Any "Type of piece" choice marked data-digital-only counts, whatever its wording.
+      const chosen = type.selectedOptions[0];
+      const designOnlyDigital = !!chosen && chosen.hasAttribute("data-digital-only");
       const tradOption = document.getElementById("traditional-option");
       tradOption.disabled = designOnlyDigital;
-      if (designOnlyDigital && medium.value === "Traditional") medium.value = "";
+      if (designOnlyDigital && is(medium.value, "Traditional")) medium.value = "";
       const note = document.getElementById("digital-note");
       note.hidden = !(design || designOnlyDigital);
       note.textContent = design ? "Logos and posters are made digitally."
                                 : "Character design sheets are made digitally.";
       // Logos have no characters; character design sheets are one character only.
-      toggle("character-count", type.value !== "Logo" && type.value !== "Character design sheet");
+      toggle("character-count", !is(type.value, "Logo") && !designOnlyDigital);
 
       // Posters can have no characters, so they start at 0. Everything else starts at 1.
-      const poster = type.value === "Poster";
+      const poster = is(type.value, "Poster");
       count.min = poster ? 0 : 1;
       if (type.value !== lastType) {
         if (poster) count.value = 0;
@@ -724,9 +729,9 @@
         : "Price increases for each additional character.";
 
       // I don't color traditionally: Complete illustration is grayed out for traditional pieces.
-      const traditional = medium.value === "Traditional";
+      const traditional = is(medium.value, "Traditional");
       document.getElementById("complete-option").disabled = traditional;
-      if (traditional && finish.value === "Complete illustration") finish.value = "";
+      if (traditional && is(finish.value, "Complete illustration")) finish.value = "";
       document.getElementById("double-note").hidden = !traditional;
       updateTotal();
     }
@@ -744,7 +749,7 @@
        the "Type of piece" choices, and column names must match the "Finish" choices. */
     const money = n => "$" + n;
     function tablePrice(medium, row, column) {
-      const table = document.getElementById(medium === "Traditional" ? "prices-traditional" : "prices-digital");
+      const table = document.getElementById(is(medium, "Traditional") ? "prices-traditional" : "prices-digital");
       const heads = [...table.querySelectorAll("thead th")].map(th => th.textContent.trim().toLowerCase());
       const col = heads.indexOf(column.toLowerCase());
       const tr = [...table.querySelectorAll("tbody tr")]
@@ -770,14 +775,14 @@
       if (t.startsWith("Other")) return show(null, "\"Other\" requests are priced in your quote.");
 
       let med = "Digital", fin = "Complete illustration", extras = 0;
-      if (t === "Logo") {
+      if (is(t, "Logo")) {
         extras = 0;
-      } else if (t === "Poster") {
+      } else if (is(t, "Poster")) {
         extras = n;                          // posters start at 0 characters
       } else {
         if (!medium.value || !finish.value) return show(null, "Pick a medium and finish to see your estimate.");
         med = medium.value; fin = finish.value;
-        extras = t === "Character design sheet" ? 0 : Math.max(0, n - 1);   // price includes one character
+        extras = type.selectedOptions[0]?.hasAttribute("data-digital-only") ? 0 : Math.max(0, n - 1);   // price includes one character; design sheets are one character only
       }
 
       const base = tablePrice(med, t, fin);
@@ -785,10 +790,10 @@
       const each = extras ? tablePrice(med, "Each additional character", fin) : 0;
       const total = base + extras * (each || 0);
 
-      let detail = t + ", " + (t === "Logo" || t === "Poster" ? "digital" : med.toLowerCase() + " " + fin.toLowerCase())
+      let detail = t + ", " + (is(t, "Logo") || is(t, "Poster") ? "digital" : med.toLowerCase() + " " + fin.toLowerCase())
                  + ": " + money(base);
       if (extras) detail += " + " + extras + " extra character" + (extras > 1 ? "s" : "") + " × " + money(each);
-      if (med === "Traditional") detail += ". Shipping is added to your quote.";
+      if (is(med, "Traditional")) detail += ". Shipping is added to your quote.";
       show(money(total), detail);
     }
 
