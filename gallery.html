@@ -89,13 +89,6 @@
     .thumb:active { transform: scale(0.95); }
     @keyframes tap { 0% { transform: scale(1); } 40% { transform: scale(0.93); } 100% { transform: scale(1); } }
     .thumb.tapped { animation: tap 0.35s ease; }
-    /* Hover (mouse only): the picture lifts a few pixels and gets a yellow border.
-       Change -3px for more or less lift. */
-    .grid .thumb { transition: transform 0.15s ease, box-shadow 0.15s ease; }
-    @media (hover: hover) {
-      .grid .thumb:hover { transform: translateY(-3px); box-shadow: 0 0 0 2px var(--accent); }
-      .grid .thumb:active { transform: scale(0.95); }   /* pressing still shrinks it */
-    }
     @media (prefers-reduced-motion: reduce) { .thumb { transition: none; } .thumb.tapped { animation: none; } }
     .thumb img, .thumb .ph { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
     .thumb .ph { background: var(--line); }

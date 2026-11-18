@@ -1140,9 +1140,7 @@ main.card, .about-text {
 /* Store: each product picture sits in a glass display case: a thin white border (like the art in
    the gallery) and slanted glass reflections: a wide one and a thin one at the top left, and a small one
    at the bottom right. */
-ul.products .product > .media { border: 1px solid var(--text); border-radius: 0.75rem; overflow: hidden; }
-ul.products .product > .media .ph,
-ul.products .product > .media img { border-radius: calc(0.75rem - 1px); }
+ul.products .product > .media { border-radius: 0.75rem; overflow: hidden; }
 ul.products .product > .media::after {
   content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; border-radius: inherit;
   background:
@@ -1180,3 +1178,29 @@ ul.products .product:nth-child(4n+3) > .media::before { animation-delay: 0.3s; }
 ul.products .product:nth-child(4n+4) > .media::before { animation-delay: 0.45s; }
 @keyframes glassShine { 0% { background-position: 100% 100%; } 35%, 100% { background-position: 0% 0%; } }
 @media (prefers-reduced-motion: reduce) { ul.products .product > .media::before { animation: none; } }
+
+/* ===== PICTURE BOXES: gallery pictures, commission examples, store cases, portfolio projects =====
+   A thin white outline normally. With a mouse over one, the outline turns yellow and grows by one
+   pixel, and the box gently floats up and down (like the current page's menu tab).
+   Pressing still shrinks it, and clicking still gives the little dip. */
+.grid .thumb, .example > .ph, .example > img,
+ul.products .product > .media, .project > .project-img {
+  outline: 1px solid var(--text); outline-offset: -1px;
+  transition: outline-color 0.15s ease, transform 0.15s ease;
+}
+@keyframes pickFloat { 0%, 100% { transform: translateY(-3px); } 50% { transform: translateY(-5px); } }
+@media (hover: hover) {
+  .grid .thumb:hover, .example:hover > .ph, .example:hover > img,
+  ul.products .product > .media:hover, .project > .project-img:hover {
+    outline: 2px solid var(--accent); outline-offset: -1px;   /* the white pixel turns yellow, plus one more outside it */
+    animation: pickFloat 2s ease-in-out infinite;
+  }
+  .grid .thumb:active, .example:active > .ph, .example:active > img,
+  ul.products .product > .media:active, .project > .project-img:active { animation: none; transform: scale(0.95); }
+  .grid .thumb.tapped:hover, .example.tapped:hover > .ph, .example.tapped:hover > img,
+  ul.products .product > .media.tapped:hover, .project > .project-img.tapped:hover { animation: tap 0.35s ease; }
+}
+@media (hover: hover) and (prefers-reduced-motion: reduce) {
+  .grid .thumb:hover, .example:hover > .ph, .example:hover > img,
+  ul.products .product > .media:hover, .project > .project-img:hover { animation: none; transform: translateY(-3px); }
+}
