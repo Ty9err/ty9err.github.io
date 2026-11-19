@@ -384,7 +384,7 @@ main { position: relative; z-index: 6; }   /* page content above the top bar's s
 @media (max-width: 800px) {
   /* Phones: the three words on three rows, with phone-size screws between the rows */
   .about .title-screws { margin-right: 0; padding-left: 0; padding-right: 0; justify-content: center; flex-wrap: nowrap; white-space: nowrap;
-                         flex-direction: column; gap: 10px; font-size: min(2.7rem, calc((100vw - 64px) / 7.2)); line-height: 1.1; margin-bottom: 1.25rem; }
+                         flex-direction: column; gap: 10px; font-size: min(2.4rem, calc((100vw - 64px) / 7.8)); line-height: 1.1; margin-bottom: 1.25rem; }
   .title-screws .screw { width: var(--screw-phone); height: var(--screw-phone); }
   .title-screws .screw:not(.end), .title-screws .screw.end:first-child { display: none; }   /* only one screw, after iLLUSTRATOR */
 }
@@ -993,16 +993,16 @@ main.card, .about-text {
       3px 3px 0 var(--shade); }
 }
 
-/* Phones: big screws on both sides of ARTiST (the top row), like the end screws on desktop */
+/* Phones: small screws on both sides of ARTiST (the top row) */
 @media (max-width: 800px) {
   .title-screws .word:nth-child(2)::before,
   .title-screws .word:nth-child(2)::after {
     content: ""; display: block; position: absolute; top: 50%; z-index: 0;
-    width: var(--screw-big); height: var(--screw-big); margin-top: calc(var(--screw-big) / -2);
+    width: var(--screw-phone); height: var(--screw-phone); margin-top: calc(var(--screw-phone) / -2);
     background: var(--screw-bright) center / contain no-repeat; pointer-events: none;
   }
-  .title-screws .word:nth-child(2)::before { left: calc(-1 * var(--screw-big) - 16px); }
-  .title-screws .word:nth-child(2)::after { left: auto; right: calc(-1 * var(--screw-big) - 16px); bottom: auto; }
+  .title-screws .word:nth-child(2)::before { left: calc(-1 * var(--screw-phone) - 14px); }
+  .title-screws .word:nth-child(2)::after { left: auto; right: calc(-1 * var(--screw-phone) - 14px); bottom: auto; }
 }
 
 /* The heading's screws (on yellow) cast the same flat dark-yellow shadow as the heading words */
