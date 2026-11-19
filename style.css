@@ -1,7 +1,7 @@
 /* ===== Site styles, based on your layout draft (Orbitron + Exo 2, yellow + charcoal) =====
    Change the values in :root and the whole site updates. */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700;800&display=swap');   /* 800 = extra bold, used by the phone footer */
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap');
 
 :root {
   --page:   #ffc310;   /* yellow page background */
@@ -167,7 +167,7 @@ main.card :focus-visible, header :focus-visible, footer :focus-visible { outline
      behind Safari's address bar matches the page. */
   html { background: var(--page); }
   body { padding-bottom: 0; }
-  footer { position: static; height: auto; background: transparent; border-radius: 0; color: var(--dark); font-weight: 800;   /* extra bold (900 is heaviest, 700 is regular bold) */
+  footer { position: static; height: auto; background: transparent; border-radius: 0; color: var(--dark); font-weight: 700;   /* bold */
            font-size: 0.75rem; padding: 0 1.25rem max(1.25rem, env(safe-area-inset-bottom)); margin-top: auto; }
   main.card { margin-bottom: 1.5rem; }
   .about-side { margin-bottom: 1rem; }
@@ -386,7 +386,7 @@ main { position: relative; z-index: 6; }   /* page content above the top bar's s
   .about .title-screws { margin-right: 0; padding-left: 0; padding-right: 0; justify-content: center; flex-wrap: nowrap; white-space: nowrap;
                          flex-direction: column; gap: 10px; font-size: min(2.7rem, calc((100vw - 64px) / 7.2)); line-height: 1.1; margin-bottom: 1.25rem; }
   .title-screws .screw { width: var(--screw-phone); height: var(--screw-phone); }
-  .title-screws .screw.end { display: none; }
+  .title-screws .screw:not(.end), .title-screws .screw.end:first-child { display: none; }   /* only one screw, after iLLUSTRATOR */
 }
 /* Phones: the name's gray outline is one pixel thinner (2px gray, then the same 1px white) */
 @media (max-width: 800px) {
@@ -993,24 +993,24 @@ main.card, .about-text {
       3px 3px 0 var(--shade); }
 }
 
-/* Phones: big screws on both sides of DESiGNER (the middle row), like the end screws on desktop */
+/* Phones: big screws on both sides of ARTiST (the top row), like the end screws on desktop */
 @media (max-width: 800px) {
-  .title-screws .word:nth-child(4)::before,
-  .title-screws .word:nth-child(4)::after {
+  .title-screws .word:nth-child(2)::before,
+  .title-screws .word:nth-child(2)::after {
     content: ""; display: block; position: absolute; top: 50%; z-index: 0;
     width: var(--screw-big); height: var(--screw-big); margin-top: calc(var(--screw-big) / -2);
     background: var(--screw-bright) center / contain no-repeat; pointer-events: none;
   }
-  .title-screws .word:nth-child(4)::before { left: calc(-1 * var(--screw-big) - 16px); }
-  .title-screws .word:nth-child(4)::after { left: auto; right: calc(-1 * var(--screw-big) - 16px); bottom: auto; }
+  .title-screws .word:nth-child(2)::before { left: calc(-1 * var(--screw-big) - 16px); }
+  .title-screws .word:nth-child(2)::after { left: auto; right: calc(-1 * var(--screw-big) - 16px); bottom: auto; }
 }
 
 /* The heading's screws (on yellow) cast the same flat dark-yellow shadow as the heading words */
 .title-screws .screw { filter: drop-shadow(4px 4px 0 var(--shade)); }
 @media (max-width: 800px) {
   .title-screws .screw,
-  .title-screws .word:nth-child(4)::before,
-  .title-screws .word:nth-child(4)::after { filter: drop-shadow(3px 3px 0 var(--shade)); }
+  .title-screws .word:nth-child(2)::before,
+  .title-screws .word:nth-child(2)::after { filter: drop-shadow(3px 3px 0 var(--shade)); }
 }
 
 /* ===== PHONES: ONE BOX FOR NAME, BIO AND PICTURE =====
@@ -1203,4 +1203,22 @@ ul.products .product > .media, .project > .project-img {
 @media (hover: hover) and (prefers-reduced-motion: reduce) {
   .grid .thumb:hover, .example:hover > .ph, .example:hover > img,
   ul.products .product > .media:hover, .project > .project-img:hover { animation: none; transform: translateY(-3px); }
+}
+
+/* Phones: everything inside the page boxes is centered: titles, text, lists, forms, buttons,
+   filters, tables and the cards under pictures. (Text you type into a form box stays left.) */
+@media (max-width: 800px) {
+  main.card, .about-text, main.card .example, main.card th, main.card td { text-align: center; }
+  main.card ul, main.card ol { list-style-position: inside; padding-left: 0; }
+  main.card .filters, main.card .filter-box, main.card .tabs, main.card .medium-switch { margin-left: auto; margin-right: auto; }
+  main.card #filters, main.card .filter-actions, main.card .row { justify-content: center; }
+  main.card form button[type="submit"] { display: block; margin-left: auto; margin-right: auto; }
+  main.card .notify form { justify-content: center; }
+  main.card .choice label, main.card form label.check { justify-content: center; }   /* radio buttons and checkbox rows */
+  main.card .choice legend { margin-left: auto; margin-right: auto; }
+  main.card ul:not([class]) { list-style: none; }   /* plain link lists (like Contact's) lose their bullets when centered */
+}
+/* Phones: the screw under iLLUSTRATOR is the small size, not the big end-screw size */
+@media (max-width: 800px) {
+  .title-screws .screw.end { width: var(--screw-phone); height: var(--screw-phone); }
 }
