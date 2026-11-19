@@ -1205,18 +1205,9 @@ ul.products .product > .media, .project > .project-img {
   ul.products .product > .media:hover, .project > .project-img:hover { animation: none; transform: translateY(-3px); }
 }
 
-/* Phones: everything inside the page boxes is centered: titles, text, lists, forms, buttons,
-   filters, tables and the cards under pictures. (Text you type into a form box stays left.) */
+/* Phones: every page's title is centered in its box (the rest of the text stays left-aligned) */
 @media (max-width: 800px) {
-  main.card, .about-text, main.card .example, main.card th, main.card td { text-align: center; }
-  main.card ul, main.card ol { list-style-position: inside; padding-left: 0; }
-  main.card .filters, main.card .filter-box, main.card .tabs, main.card .medium-switch { margin-left: auto; margin-right: auto; }
-  main.card #filters, main.card .filter-actions, main.card .row { justify-content: center; }
-  main.card form button[type="submit"] { display: block; margin-left: auto; margin-right: auto; }
-  main.card .notify form { justify-content: center; }
-  main.card .choice label, main.card form label.check { justify-content: center; }   /* radio buttons and checkbox rows */
-  main.card .choice legend { margin-left: auto; margin-right: auto; }
-  main.card ul:not([class]) { list-style: none; }   /* plain link lists (like Contact's) lose their bullets when centered */
+  main.card h1, .about-text .bio-title { text-align: center; }
 }
 /* Phones: the screw under iLLUSTRATOR is the small size, not the big end-screw size */
 @media (max-width: 800px) {
