@@ -445,7 +445,25 @@
         return chip;
       }));
       if (!lb.open) { lb.showModal(); lb.scrollTop = 0; }   // open at the top, with the arrows in view
+      fitPic();   // after the pop-up is open, so the frame's size is known
     }
+
+    /* Sizes the pop-up picture to exactly the artwork's shape (as big as fits in the frame, never
+       bigger than the file), so the white border hugs the art with no gray strip above or below it,
+       in every browser. */
+    function fitPic() {
+      const img = $("lbImg").querySelector("img");
+      if (!img) return;
+      const go = () => {
+        const nw = img.naturalWidth, nh = img.naturalHeight, frame = $("lbImg");
+        if (!nw || !nh) return;
+        const s = Math.min((frame.clientWidth - 2) / nw, (frame.clientHeight - 2) / nh, 1);   // 2 = the 1px border on each side
+        img.style.width = Math.round(nw * s) + 2 + "px";
+        img.style.height = Math.round(nh * s) + 2 + "px";
+      };
+      if (img.complete) go(); else img.addEventListener("load", go, { once: true });
+    }
+    window.addEventListener("resize", () => { if (lb.open) fitPic(); });
 
     const step = by => openLightbox(pos + by);
     const arrowStep = by => { if (!sliding) step(by); };   // arrows wait for a swipe slide to finish

@@ -1213,3 +1213,13 @@ ul.products .product > .media, .project > .project-img {
 @media (max-width: 800px) {
   .title-screws .screw.end { width: var(--screw-phone); height: var(--screw-phone); }
 }
+
+/* Desktop: while a pop-up is open, the thin strips kept free for the scroll bar at the window's
+   edges darken too, so the dimmed background covers the whole window (the strips show the page's
+   own background, which the pop-up's dimming can't reach). The colors are the page yellow under
+   the gallery's 70% dimming and the other pop-ups' 60% dimming. */
+@media (min-width: 801px) {
+  html { transition: background-color 0.5s ease; }
+  html:has(#lightbox[open]) { background-color: rgb(77, 59, 5); }
+  html:has(dialog.sheet[open]) { background-color: rgb(102, 78, 6); }
+}
