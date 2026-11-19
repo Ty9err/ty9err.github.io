@@ -1220,6 +1220,6 @@ ul.products .product > .media, .project > .project-img {
    the gallery's 70% dimming and the other pop-ups' 60% dimming. */
 @media (min-width: 801px) {
   html { transition: background-color 0.5s ease; }
-  html:has(#lightbox[open]) { background-color: rgb(77, 59, 5); }
-  html:has(dialog.sheet[open]) { background-color: rgb(102, 78, 6); }
+  html.lightbox-open { background-color: rgb(77, 59, 5); }
+  html.sheet-open { background-color: rgb(102, 78, 6); }
 }

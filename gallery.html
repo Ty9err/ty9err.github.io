@@ -114,8 +114,8 @@
     #lbImg { height: min(62vh, 640px); display: flex; align-items: center; justify-content: center; }
     @media (max-width: 600px) { #lbImg { height: 50vh; } }
     /* The picture keeps a thin white border inside the yellow outline */
-    dialog img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; margin: 0 auto; display: block;
-                 border: 1px solid var(--text); box-sizing: border-box; }
+    dialog img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: cover; margin: 0 auto; display: block;
+                 border: 1px solid var(--text); box-sizing: border-box; }   /* cover: fills its exactly-sized box, so no gray strip */
     dialog .ph { height: 100%; max-width: 100%; aspect-ratio: 4 / 3; background: var(--line); border: 1px solid var(--text); box-sizing: border-box; }
     /* Pop-up details: centered. The medium and tags share one row of yellow boxes (like a
        selected filter button); Close is a rounded outline button like Shuffle. */
@@ -619,6 +619,13 @@
     })();
   </script>
 
+  <script>
+    /* Marks the page while a pop-up is open, so the strips at the window's edges can darken with it
+       (Safari doesn't always notice a pop-up opening on its own). */
+    document.querySelectorAll("dialog").forEach(d => new MutationObserver(() => {
+      document.documentElement.classList.toggle(d.id === "lightbox" ? "lightbox-open" : "sheet-open", d.open);
+    }).observe(d, { attributes: true, attributeFilter: ["open"] }));
+  </script>
   <script src="site.js"></script>   <!-- keeps the top bar's shadow the same height as the bar -->
 </body>
 </html>
