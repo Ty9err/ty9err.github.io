@@ -1128,7 +1128,7 @@ main.card, .about-text {
    screws sit in exactly the same place on every page, whether or not the page scrolls.
    (On Macs set to hide scroll bars this changes nothing.) */
 @media (min-width: 801px) {
-  html { scrollbar-gutter: stable both-edges; background: var(--page); }   /* the reserved strips are yellow like the page */
+  html { overflow-y: scroll; background: var(--page); }   /* the scroll bar is always there, so nothing shifts between pages */
   /* The top and bottom bars (and the top bar's shadow) are brought in from both sides by the size of
      the shadow, so the shadow on the right always has room and never gets cut off at the edge. */
   header { margin-left: var(--sh); margin-right: var(--sh); }
@@ -1212,14 +1212,4 @@ ul.products .product > .media, .project > .project-img {
 /* Phones: the screw under iLLUSTRATOR is the small size, not the big end-screw size */
 @media (max-width: 800px) {
   .title-screws .screw.end { width: var(--screw-phone); height: var(--screw-phone); }
-}
-
-/* Desktop: while a pop-up is open, the thin strips kept free for the scroll bar at the window's
-   edges darken too, so the dimmed background covers the whole window (the strips show the page's
-   own background, which the pop-up's dimming can't reach). The colors are the page yellow under
-   the gallery's 70% dimming and the other pop-ups' 60% dimming. */
-@media (min-width: 801px) {
-  html { transition: background-color 0.5s ease; }
-  html.lightbox-open { background-color: rgb(77, 59, 5); }
-  html.sheet-open { background-color: rgb(102, 78, 6); }
 }

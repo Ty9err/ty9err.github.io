@@ -116,6 +116,12 @@
     /* The picture keeps a thin white border inside the yellow outline */
     dialog img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: cover; margin: 0 auto; display: block;
                  border: 1px solid var(--text); box-sizing: border-box; }   /* cover: fills its exactly-sized box, so no gray strip */
+    /* Once the picture loads it sits in this frame: the frame has the white border and rounded
+       corners, and the art is trimmed by a hair (3 pixels of the file) on every edge, hiding thin
+       dark lines some files have along their edges. */
+    .lb-pic { display: block; overflow: hidden; margin: 0 auto; box-sizing: border-box;
+              border: 1px solid var(--text); border-radius: 0.75rem; }
+    dialog .lb-pic img { display: block; border: 0; border-radius: 0; max-width: none; max-height: none; object-fit: fill; }
     dialog .ph { height: 100%; max-width: 100%; aspect-ratio: 4 / 3; background: var(--line); border: 1px solid var(--text); box-sizing: border-box; }
     /* Pop-up details: centered. The medium and tags share one row of yellow boxes (like a
        selected filter button); Close is a rounded outline button like Shuffle. */
@@ -458,8 +464,16 @@
         const nw = img.naturalWidth, nh = img.naturalHeight, frame = $("lbImg");
         if (!nw || !nh) return;
         const s = Math.min((frame.clientWidth - 2) / nw, (frame.clientHeight - 2) / nh, 1);   // 2 = the 1px border on each side
-        img.style.width = Math.round(nw * s) + 2 + "px";
-        img.style.height = Math.round(nh * s) + 2 + "px";
+        const w = Math.round(nw * s), h = Math.round(nh * s);
+        const trim = Math.max(3 * s, 1);   // 3 pixels of the file (at least 1 on screen), at the size it is shown
+        let box = img.parentElement;
+        if (!box.classList.contains("lb-pic")) {
+          box = document.createElement("span"); box.className = "lb-pic";
+          img.replaceWith(box); box.appendChild(img);
+        }
+        box.style.width = w + 2 + "px"; box.style.height = h + 2 + "px";
+        img.style.width = w + 2 * trim + "px"; img.style.height = h + 2 * trim + "px";
+        img.style.margin = -trim + "px";
       };
       if (img.complete) go(); else img.addEventListener("load", go, { once: true });
     }
@@ -619,13 +633,6 @@
     })();
   </script>
 
-  <script>
-    /* Marks the page while a pop-up is open, so the strips at the window's edges can darken with it
-       (Safari doesn't always notice a pop-up opening on its own). */
-    document.querySelectorAll("dialog").forEach(d => new MutationObserver(() => {
-      document.documentElement.classList.toggle(d.id === "lightbox" ? "lightbox-open" : "sheet-open", d.open);
-    }).observe(d, { attributes: true, attributeFilter: ["open"] }));
-  </script>
   <script src="site.js"></script>   <!-- keeps the top bar's shadow the same height as the bar -->
 </body>
 </html>
