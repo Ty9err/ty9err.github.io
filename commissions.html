@@ -193,6 +193,90 @@
     .estimate { margin-top: 1.25rem; padding: 0.9rem 1rem; border: 2px solid var(--accent); border-radius: 0.75rem;
                 background: var(--bg); }
     .estimate .est-total { margin: 0; color: var(--accent); font-weight: 700; font-size: 1.2rem; }
+    /* The dollar amount is styled like the current page's tab in the menu: bold yellow letters with a
+       gray, then white outline, gently floating up and down. */
+    .estimate .est-amount { display: inline-block; animation: navFloat 3s ease-in-out infinite;
+      text-shadow:
+        1.00px 0.00px 0 var(--line),
+        0.87px 0.50px 0 var(--line),
+        0.50px 0.87px 0 var(--line),
+        0.00px 1.00px 0 var(--line),
+        -0.50px 0.87px 0 var(--line),
+        -0.87px 0.50px 0 var(--line),
+        -1.00px 0.00px 0 var(--line),
+        -0.87px -0.50px 0 var(--line),
+        -0.50px -0.87px 0 var(--line),
+        -0.00px -1.00px 0 var(--line),
+        0.50px -0.87px 0 var(--line),
+        0.87px -0.50px 0 var(--line),
+        2.00px 0.00px 0 var(--line),
+        1.85px 0.77px 0 var(--line),
+        1.41px 1.41px 0 var(--line),
+        0.77px 1.85px 0 var(--line),
+        0.00px 2.00px 0 var(--line),
+        -0.77px 1.85px 0 var(--line),
+        -1.41px 1.41px 0 var(--line),
+        -1.85px 0.77px 0 var(--line),
+        -2.00px 0.00px 0 var(--line),
+        -1.85px -0.77px 0 var(--line),
+        -1.41px -1.41px 0 var(--line),
+        -0.77px -1.85px 0 var(--line),
+        -0.00px -2.00px 0 var(--line),
+        0.77px -1.85px 0 var(--line),
+        1.41px -1.41px 0 var(--line),
+        1.85px -0.77px 0 var(--line),
+        3.00px 0.00px 0 var(--text),
+        2.85px 0.93px 0 var(--text),
+        2.43px 1.76px 0 var(--text),
+        1.76px 2.43px 0 var(--text),
+        0.93px 2.85px 0 var(--text),
+        0.00px 3.00px 0 var(--text),
+        -0.93px 2.85px 0 var(--text),
+        -1.76px 2.43px 0 var(--text),
+        -2.43px 1.76px 0 var(--text),
+        -2.85px 0.93px 0 var(--text),
+        -3.00px 0.00px 0 var(--text),
+        -2.85px -0.93px 0 var(--text),
+        -2.43px -1.76px 0 var(--text),
+        -1.76px -2.43px 0 var(--text),
+        -0.93px -2.85px 0 var(--text),
+        -0.00px -3.00px 0 var(--text),
+        0.93px -2.85px 0 var(--text),
+        1.76px -2.43px 0 var(--text),
+        2.43px -1.76px 0 var(--text),
+        2.85px -0.93px 0 var(--text); }
+    @media (max-width: 800px) {
+      .estimate .est-amount { text-shadow:
+        1.00px 0.00px 0 var(--line),
+        0.87px 0.50px 0 var(--line),
+        0.50px 0.87px 0 var(--line),
+        0.00px 1.00px 0 var(--line),
+        -0.50px 0.87px 0 var(--line),
+        -0.87px 0.50px 0 var(--line),
+        -1.00px 0.00px 0 var(--line),
+        -0.87px -0.50px 0 var(--line),
+        -0.50px -0.87px 0 var(--line),
+        -0.00px -1.00px 0 var(--line),
+        0.50px -0.87px 0 var(--line),
+        0.87px -0.50px 0 var(--line),
+        2.00px 0.00px 0 var(--text),
+        1.85px 0.77px 0 var(--text),
+        1.41px 1.41px 0 var(--text),
+        0.77px 1.85px 0 var(--text),
+        0.00px 2.00px 0 var(--text),
+        -0.77px 1.85px 0 var(--text),
+        -1.41px 1.41px 0 var(--text),
+        -1.85px 0.77px 0 var(--text),
+        -2.00px 0.00px 0 var(--text),
+        -1.85px -0.77px 0 var(--text),
+        -1.41px -1.41px 0 var(--text),
+        -0.77px -1.85px 0 var(--text),
+        -0.00px -2.00px 0 var(--text),
+        0.77px -1.85px 0 var(--text),
+        1.41px -1.41px 0 var(--text),
+        1.85px -0.77px 0 var(--text); }
+    }
+    @media (prefers-reduced-motion: reduce) { .estimate .est-amount { animation: none; } }
     .estimate .est-detail { margin: 0.25rem 0 0; color: var(--text); }
 
     /* Soft fade-ins: things that appear after a click fade in (with a tiny upward drift)
@@ -491,7 +575,7 @@
 
       <!-- Estimated total. Worked out from the price tables above, so only edit prices there. -->
       <div class="estimate" id="estimate" aria-live="polite">
-        <p class="est-total" id="est-total">Estimated total: &ndash;</p>
+        <p class="est-total" id="est-total">Estimated total: <span class="est-amount" id="est-amount">&ndash;</span></p>
         <p class="est-detail" id="est-detail">Choose your options above to see an estimate.</p>
       </div>
       <input type="hidden" name="estimate" id="est-field" value="">
@@ -782,13 +866,14 @@
     }
 
     function updateTotal() {
-      const totalEl = document.getElementById("est-total");
       const detailEl = document.getElementById("est-detail");
       const field = document.getElementById("est-field");
-      const show = (total, detail) => {
-        totalEl.textContent = "Estimated total: " + (total === null ? "–" : total);
-        detailEl.textContent = detail;
-        field.value = total === null ? "" : total + " (" + detail + ")";
+      const show = (total, detail, note = "") => {
+        document.getElementById("est-amount").textContent = total === null ? "–" : total;
+        // Under the total: only guidance or notes (like shipping), never the price again
+        detailEl.textContent = total === null ? detail : note;
+        detailEl.hidden = !detailEl.textContent;
+        field.value = total === null ? "" : total + " (" + detail + ")";   // the full breakdown still goes to your inbox
       };
 
       const t = type.value;
@@ -815,8 +900,9 @@
       let detail = t + ", " + (is(t, "Logo") || is(t, "Poster") ? "digital" : med.toLowerCase() + " " + fin.toLowerCase())
                  + ": " + money(base);
       if (extras) detail += " + " + extras + (is(t, "Poster") ? " character" : " extra character") + (extras > 1 ? "s" : "") + " × " + money(each);   // posters start with none
-      if (is(med, "Traditional")) detail += ". Shipping is added to your quote.";
-      show(money(total), detail);
+      const shipping = is(med, "Traditional") ? "Shipping is added to your quote." : "";
+      if (shipping) detail += ". " + shipping;
+      show(money(total), detail, shipping);
     }
 
     type.addEventListener("change", update);
