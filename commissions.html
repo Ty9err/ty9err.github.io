@@ -193,9 +193,11 @@
     .estimate { margin-top: 1.25rem; padding: 0.9rem 1rem; border: 2px solid var(--accent); border-radius: 0.75rem;
                 background: var(--bg); }
     .estimate .est-total { margin: 0; color: var(--accent); font-weight: 700; font-size: 1.2rem; }
-    /* The dollar amount is styled like the current page's tab in the menu: bold yellow letters with a
-       gray, then white outline, gently floating up and down. */
-    .estimate .est-amount { display: inline-block; animation: navFloat 3s ease-in-out infinite;
+    /* Once there's a price, the dollar amount is bigger and styled like the current page's tab in the
+       menu: bold yellow letters with a gray, then white outline, gently floating up and down.
+       The "–" shown before that stays plain. */
+    .estimate .est-amount { display: inline-block; margin-left: 0.5rem; }   /* a little space after "Estimated total:" */
+    .estimate .est-amount.priced { font-size: 1.6rem; animation: navFloat 3s ease-in-out infinite;
       text-shadow:
         1.00px 0.00px 0 var(--line),
         0.87px 0.50px 0 var(--line),
@@ -246,7 +248,7 @@
         2.43px -1.76px 0 var(--text),
         2.85px -0.93px 0 var(--text); }
     @media (max-width: 800px) {
-      .estimate .est-amount { text-shadow:
+      .estimate .est-amount.priced { text-shadow:
         1.00px 0.00px 0 var(--line),
         0.87px 0.50px 0 var(--line),
         0.50px 0.87px 0 var(--line),
@@ -276,7 +278,7 @@
         1.41px -1.41px 0 var(--text),
         1.85px -0.77px 0 var(--text); }
     }
-    @media (prefers-reduced-motion: reduce) { .estimate .est-amount { animation: none; } }
+    @media (prefers-reduced-motion: reduce) { .estimate .est-amount.priced { animation: none; } }
     .estimate .est-detail { margin: 0.25rem 0 0; color: var(--text); }
 
     /* Soft fade-ins: things that appear after a click fade in (with a tiny upward drift)
@@ -868,12 +870,13 @@
     function updateTotal() {
       const detailEl = document.getElementById("est-detail");
       const field = document.getElementById("est-field");
-      const show = (total, detail, note = "") => {
-        document.getElementById("est-amount").textContent = total === null ? "–" : total;
-        // Under the total: only guidance or notes (like shipping), never the price again
-        detailEl.textContent = total === null ? detail : note;
-        detailEl.hidden = !detailEl.textContent;
-        field.value = total === null ? "" : total + " (" + detail + ")";   // the full breakdown still goes to your inbox
+      const show = (total, detail, shown = detail) => {
+        const amount = document.getElementById("est-amount");
+        amount.textContent = total === null ? "–" : total;
+        amount.classList.toggle("priced", total !== null);
+        detailEl.textContent = shown;   // the breakdown under the total (without repeating the total)
+        detailEl.hidden = !shown;
+        field.value = total === null ? "" : total + " (" + detail + ")";   // the full breakdown goes to your inbox
       };
 
       const t = type.value;
@@ -897,12 +900,13 @@
       const each = extras ? tablePrice(med, "Each additional character", fin) : 0;
       const total = base + extras * (each || 0);
 
-      let detail = t + ", " + (is(t, "Logo") || is(t, "Poster") ? "digital" : med.toLowerCase() + " " + fin.toLowerCase())
-                 + ": " + money(base);
-      if (extras) detail += " + " + extras + (is(t, "Poster") ? " character" : " extra character") + (extras > 1 ? "s" : "") + " × " + money(each);   // posters start with none
-      const shipping = is(med, "Traditional") ? "Shipping is added to your quote." : "";
-      if (shipping) detail += ". " + shipping;
-      show(money(total), detail, shipping);
+      const what = t + ", " + (is(t, "Logo") || is(t, "Poster") ? "digital" : med.toLowerCase() + " " + fin.toLowerCase());
+      const parts = money(base) + (extras ? " + " + extras + (is(t, "Poster") ? " character" : " extra character")
+                    + (extras > 1 ? "s" : "") + " × " + money(each) : "");   // posters start with none
+      const shipping = is(med, "Traditional") ? ". Shipping is added to your quote." : "";
+      // On the page: the prices are only spelled out when characters are added (otherwise it would
+      // just repeat the total). Your inbox always gets the full breakdown.
+      show(money(total), what + ": " + parts + shipping, (extras ? what + ": " + parts : what) + shipping);
     }
 
     type.addEventListener("change", update);
